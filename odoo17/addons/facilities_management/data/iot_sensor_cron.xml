@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cron job for updating IoT sensor readings -->
+        <record id="cron_update_sensor_readings" model="ir.cron">
+            <field name="name">Update IoT Sensor Readings</field>
+            <field name="model_id" ref="facilities_management.model_facilities_asset_sensor"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_update_sensor_readings()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Cron job for cleaning old sensor data -->
+        <record id="cron_clean_sensor_data" model="ir.cron">
+            <field name="name">Clean Old Sensor Data</field>
+            <field name="model_id" ref="facilities_management.model_facilities_asset_sensor_data"/>
+            <field name="state">code</field>
+            <field name="code">model._clean_old_sensor_data()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Cron job for sensor health check -->
+        <record id="cron_sensor_health_check" model="ir.cron">
+            <field name="name">IoT Sensor Health Check</field>
+            <field name="model_id" ref="facilities_management.model_facilities_asset_sensor"/>
+            <field name="state">code</field>
+            <field name="code">model._check_sensor_health()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

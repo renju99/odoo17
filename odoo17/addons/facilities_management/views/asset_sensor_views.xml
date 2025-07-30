@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Asset Sensor Tree View -->
+    <record id="asset_sensor_tree_view" model="ir.ui.view">
+        <field name="name">facilities.asset.sensor.tree</field>
+        <field name="model">facilities.asset.sensor</field>
+        <field name="arch" type="xml">
+            <tree string="Asset Sensors" decoration-success="status == 'normal'" decoration-warning="status == 'warning'" decoration-danger="status == 'critical'">
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="sensor_type"/>
+                <field name="sensor_id"/>
+                <field name="current_value"/>
+                <field name="unit"/>
+                <field name="status"/>
+                <field name="last_reading_time"/>
+                <field name="reading_frequency"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Form View -->
+    <record id="asset_sensor_form_view" model="ir.ui.view">
+        <field name="name">facilities.asset.sensor.form</field>
+        <field name="model">facilities.asset.sensor</field>
+        <field name="arch" type="xml">
+            <form string="Asset Sensor">
+                <header>
+                    <button name="action_test_sensor" string="Test Sensor" type="object" class="btn-primary"/>
+                    <button name="action_view_historical_data" string="View History" type="object" class="btn-secondary"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Sensor Name"/>
+                        </h1>
+                        <div class="o_row">
+                            <field name="sensor_id"/>
+                            <field name="status" widget="badge" decoration-success="status == 'normal'" decoration-warning="status == 'warning'" decoration-danger="status == 'critical'"/>
+                        </div>
+                    </div>
+                    
+                    <group>
+                        <group string="Sensor Information">
+                            <field name="asset_id"/>
+                            <field name="sensor_type"/>
+                            <field name="unit"/>
+                            <field name="reading_frequency"/>
+                        </group>
+                        
+                        <group string="Current Status">
+                            <field name="current_value"/>
+                            <field name="last_reading_time"/>
+                            <field name="alert_enabled"/>
+                            <field name="alert_count"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Thresholds" name="thresholds">
+                            <group>
+                                <group string="Warning Thresholds">
+                                    <field name="warning_threshold"/>
+                                    <field name="critical_threshold"/>
+                                </group>
+                                
+                                <group string="Value Range">
+                                    <field name="min_value"/>
+                                    <field name="max_value"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Communication" name="communication">
+                            <group>
+                                <group string="Protocol">
+                                    <field name="communication_protocol"/>
+                                    <field name="endpoint_url"/>
+                                    <field name="api_key" password="True"/>
+                                </group>
+                                
+                                <group string="Data Retention">
+                                    <field name="data_retention_days"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Alerts" name="alerts">
+                            <group>
+                                <group string="Alert History">
+                                    <field name="last_alert_time"/>
+                                    <field name="alert_count"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    
+                    <field name="notes" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Search View -->
+    <record id="asset_sensor_search_view" model="ir.ui.view">
+        <field name="name">facilities.asset.sensor.search</field>
+        <field name="model">facilities.asset.sensor</field>
+        <field name="arch" type="xml">
+            <search string="Asset Sensor Search">
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="sensor_type"/>
+                <field name="sensor_id"/>
+                <field name="status"/>
+                
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                
+                <filter string="Normal" name="normal" domain="[('status', '=', 'normal')]"/>
+                <filter string="Warning" name="warning" domain="[('status', '=', 'warning')]"/>
+                <filter string="Critical" name="critical" domain="[('status', '=', 'critical')]"/>
+                <filter string="Offline" name="offline" domain="[('status', '=', 'offline')]"/>
+                <filter string="Error" name="error" domain="[('status', '=', 'error')]"/>
+                
+                <separator/>
+                
+                <filter string="Temperature" name="temperature" domain="[('sensor_type', '=', 'temperature')]"/>
+                <filter string="Humidity" name="humidity" domain="[('sensor_type', '=', 'humidity')]"/>
+                <filter string="Vibration" name="vibration" domain="[('sensor_type', '=', 'vibration')]"/>
+                <filter string="Pressure" name="pressure" domain="[('sensor_type', '=', 'pressure')]"/>
+                <filter string="Power" name="power" domain="[('sensor_type', '=', 'power')]"/>
+                <filter string="Runtime" name="runtime" domain="[('sensor_type', '=', 'runtime')]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Asset" name="group_asset" context="{'group_by': 'asset_id'}"/>
+                    <filter string="Sensor Type" name="group_type" context="{'group_by': 'sensor_type'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Reading Frequency" name="group_frequency" context="{'group_by': 'reading_frequency'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Kanban View -->
+    <record id="asset_sensor_kanban_view" model="ir.ui.view">
+        <field name="name">facilities.asset.sensor.kanban</field>
+        <field name="model">facilities.asset.sensor</field>
+        <field name="arch" type="xml">
+            <kanban string="Asset Sensors" class="o_kanban_small_column" default_group_by="status">
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="sensor_type"/>
+                <field name="current_value"/>
+                <field name="unit"/>
+                <field name="status"/>
+                <field name="last_reading_time"/>
+                <field name="active"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="asset_id"/>
+                                </div>
+                                <div class="o_kanban_tags_section">
+                                    <span class="badge badge-info">
+                                        <field name="sensor_type"/>
+                                    </span>
+                                    <span class="badge badge-success" invisible="status != 'normal'">
+                                        <field name="status"/>
+                                    </span>
+                                    <span class="badge badge-warning" invisible="status != 'warning'">
+                                        <field name="status"/>
+                                    </span>
+                                    <span class="badge badge-danger" invisible="status != 'critical'">
+                                        <field name="status"/>
+                                    </span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span class="o_kanban_text_left">
+                                            <field name="current_value"/> <field name="unit"/>
+                                        </span>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="last_reading_time" widget="relative_time"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Graph View -->
+    <record id="asset_sensor_graph_view" model="ir.ui.view">
+        <field name="name">facilities.asset.sensor.graph</field>
+        <field name="model">facilities.asset.sensor</field>
+        <field name="arch" type="xml">
+            <graph string="Sensor Analysis" type="bar">
+                <field name="sensor_type"/>
+                <field name="status"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Action -->
+    <record id="action_asset_sensor" model="ir.actions.act_window">
+        <field name="name">Asset Sensors</field>
+        <field name="res_model">facilities.asset.sensor</field>
+        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first asset sensor!
+            </p>
+            <p>
+                Monitor your assets in real-time with IoT sensors for temperature, humidity, vibration, and more.
+            </p>
+        </field>
+    </record>
+
+    <!-- Asset Threshold Tree View -->
+    <record id="asset_threshold_tree_view" model="ir.ui.view">
+        <field name="name">facilities.asset.threshold.tree</field>
+        <field name="model">facilities.asset.threshold</field>
+        <field name="arch" type="xml">
+            <tree string="Asset Thresholds" decoration-success="not is_exceeded" decoration-danger="is_exceeded">
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="threshold_type"/>
+                <field name="condition_operator"/>
+                <field name="threshold_value"/>
+                <field name="unit"/>
+                <field name="action_type"/>
+                <field name="is_exceeded"/>
+                <field name="can_trigger"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Asset Threshold Form View -->
+    <record id="asset_threshold_form_view" model="ir.ui.view">
+        <field name="name">facilities.asset.threshold.form</field>
+        <field name="model">facilities.asset.threshold</field>
+        <field name="arch" type="xml">
+            <form string="Asset Threshold">
+                <header>
+                    <button name="action_trigger_threshold" string="Trigger Now" type="object" class="btn-primary" invisible="not is_exceeded"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Threshold Name"/>
+                        </h1>
+                        <div class="o_row">
+                            <field name="is_exceeded" widget="boolean_toggle" readonly="1"/>
+                            <field name="can_trigger" widget="boolean_toggle" readonly="1"/>
+                        </div>
+                    </div>
+                    
+                    <group>
+                        <group string="Threshold Configuration">
+                            <field name="asset_id"/>
+                            <field name="threshold_type"/>
+                            <field name="condition_operator"/>
+                            <field name="threshold_value"/>
+                            <field name="unit"/>
+                        </group>
+                        
+                        <group string="Action Configuration">
+                            <field name="action_type"/>
+                            <field name="work_order_type"/>
+                            <field name="work_order_priority"/>
+                            <field name="cooldown_hours"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Sensor Configuration" name="sensor" invisible="threshold_type != 'sensor_value'">
+                            <group>
+                                <field name="sensor_id" domain="[('asset_id', '=', asset_id)]"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Alert Configuration" name="alerts" invisible="action_type != 'send_alert'">
+                            <group>
+                                <field name="alert_message" nolabel="1"/>
+                                <field name="alert_recipients" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Tracking" name="tracking">
+                            <group>
+                                <group string="Status">
+                                    <field name="last_triggered"/>
+                                    <field name="trigger_count"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    
+                    <field name="notes" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Threshold Search View -->
+    <record id="asset_threshold_search_view" model="ir.ui.view">
+        <field name="name">facilities.asset.threshold.search</field>
+        <field name="model">facilities.asset.threshold</field>
+        <field name="arch" type="xml">
+            <search string="Asset Threshold Search">
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="threshold_type"/>
+                <field name="action_type"/>
+                <field name="is_exceeded"/>
+                
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                
+                <filter string="Exceeded" name="exceeded" domain="[('is_exceeded', '=', True)]"/>
+                <filter string="Not Exceeded" name="not_exceeded" domain="[('is_exceeded', '=', False)]"/>
+                <filter string="Can Trigger" name="can_trigger" domain="[('can_trigger', '=', True)]"/>
+                
+                <separator/>
+                
+                <filter string="Create Work Order" name="create_workorder" domain="[('action_type', '=', 'create_workorder')]"/>
+                <filter string="Send Alert" name="send_alert" domain="[('action_type', '=', 'send_alert')]"/>
+                <filter string="Update Status" name="update_status" domain="[('action_type', '=', 'update_status')]"/>
+                <filter string="Schedule Maintenance" name="schedule_maintenance" domain="[('action_type', '=', 'schedule_maintenance')]"/>
+                <filter string="Escalate" name="escalate" domain="[('action_type', '=', 'escalate')]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Asset" name="group_asset" context="{'group_by': 'asset_id'}"/>
+                    <filter string="Threshold Type" name="group_type" context="{'group_by': 'threshold_type'}"/>
+                    <filter string="Action Type" name="group_action" context="{'group_by': 'action_type'}"/>
+                    <filter string="Status" name="group_status" context="{'group_by': 'is_exceeded'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Asset Threshold Action -->
+    <record id="action_asset_threshold" model="ir.actions.act_window">
+        <field name="name">Asset Thresholds</field>
+        <field name="res_model">facilities.asset.threshold</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first asset threshold!
+            </p>
+            <p>
+                Set up condition-based triggers to automatically create work orders, send alerts, or update asset status.
+            </p>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Data Tree View -->
+    <record id="asset_sensor_data_tree_view" model="ir.ui.view">
+        <field name="name">facilities.asset.sensor.data.tree</field>
+        <field name="model">facilities.asset.sensor.data</field>
+        <field name="arch" type="xml">
+            <tree string="Sensor Data" decoration-success="status == 'normal'" decoration-warning="status == 'warning'" decoration-danger="status == 'critical'">
+                <field name="sensor_id"/>
+                <field name="asset_id"/>
+                <field name="reading_time"/>
+                <field name="value"/>
+                <field name="unit"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Data Graph View -->
+    <record id="asset_sensor_data_graph_view" model="ir.ui.view">
+        <field name="name">facilities.asset.sensor.data.graph</field>
+        <field name="model">facilities.asset.sensor.data</field>
+        <field name="arch" type="xml">
+            <graph string="Sensor Data Analysis" type="line">
+                <field name="reading_time" type="row" interval="hour"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Asset Sensor Data Action -->
+    <record id="action_asset_sensor_data" model="ir.actions.act_window">
+        <field name="name">Sensor Data</field>
+        <field name="res_model">facilities.asset.sensor.data</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No sensor data available!
+            </p>
+            <p>
+                Historical sensor data will appear here once sensors start recording readings.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_asset_sensor"
+              name="Asset Sensors"
+              parent="menu_asset_monitoring"
+              action="action_asset_sensor"
+              sequence="50"/>
+
+    <menuitem id="menu_asset_threshold"
+              name="Asset Thresholds"
+              parent="menu_asset_monitoring"
+              action="action_asset_threshold"
+              sequence="51"/>
+
+    <menuitem id="menu_asset_sensor_data"
+              name="Sensor Data"
+              parent="menu_asset_monitoring"
+              action="action_asset_sensor_data"
+              sequence="52"/>
+</odoo>

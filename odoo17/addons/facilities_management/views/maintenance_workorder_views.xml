@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_workorder_form" model="ir.ui.view">
+        <field name="name">maintenance.workorder.form</field>
+        <field name="model">maintenance.workorder</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="approval_state" widget="statusbar"
+                        statusbar_visible="draft,submitted,supervisor,manager,approved,in_progress,done,refused,escalated,cancelled"
+                        statusbar_colors='{"refused":"red","escalated":"orange","done":"green","cancelled":"red"}'/>
+                    <field name="status" invisible="1"/>
+                    <field name="all_tasks_completed" invisible="1"/>
+                    <button name="action_submit_for_approval" type="object" string="Submit for Approval" class="oe_highlight"
+                        invisible="approval_state != 'draft'"/>
+                    <button name="action_supervisor_approve" type="object" string="Supervisor Approve" class="oe_highlight"
+                        invisible="approval_state != 'submitted'"/>
+                    <button name="action_manager_approve" type="object" string="Manager Approve" class="oe_highlight"
+                        invisible="approval_state != 'supervisor'"/>
+                    <button name="action_fully_approve" type="object" string="Fully Approve" class="oe_highlight"
+                        invisible="approval_state != 'manager'"/>
+                    <button name="action_refuse" type="object" string="Refuse" class="btn-danger"
+                        invisible="approval_state in ('refused','done','cancelled') or status == 'done'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                        invisible="status in ('done', 'cancelled')"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to Draft"
+                        invisible="status == 'draft'"
+                        confirm="Are you sure you want to reset this work order to draft state? This action cannot be undone easily."/>
+                    <button name="action_escalate" type="object" string="Escalate"
+                        invisible="not (approval_state in ('submitted','supervisor') and escalation_deadline and escalation_deadline &lt;= context_today())"/>
+                    <button name="action_start_progress" type="object" string="Start Workorder" class="oe_highlight"
+                        invisible="status != 'draft' or approval_state != 'approved'"/>
+                    <button name="action_complete" type="object" string="Mark as Completed" class="oe_highlight"
+                        invisible="status != 'in_progress'"
+                        confirm="Are you sure you want to mark this Work Order as completed? All tasks will be set as completed."/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_view_picking" type="object" icon="fa-truck"
+                            invisible="picking_count == 0">
+                            <field name="picking_count" widget="statinfo" string="Parts Transfers"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Work Order Reference"/></h1>
+                    </div>
+                    <group>
+                        <group string="Work Order Details">
+                            <field name="asset_id" options="{'no_create': True}"/>
+                            <field name="facility_id" readonly="1"/>
+                            <field name="room_id" readonly="1"/>
+                            <field name="building_id" readonly="1"/>
+                            <field name="floor_id" readonly="1"/>
+                            <field name="work_order_type"/>
+                            <field name="priority"/>
+                            <field name="schedule_id"
+                                domain="[('active','=',True), ('asset_id','=',asset_id)]"
+                                context="{'default_asset_id': asset_id}"/>
+                            <field name="job_plan_id"
+                                invisible="workorder_task_ids != False"
+                                readonly="status != 'draft'"
+                                help="Select a Job Plan to automatically populate tasks for this work order."/>
+                            <field name="service_type"/>
+                            <field name="maintenance_team_id"/>
+                        </group>
+                        <group string="Personnel &amp; Scheduled Dates">
+                            <field name="technician_id"/>
+                            <field name="supervisor_id" readonly="1"/>
+                            <field name="manager_id" readonly="1"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <group string="Approval Details" colspan="2">
+                        <field name="submitted_by_id" readonly="1"/>
+                        <field name="approved_by_id" readonly="1"/>
+                        <field name="approval_request_date" readonly="1"/>
+                        <field name="escalation_deadline" readonly="1"/>
+                        <field name="escalation_to_id" readonly="1"/>
+                        <field name="escalation_count" readonly="1"/>
+                    </group>
+                    <group string="Actual Work Dates">
+                        <field name="actual_start_date"/>
+                        <field name="actual_end_date"/>
+                    </group>
+                    <group string="SLA Information" colspan="2">
+                        <field name="sla_id"/>
+                        <field name="sla_response_deadline" readonly="1"/>
+                        <field name="sla_resolution_deadline" readonly="1"/>
+                        <field name="sla_response_status" widget="badge"/>
+                        <field name="sla_resolution_status" widget="badge"/>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Sections &amp; Tasks">
+                            <field name="section_ids" create="false" delete="false">
+                                <tree>
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="name" readonly="1"/>
+                                        <field name="sequence" readonly="1"/>
+                                    </group>
+                                    <field name="task_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" readonly="1"/>
+                                            <field name="name" readonly="1"/>
+                                            <field name="description" readonly="1"/>
+                                            <field name="is_checklist_item" readonly="1"/>
+                                            <field name="is_done" widget="boolean_toggle"/>
+                                            <field name="before_image" widget="image"/>
+                                            <field name="after_image" widget="image"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Work Done">
+                            <field name="work_done"/>
+                        </page>
+                        <page string="Technician Assignments">
+                            <field name="assignment_ids">
+                                <tree editable="bottom">
+                                    <field name="technician_id"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Parts Used">
+                            <field name="parts_used_ids">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="product_qty_in_hand"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Permits">
+                            <field name="permit_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="permit_type"/>
+                                    <field name="status"/>
+                                    <field name="issued_date"/>
+                                    <field name="expiry_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                <field name="workorder_task_ids" invisible="1"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_maintenance_workorder_tree" model="ir.ui.view">
+        <field name="name">maintenance.workorder.tree</field>
+        <field name="model">maintenance.workorder</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="status=='done'"
+                  decoration-danger="status=='cancelled'"
+                  decoration-info="status=='in_progress'">
+                <field name="name"/>
+                <field name="status"/>
+                <field name="approval_state"/>
+                <field name="asset_id"/>
+                <field name="facility_id"/>
+                <field name="room_id"/>
+                <field name="building_id"/>
+                <field name="floor_id"/>
+                <field name="priority"/>
+                <field name="service_type"/>
+                <field name="maintenance_team_id"/>
+                <field name="technician_id"/>
+                <field name="supervisor_id"/>
+                <field name="manager_id"/>
+                <field name="sla_id"/>
+                <field name="sla_response_status" widget="badge"/>
+                <field name="sla_resolution_status" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
