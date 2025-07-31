@@ -563,6 +563,16 @@ class MaintenanceWorkOrder(models.Model):
         })
         self.message_post(body=_("Work order completed by %s") % self.env.user.name)
 
+    def action_cancel(self):
+        self.ensure_one()
+        if self.state in ('done', 'cancelled'):
+            raise UserError(_("Cannot cancel a work order that is already done or cancelled."))
+        self.write({
+            'approval_state': 'cancelled',
+            'state': 'cancelled'
+        })
+        self.message_post(body=_("Work order cancelled by %s") % self.env.user.name)
+
     @api.depends('section_ids.task_ids.is_done', 'workorder_task_ids.is_done')
     def _compute_all_tasks_completed(self):
         for workorder in self:
