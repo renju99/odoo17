@@ -303,24 +303,7 @@
         </field>
     </record>
 
-    <record id="action_asset" model="ir.actions.act_window">
-        <field name="name">Assets</field>
-        <field name="res_model">facilities.asset</field>
-        <field name="view_mode">kanban,tree,form,calendar</field>
-        <field name="context">{
-            'search_default_active': 1
-            }
-        </field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first facility asset!
-            </p>
-            <p>
-                Manage your facility assets including equipment, furniture, and infrastructure.
-                Use calendar view to track important dates.
-            </p>
-        </field>
-    </record>
+
 
     <record id="action_assets_overview" model="ir.actions.act_window">
         <field name="name">Assets Overview</field>
@@ -331,18 +314,6 @@
             'search_default_filter_active': 1
             }
         </field>
-    </record>
-
-    <record id="action_warranty_monitoring" model="ir.actions.act_window">
-        <field name="name">Warranty Monitoring</field>
-        <field name="res_model">facilities.asset</field>
-        <field name="view_mode">calendar,tree,kanban</field>
-        <field name="view_id" ref="view_facilities_asset_calendar_warranty"/>
-        <field name="context">{
-            'search_default_has_warranty': 1
-            }
-        </field>
-        <field name="domain">[('warranty_expiration_date', '!=', False)]</field>
     </record>
 
     <!-- ROOT MENU -->
