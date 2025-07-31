@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Asset Tree View -->
     <record id="view_facilities_asset_tree" model="ir.ui.view">
         <field name="name">facilities.asset.tree</field>
@@ -345,5 +346,5 @@
         </field>
     </record>
 
-
+    </data>
 </odoo>

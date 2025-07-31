@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Enhanced Search View -->
     <record id="view_space_booking_search" model="ir.ui.view">
         <field name="name">facilities.space.booking.search</field>
@@ -751,4 +752,5 @@
         <field name="auto_delete" eval="True"/>
     </record>
 
+    </data>
 </odoo>

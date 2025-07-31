@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <!-- Asset Sensor Tree View -->
     <record id="asset_sensor_tree_view" model="ir.ui.view">
         <field name="name">facilities.asset.sensor.tree</field>
@@ -415,4 +416,5 @@
             </p>
         </field>
     </record>
+    </data>
 </odoo>

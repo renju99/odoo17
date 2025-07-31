@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <record id="ir_cron_maintenance_reminder" model="ir.cron">
         <field name="name">Maintenance Schedule Reminder</field>
         <field name="model_id" ref="facilities_management.model_asset_maintenance_schedule"/>
@@ -28,4 +29,5 @@
         </field>
     </record>
 
+    </data>
 </odoo>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Permit Tree View -->
     <record id="view_workorder_permit_tree" model="ir.ui.view">
         <field name="name">maintenance.workorder.permit.tree</field>
@@ -85,4 +86,5 @@
             </form>
         </field>
     </record>
+    </data>
 </odoo>

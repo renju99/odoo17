@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <record id="view_facilities_building_tree" model="ir.ui.view">
         <field name="name">facilities.building.tree</field>
         <field name="model">facilities.building</field>
@@ -100,4 +101,5 @@
         </field>
     </record>
 
+    </data>
 </odoo>

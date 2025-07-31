@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Enhanced Asset Action with better view modes -->
     <record id="action_asset" model="ir.actions.act_window">
         <field name="name">Assets</field>
@@ -647,4 +648,5 @@
               action="action_offline_scanner"
               sequence="101"/>
 
+    </data>
 </odoo>

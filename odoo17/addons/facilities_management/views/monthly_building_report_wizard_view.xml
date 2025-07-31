@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <record id="view_monthly_building_report_wizard_form" model="ir.ui.view">
         <field name="name">monthly.building.report.wizard.form</field>
         <field name="model">monthly.building.report.wizard</field>
@@ -17,4 +18,5 @@
             </form>
         </field>
     </record>
+    </data>
 </odoo>

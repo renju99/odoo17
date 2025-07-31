@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <!-- Asset Scan Wizard Form View -->
     <record id="asset_scan_wizard_form_view" model="ir.ui.view">
         <field name="name">facilities.asset.scan.wizard.form</field>
@@ -101,4 +102,5 @@
     </record>
 
 
+    </data>
 </odoo>

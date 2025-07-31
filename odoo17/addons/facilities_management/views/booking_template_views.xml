@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Booking Template Tree View -->
     <record id="view_booking_template_tree" model="ir.ui.view">
         <field name="name">facilities.booking.template.tree</field>
@@ -135,4 +136,5 @@
         </field>
     </record>
 
+    </data>
 </odoo>

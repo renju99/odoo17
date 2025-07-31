@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <!-- Asset Search View for Calendar -->
     <record id="view_facilities_asset_search_calendar" model="ir.ui.view">
         <field name="name">facilities.asset.search.calendar</field>
@@ -163,4 +164,5 @@
             </p>
         </field>
     </record>
+    </data>
 </odoo>
