@@ -216,7 +216,7 @@
         <!-- Asset Disposal Menu -->
         <menuitem id="menu_asset_disposal"
                   name="Asset Disposals"
-                  parent="facilities_management.menu_asset_operations"
+                  parent="menu_asset_operations"
                   action="action_asset_disposal"
                   sequence="50"/>
 
