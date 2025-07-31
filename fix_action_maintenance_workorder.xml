@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Create the missing action_maintenance_workorder -->
+        <record id="action_maintenance_workorder" model="ir.actions.act_window">
+            <field name="name">Maintenance Work Orders</field>
+            <field name="res_model">maintenance.workorder</field>
+            <field name="view_mode">tree,form,calendar,kanban</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first maintenance work order!
+                </p>
+                <p>
+                    Track and manage maintenance work orders for your facilities and assets.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
