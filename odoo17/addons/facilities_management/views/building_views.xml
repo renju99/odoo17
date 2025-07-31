@@ -100,15 +100,4 @@
         </field>
     </record>
 
-    <record id="action_facilities_building" model="ir.actions.act_window">
-        <field name="name">Buildings</field>
-        <field name="res_model">facilities.building</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new Building
-            </p>
-        </field>
-    </record>
-
 </odoo>
