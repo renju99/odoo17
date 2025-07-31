@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <record id="view_workorder_technician_calendar" model="ir.ui.view">
         <field name="name">maintenance.workorder.technician.calendar</field>
         <field name="model">maintenance.workorder</field>
@@ -94,4 +95,5 @@
               parent="menu_maintenance_operations"
               action="action_workorder_team_calendar"
               sequence="45"/>
+    </data>
 </odoo>

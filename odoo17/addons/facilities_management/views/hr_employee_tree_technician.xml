@@ -1,4 +1,5 @@
 <odoo>
+    <data>
     <record id="view_hr_employee_tree_technician" model="ir.ui.view">
         <field name="name">hr.employee.tree.technician</field>
         <field name="model">hr.employee</field>
@@ -28,4 +29,5 @@
               parent="menu_asset_config"
               action="action_hr_employee_technician_list"
               sequence="99"/>
+    </data>
 </odoo>

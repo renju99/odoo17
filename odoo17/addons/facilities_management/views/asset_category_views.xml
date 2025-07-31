@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Asset Category Tree View with Hierarchy -->
     <record id="view_asset_category_tree" model="ir.ui.view">
         <field name="name">facilities.asset.category.tree</field>
@@ -180,4 +181,5 @@
             </search>
         </field>
     </record>
+    </data>
 </odoo>

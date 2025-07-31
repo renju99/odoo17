@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
     <!-- Simplified maintenance calendar view -->
     <record id="view_maintenance_schedule_calendar" model="ir.ui.view">
         <field name="name">asset.maintenance.schedule.calendar</field>
@@ -76,4 +77,5 @@
             </p>
         </field>
     </record>
+    </data>
 </odoo>

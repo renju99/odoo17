@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Maintenance Team List View -->
     <record id="view_maintenance_team_tree" model="ir.ui.view">
         <field name="name">maintenance.team.tree</field>
@@ -42,4 +43,5 @@
             </p>
         </field>
     </record>
+    </data>
 </odoo>

@@ -1,4 +1,5 @@
 <odoo>
+    <data>
     <!-- Minimal Mobile List View for Technicians -->
     <record id="view_workorder_mobile_list" model="ir.ui.view">
         <field name="name">maintenance.workorder.mobile.list</field>
@@ -107,4 +108,5 @@
               action="action_maintenance_workorder_mobile_list"
               sequence="20"
               groups="base.group_user"/>
+    </data>
 </odoo>

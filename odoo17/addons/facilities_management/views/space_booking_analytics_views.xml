@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Enhanced Tree View for Analytics -->
     <record id="view_space_booking_tree_analytics" model="ir.ui.view">
         <field name="name">facilities.space.booking.tree.analytics</field>
@@ -356,4 +357,5 @@
         </field>
     </record>
 
+    </data>
 </odoo>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <record id="view_facilities_room_tree" model="ir.ui.view">
         <field name="name">facilities.room.tree</field>
         <field name="model">facilities.room</field>
@@ -81,4 +82,5 @@
         </field>
     </record>
 
+    </data>
 </odoo>

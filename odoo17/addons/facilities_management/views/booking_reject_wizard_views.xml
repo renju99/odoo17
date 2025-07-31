@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <data>
     <!-- Booking Reject Wizard Form View -->
     <record id="view_booking_reject_wizard_form" model="ir.ui.view">
         <field name="name">facilities.booking.reject.wizard.form</field>
@@ -26,4 +27,5 @@
         </field>
     </record>
 
+    </data>
 </odoo>
