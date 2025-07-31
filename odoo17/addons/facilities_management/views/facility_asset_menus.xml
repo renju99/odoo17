@@ -430,6 +430,24 @@
               action="action_predictive_maintenance"
               sequence="30"/>
 
+    <menuitem id="menu_asset_sensor"
+              name="Asset Sensors"
+              parent="menu_asset_monitoring"
+              action="action_asset_sensor"
+              sequence="40"/>
+
+    <menuitem id="menu_asset_threshold"
+              name="Asset Thresholds"
+              parent="menu_asset_monitoring"
+              action="action_asset_threshold"
+              sequence="41"/>
+
+    <menuitem id="menu_asset_sensor_data"
+              name="Sensor Data"
+              parent="menu_asset_monitoring"
+              action="action_asset_sensor_data"
+              sequence="42"/>
+
     <!-- MAINTENANCE SECTION -->
     <menuitem id="menu_maintenance"
               name="Maintenance"

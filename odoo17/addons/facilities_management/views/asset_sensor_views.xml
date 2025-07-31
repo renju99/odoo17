@@ -415,23 +415,4 @@
             </p>
         </field>
     </record>
-
-    <!-- Menu Items -->
-    <menuitem id="menu_asset_sensor"
-              name="Asset Sensors"
-              parent="menu_asset_monitoring"
-              action="action_asset_sensor"
-              sequence="50"/>
-
-    <menuitem id="menu_asset_threshold"
-              name="Asset Thresholds"
-              parent="menu_asset_monitoring"
-              action="action_asset_threshold"
-              sequence="51"/>
-
-    <menuitem id="menu_asset_sensor_data"
-              name="Sensor Data"
-              parent="menu_asset_monitoring"
-              action="action_asset_sensor_data"
-              sequence="52"/>
 </odoo>
