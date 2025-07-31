@@ -10,6 +10,7 @@ class FacilitiesSLA(models.Model):
     _name = 'facilities.sla'
     _description = 'Service Level Agreement'
     _order = 'priority desc, name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(string='SLA Name', required=True)
     description = fields.Text(string='Description')
@@ -225,6 +226,7 @@ class FacilitiesSLA(models.Model):
 class SLADashboard(models.Model):
     _name = 'facilities.sla.dashboard'
     _description = 'SLA Performance Dashboard'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     sla_id = fields.Many2one('facilities.sla', string='SLA', required=True)
     date_from = fields.Date(string='From Date', default=fields.Date.today)
@@ -338,6 +340,7 @@ class SLADashboard(models.Model):
 class MaintenanceKPIDashboard(models.Model):
     _name = 'maintenance.kpi.dashboard'
     _description = 'Maintenance KPI Dashboard'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     workorder_id = fields.Many2one('maintenance.workorder', string='Work Order')
     team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
