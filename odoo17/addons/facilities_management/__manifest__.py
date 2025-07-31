@@ -81,10 +81,7 @@ Features:
         'views/monthly_building_report_wizard_action.xml',
         'views/monthly_building_report_wizard_view.xml',
 
-        # Views - Menus (must be loaded after actions)
-        'views/facility_asset_menus.xml',
-
-        # Views - Maintenance
+        # Views - Maintenance (must be loaded before menus)
         'views/maintenance_team_views.xml',
         'views/maintenance_workorder_views.xml',
         'views/maintenance_workorder_part_line_views.xml',
@@ -94,6 +91,9 @@ Features:
         'views/maintenance_job_plan_views.xml',
         'views/maintenance_report_views.xml',
         'views/maintenance_workorder_calendar_views.xml',
+
+        # Views - Menus (must be loaded after actions)
+        'views/facility_asset_menus.xml',
 
         # Views - Other
         'views/sla_views.xml',
