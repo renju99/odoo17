@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 import logging
+from datetime import timedelta
 
 _logger = logging.getLogger(__name__)
 
@@ -204,6 +205,45 @@ class AssetSensor(models.Model):
                 _logger.error(f"Error updating sensor {sensor.name}: {str(e)}")
                 sensor.status = 'error'
 
+    @api.model
+    def _check_sensor_health(self):
+        """Cron job method to check sensor health and status"""
+        now = fields.Datetime.now()
+        sensors = self.search([('active', '=', True)])
+        
+        health_check_count = 0
+        for sensor in sensors:
+            try:
+                # Check if sensor is responding (last reading within expected timeframe)
+                if sensor.last_reading_time:
+                    time_since_last_reading = (now - sensor.last_reading_time).total_seconds() / 3600
+                    
+                    # Determine expected reading frequency in hours
+                    frequency_hours = {
+                        'realtime': 0.1,  # 6 minutes
+                        'minute': 1/60,   # 1 minute
+                        'hour': 1,        # 1 hour
+                        'day': 24         # 24 hours
+                    }.get(sensor.reading_frequency, 1)
+                    
+                    # If sensor hasn't reported in 3x the expected frequency, mark as offline
+                    if time_since_last_reading > (frequency_hours * 3):
+                        sensor.status = 'offline'
+                        _logger.warning(f"Sensor {sensor.name} marked as offline - no readings for {time_since_last_reading:.1f} hours")
+                    else:
+                        # Update status based on current value
+                        sensor._compute_status()
+                        
+                health_check_count += 1
+                
+            except Exception as e:
+                _logger.error(f"Error checking health for sensor {sensor.name}: {str(e)}")
+                sensor.status = 'error'
+                continue
+        
+        _logger.info(f"Health check completed for {health_check_count} sensors")
+        return health_check_count
+
 
 class AssetSensorData(models.Model):
     _name = 'facilities.asset.sensor.data'
@@ -232,3 +272,38 @@ class AssetSensorData(models.Model):
                 record.status = 'warning'
             else:
                 record.status = 'normal'
+
+    @api.model
+    def _clean_old_sensor_data(self):
+        """Cron job method to clean old sensor data based on retention policy"""
+        today = fields.Date.today()
+        
+        # Get all sensors with their retention policies
+        sensors = self.env['facilities.asset.sensor'].search([('active', '=', True)])
+        
+        cleaned_count = 0
+        for sensor in sensors:
+            try:
+                if sensor.data_retention_days > 0:
+                    # Calculate cutoff date
+                    cutoff_date = today - timedelta(days=sensor.data_retention_days)
+                    
+                    # Find old records for this sensor
+                    old_records = self.search([
+                        ('sensor_id', '=', sensor.id),
+                        ('reading_time', '<', cutoff_date)
+                    ])
+                    
+                    if old_records:
+                        deleted_count = len(old_records)
+                        old_records.unlink()
+                        cleaned_count += deleted_count
+                        
+                        _logger.info(f"Cleaned {deleted_count} old records for sensor {sensor.name}")
+                        
+            except Exception as e:
+                _logger.error(f"Error cleaning old data for sensor {sensor.name}: {str(e)}")
+                continue
+        
+        _logger.info(f"Data cleanup completed. Removed {cleaned_count} old sensor records")
+        return cleaned_count

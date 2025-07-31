@@ -3,11 +3,14 @@ from odoo.exceptions import ValidationError
 import base64
 import io
 from datetime import date, datetime, timedelta
+import logging
 
 try:
     import qrcode
 except ImportError:
     qrcode = None
+
+_logger = logging.getLogger(__name__)
 
 class FacilityAsset(models.Model):
     _name = 'facilities.asset'
@@ -663,3 +666,116 @@ class FacilityAsset(models.Model):
             total_operating = asset.annual_operating_cost * years_owned
             
             asset.total_cost_of_ownership = (asset.purchase_value or 0) + total_maintenance + total_operating
+
+    @api.model
+    def _update_health_scores(self):
+        """Cron job method to update asset health scores"""
+        assets = self.search([('active', '=', True)])
+        
+        updated_count = 0
+        for asset in assets:
+            try:
+                # Trigger recomputation of health score
+                asset._compute_health_score()
+                asset._compute_health_trend()
+                updated_count += 1
+                
+            except Exception as e:
+                _logger.error(f"Error updating health score for asset {asset.name}: {str(e)}")
+                continue
+        
+        _logger.info(f"Updated health scores for {updated_count} assets")
+        return updated_count
+
+    @api.model
+    def _run_predictive_analysis(self):
+        """Cron job method to run predictive maintenance analysis"""
+        assets = self.search([
+            ('active', '=', True),
+            ('predictive_maintenance_enabled', '=', True)
+        ])
+        
+        analyzed_count = 0
+        for asset in assets:
+            try:
+                # Simulate predictive analysis (in real implementation, this would call ML models)
+                import random
+                
+                # Generate a random prediction confidence
+                confidence = random.uniform(60, 95)
+                asset.prediction_confidence = confidence
+                
+                # Simulate next failure prediction (within next 30 days)
+                from datetime import timedelta
+                days_to_failure = random.randint(1, 30)
+                next_failure = fields.Datetime.now() + timedelta(days=days_to_failure)
+                asset.next_failure_prediction = next_failure
+                
+                # If confidence is high and failure is predicted soon, create preventive work order
+                if confidence > 80 and days_to_failure <= 7:
+                    workorder_vals = {
+                        'name': f"Predictive Maintenance - {asset.name}",
+                        'asset_id': asset.id,
+                        'work_order_type': 'predictive',
+                        'priority': '3',  # High priority
+                        'description': f"Predictive maintenance triggered for {asset.name}. "
+                                     f"Failure predicted in {days_to_failure} days with {confidence:.1f}% confidence.",
+                        'status': 'draft'
+                    }
+                    self.env['maintenance.workorder'].create(workorder_vals)
+                
+                analyzed_count += 1
+                
+            except Exception as e:
+                _logger.error(f"Error running predictive analysis for asset {asset.name}: {str(e)}")
+                continue
+        
+        _logger.info(f"Predictive analysis completed for {analyzed_count} assets")
+        return analyzed_count
+
+    @api.model
+    def _check_disposal_candidates(self):
+        """Cron job method to check for assets that should be disposed"""
+        today = fields.Date.today()
+        
+        # Find assets that meet disposal criteria
+        disposal_candidates = self.search([
+            ('active', '=', True),
+            ('state', '!=', 'disposed'),
+            '|',
+            ('current_value', '<=', 0),
+            ('health_score', '<', 20),
+            ('warranty_status', '=', 'expired'),
+            ('condition', '=', 'poor')
+        ])
+        
+        disposed_count = 0
+        for asset in disposal_candidates:
+            try:
+                # Check if asset meets multiple disposal criteria
+                disposal_score = 0
+                
+                if asset.current_value <= 0:
+                    disposal_score += 30
+                if asset.health_score < 20:
+                    disposal_score += 25
+                if asset.warranty_status == 'expired':
+                    disposal_score += 20
+                if asset.condition == 'poor':
+                    disposal_score += 25
+                
+                # If disposal score is high enough, mark for disposal
+                if disposal_score >= 50:
+                    asset.disposal_workflow_state = 'pending'
+                    asset.message_post(
+                        body=_("Asset marked for disposal due to poor condition, "
+                              "expired warranty, or zero value. Disposal score: %s") % disposal_score
+                    )
+                    disposed_count += 1
+                
+            except Exception as e:
+                _logger.error(f"Error checking disposal for asset {asset.name}: {str(e)}")
+                continue
+        
+        _logger.info(f"Disposal check completed. {disposed_count} assets marked for disposal")
+        return disposed_count
