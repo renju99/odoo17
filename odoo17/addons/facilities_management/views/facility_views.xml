@@ -338,10 +338,4 @@
         </field>
     </record>
 
-    <!-- Facility Menu -->
-    <menuitem id="menu_facility"
-              name="Facilities"
-              parent="menu_facility_records"
-              action="action_facility"
-              sequence="10"/>
 </odoo>
