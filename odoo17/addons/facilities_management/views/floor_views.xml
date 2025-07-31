@@ -23,7 +23,7 @@
             <form string="Floor">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="%(action_facilities_room)d" type="action" icon="fa-cube">
+                        <button class="oe_stat_button" name="action_view_rooms" type="object" icon="fa-cube">
                             <field name="room_count" widget="statinfo" string="Rooms"/>
                         </button>
                     </div>
