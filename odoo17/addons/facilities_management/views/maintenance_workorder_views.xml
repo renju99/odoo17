@@ -195,5 +195,20 @@
             </tree>
         </field>
     </record>
+
+    <!-- Maintenance Work Order Action -->
+    <record id="action_maintenance_workorder" model="ir.actions.act_window">
+        <field name="name">Maintenance Work Orders</field>
+        <field name="res_model">maintenance.workorder</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first work order!
+            </p>
+            <p>
+                Manage maintenance work orders and track their progress.
+            </p>
+        </field>
+    </record>
     </data>
 </odoo>

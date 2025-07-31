@@ -77,7 +77,11 @@ Features:
         'views/asset_disposal_wizard_views.xml',
         'views/facilities_import_wizard_views.xml',
 
-        # Views - Menus (must be loaded first)
+        # Views - Wizards and Actions (must be loaded before menus)
+        'views/monthly_building_report_wizard_action.xml',
+        'views/monthly_building_report_wizard_view.xml',
+
+        # Views - Menus (must be loaded after actions)
         'views/facility_asset_menus.xml',
 
         # Views - Maintenance
@@ -101,8 +105,6 @@ Features:
         'views/room_equipment_views.xml',
         'views/booking_reject_wizard_views.xml',
         'views/facility_asset_search.xml',
-        'views/monthly_building_report_wizard_action.xml',
-        'views/monthly_building_report_wizard_view.xml',
         'views/technician_performance_dashboard_views.xml',
         'views/hr_employee_views.xml',
         'views/hr_employee_tree_technician.xml',
