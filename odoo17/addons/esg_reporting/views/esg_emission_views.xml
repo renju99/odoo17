@@ -7,33 +7,35 @@
             <field name="model">esg.emission</field>
             <field name="arch" type="xml">
                 <form string="ESG Emission">
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_validate" string="Validate" type="object" class="oe_highlight" states="confirmed"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="draft,confirmed"/>
+                        <button name="action_draft" string="Set to Draft" type="object" states="cancelled"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,validated"/>
+                    </header>
                     <sheet>
                         <group>
                             <group string="Basic Information">
                                 <field name="name"/>
-                                <field name="emission_type"/>
-                                <field name="emission_source"/>
-                                <field name="measurement_unit"/>
-                                <field name="emission_value"/>
-                                <field name="reporting_period"/>
+                                <field name="date"/>
+                                <field name="partner_id"/>
+                                <field name="emission_factor_id"/>
+                                <field name="quantity"/>
+                                <field name="unit"/>
+                                <field name="emission_amount"/>
                             </group>
                             <group string="Additional Details">
-                                <field name="location"/>
-                                <field name="facility"/>
-                                <field name="responsible_person"/>
-                                <field name="verification_status"/>
+                                <field name="amount"/>
+                                <field name="currency_id"/>
+                                <field name="journal_id"/>
+                                <field name="company_id"/>
                                 <field name="notes"/>
                             </group>
                         </group>
-                        <group string="Calculations">
-                            <field name="co2_equivalent"/>
-                            <field name="conversion_factor"/>
-                            <field name="uncertainty_level"/>
-                        </group>
-                        <group string="Documentation">
-                            <field name="supporting_documents"/>
-                            <field name="verification_date"/>
-                            <field name="next_review_date"/>
+                        <group string="Period Information">
+                            <field name="month"/>
+                            <field name="year"/>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -52,13 +54,14 @@
             <field name="arch" type="xml">
                 <tree string="ESG Emissions">
                     <field name="name"/>
-                    <field name="emission_type"/>
-                    <field name="emission_source"/>
-                    <field name="emission_value"/>
-                    <field name="measurement_unit"/>
-                    <field name="reporting_period"/>
-                    <field name="location"/>
-                    <field name="verification_status"/>
+                    <field name="date"/>
+                    <field name="partner_id"/>
+                    <field name="emission_factor_id"/>
+                    <field name="quantity"/>
+                    <field name="unit"/>
+                    <field name="emission_amount"/>
+                    <field name="amount"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -70,18 +73,20 @@
             <field name="arch" type="xml">
                 <search string="Search ESG Emissions">
                     <field name="name"/>
-                    <field name="emission_type"/>
-                    <field name="emission_source"/>
-                    <field name="location"/>
-                    <field name="responsible_person"/>
-                    <filter string="Verified" name="verified" domain="[('verification_status', '=', 'verified')]"/>
-                    <filter string="Pending Verification" name="pending" domain="[('verification_status', '=', 'pending')]"/>
-                    <filter string="High Emissions" name="high_emissions" domain="[('emission_value', '>', 1000)]"/>
+                    <field name="partner_id"/>
+                    <field name="emission_factor_id"/>
+                    <field name="date"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Validated" name="validated" domain="[('state', '=', 'validated')]"/>
+                    <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Emission Type" name="group_emission_type" context="{'group_by': 'emission_type'}"/>
-                        <filter string="Location" name="group_location" context="{'group_by': 'location'}"/>
-                        <filter string="Reporting Period" name="group_period" context="{'group_by': 'reporting_period'}"/>
-                        <filter string="Verification Status" name="group_verification" context="{'group_by': 'verification_status'}"/>
+                        <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Emission Factor" name="group_factor" context="{'group_by': 'emission_factor_id'}"/>
+                        <filter string="Unit" name="group_unit" context="{'group_by': 'unit'}"/>
+                        <filter string="State" name="group_state" context="{'group_by': 'state'}"/>
+                        <filter string="Month" name="group_month" context="{'group_by': 'month'}"/>
+                        <filter string="Year" name="group_year" context="{'group_by': 'year'}"/>
                     </group>
                 </search>
             </field>
@@ -106,7 +111,7 @@
         <!-- Menu Item -->
         <menuitem id="menu_esg_emission"
                   name="Emissions"
-                  parent="menu_esg_reporting"
+                  parent="menu_esg_environmental"
                   action="action_esg_emission"
                   sequence="10"/>
     </data>
