@@ -61,10 +61,8 @@ class FacilitiesSLA(models.Model):
     business_hours_only = fields.Boolean(string='Business Hours Only', default=False)
     business_hours_start = fields.Float(string='Business Hours Start', default=8.0)
     business_hours_end = fields.Float(string='Business Hours End', default=17.0)
-    business_days = fields.Selection([
-        ('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'),
-        ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday'), ('sunday', 'Sunday')
-    ], string='Business Days', default='monday,tuesday,wednesday,thursday,friday')
+    business_days = fields.Char(string='Business Days', default='monday,tuesday,wednesday,thursday,friday',
+                               help="Comma-separated list of business days (e.g., monday,tuesday,wednesday,thursday,friday)")
     
     # Performance Tracking
     total_workorders = fields.Integer(string='Total Work Orders', compute='_compute_performance_metrics')
