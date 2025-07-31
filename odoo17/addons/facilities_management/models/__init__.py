@@ -82,8 +82,7 @@ def pre_init_hook(cr):
     except Exception as e:
         _logger.warning(f"Failed to run pre_init_hook cleanup: {e}")
 
-def post_init_hook(cr, registry):
+def post_init_hook(env):
     """Ensure at least one SLA record exists for foreign key sanity."""
-    env = api.Environment(cr, SUPERUSER_ID, {})
     env['facilities.sla'].create_default_sla_records()
     _logger.info("Ensured default SLA records exist after install/upgrade.")
