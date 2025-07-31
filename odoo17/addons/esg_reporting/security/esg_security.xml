@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ESG User Group -->
+        <record id="group_esg_user" model="res.groups">
+            <field name="name">ESG User</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">Users can view and create ESG records.</field>
+        </record>
+
+        <!-- ESG Manager Group -->
+        <record id="group_esg_manager" model="res.groups">
+            <field name="name">ESG Manager</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">Managers can manage all ESG records and generate reports.</field>
+            <field name="implied_ids" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <!-- ESG Administrator Group -->
+        <record id="group_esg_administrator" model="res.groups">
+            <field name="name">ESG Administrator</field>
+            <field name="category_id" ref="base.module_category_human_resources"/>
+            <field name="comment">Administrators have full access to all ESG features.</field>
+            <field name="implied_ids" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <!-- ESG Security Rules -->
+        <record id="esg_emission_rule_user" model="ir.rule">
+            <field name="name">ESG Emissions: User Access</field>
+            <field name="model_id" ref="model_esg_emission"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_emission_rule_manager" model="ir.rule">
+            <field name="name">ESG Emissions: Manager Access</field>
+            <field name="model_id" ref="model_esg_emission"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_offset_rule_user" model="ir.rule">
+            <field name="name">ESG Offsets: User Access</field>
+            <field name="model_id" ref="model_esg_offset"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_offset_rule_manager" model="ir.rule">
+            <field name="name">ESG Offsets: Manager Access</field>
+            <field name="model_id" ref="model_esg_offset"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_employee_community_rule_user" model="ir.rule">
+            <field name="name">ESG Employee Community: User Access</field>
+            <field name="model_id" ref="model_esg_employee_community"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_employee_community_rule_manager" model="ir.rule">
+            <field name="name">ESG Employee Community: Manager Access</field>
+            <field name="model_id" ref="model_esg_employee_community"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_initiative_rule_user" model="ir.rule">
+            <field name="name">ESG Initiatives: User Access</field>
+            <field name="model_id" ref="model_esg_initiative"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_initiative_rule_manager" model="ir.rule">
+            <field name="name">ESG Initiatives: Manager Access</field>
+            <field name="model_id" ref="model_esg_initiative"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_analytics_rule_user" model="ir.rule">
+            <field name="name">ESG Analytics: User Access</field>
+            <field name="model_id" ref="model_esg_analytics"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_analytics_rule_manager" model="ir.rule">
+            <field name="name">ESG Analytics: Manager Access</field>
+            <field name="model_id" ref="model_esg_analytics"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_gender_parity_rule_user" model="ir.rule">
+            <field name="name">ESG Gender Parity: User Access</field>
+            <field name="model_id" ref="model_esg_gender_parity"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_gender_parity_rule_manager" model="ir.rule">
+            <field name="name">ESG Gender Parity: Manager Access</field>
+            <field name="model_id" ref="model_esg_gender_parity"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_pay_gap_rule_user" model="ir.rule">
+            <field name="name">ESG Pay Gap: User Access</field>
+            <field name="model_id" ref="model_esg_pay_gap"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_pay_gap_rule_manager" model="ir.rule">
+            <field name="name">ESG Pay Gap: Manager Access</field>
+            <field name="model_id" ref="model_esg_pay_gap"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_carbon_footprint_rule_user" model="ir.rule">
+            <field name="name">ESG Carbon Footprint: User Access</field>
+            <field name="model_id" ref="model_esg_carbon_footprint"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_carbon_footprint_rule_manager" model="ir.rule">
+            <field name="name">ESG Carbon Footprint: Manager Access</field>
+            <field name="model_id" ref="model_esg_carbon_footprint"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+        <record id="esg_emission_factor_rule_user" model="ir.rule">
+            <field name="name">ESG Emission Factors: User Access</field>
+            <field name="model_id" ref="model_esg_emission_factor"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_offset_type_rule_user" model="ir.rule">
+            <field name="name">ESG Offset Types: User Access</field>
+            <field name="model_id" ref="model_esg_offset_type"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_initiative_tag_rule_user" model="ir.rule">
+            <field name="name">ESG Initiative Tags: User Access</field>
+            <field name="model_id" ref="model_esg_initiative_tag"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_community_initiative_rule_user" model="ir.rule">
+            <field name="name">ESG Community Initiatives: User Access</field>
+            <field name="model_id" ref="model_esg_community_initiative"/>
+            <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
+        </record>
+
+        <record id="esg_community_initiative_rule_manager" model="ir.rule">
+            <field name="name">ESG Community Initiatives: Manager Access</field>
+            <field name="model_id" ref="model_esg_community_initiative"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

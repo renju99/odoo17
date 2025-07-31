@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- ESG Emissions Report -->
+        <record id="action_report_esg_emissions" model="ir.actions.report">
+            <field name="name">ESG Emissions Report</field>
+            <field name="model">esg.emission</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_esg_emissions</field>
+            <field name="report_file">esg_reporting.report_esg_emissions</field>
+            <field name="print_report_name">'ESG Emissions Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_esg_emission"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- ESG Offsets Report -->
+        <record id="action_report_esg_offsets" model="ir.actions.report">
+            <field name="name">ESG Offsets Report</field>
+            <field name="model">esg.offset</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_esg_offsets</field>
+            <field name="report_file">esg_reporting.report_esg_offsets</field>
+            <field name="print_report_name">'ESG Offsets Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_esg_offset"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- ESG Analytics Report -->
+        <record id="action_report_esg_analytics" model="ir.actions.report">
+            <field name="name">ESG Analytics Report</field>
+            <field name="model">esg.analytics</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_esg_analytics</field>
+            <field name="report_file">esg_reporting.report_esg_analytics</field>
+            <field name="print_report_name">'ESG Analytics Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_esg_analytics"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- ESG Gender Parity Report -->
+        <record id="action_report_esg_gender_parity" model="ir.actions.report">
+            <field name="name">ESG Gender Parity Report</field>
+            <field name="model">esg.gender.parity</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_esg_gender_parity</field>
+            <field name="report_file">esg_reporting.report_esg_gender_parity</field>
+            <field name="print_report_name">'ESG Gender Parity Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_esg_gender_parity"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- ESG Pay Gap Report -->
+        <record id="action_report_esg_pay_gap" model="ir.actions.report">
+            <field name="name">ESG Pay Gap Report</field>
+            <field name="model">esg.pay.gap</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_esg_pay_gap</field>
+            <field name="report_file">esg_reporting.report_esg_pay_gap</field>
+            <field name="print_report_name">'ESG Pay Gap Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_esg_pay_gap"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- ESG Initiatives Report -->
+        <record id="action_report_esg_initiatives" model="ir.actions.report">
+            <field name="name">ESG Initiatives Report</field>
+            <field name="model">esg.initiative</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_esg_initiatives</field>
+            <field name="report_file">esg_reporting.report_esg_initiatives</field>
+            <field name="print_report_name">'ESG Initiatives Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_esg_initiative"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Comprehensive ESG Report -->
+        <record id="action_report_esg_comprehensive" model="ir.actions.report">
+            <field name="name">Comprehensive ESG Report</field>
+            <field name="model">esg.analytics</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_esg_comprehensive</field>
+            <field name="report_file">esg_reporting.report_esg_comprehensive</field>
+            <field name="print_report_name">'Comprehensive ESG Report - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_esg_analytics"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>

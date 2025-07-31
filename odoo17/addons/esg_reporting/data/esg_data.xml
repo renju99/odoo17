@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ESG Emission Factors -->
+        <record id="emission_factor_electricity" model="esg.emission.factor">
+            <field name="name">Grid Electricity</field>
+            <field name="factor">0.0005</field>
+            <field name="unit">kwh</field>
+            <field name="category">electricity</field>
+            <field name="description">Grid electricity emission factor (t CO2/kWh)</field>
+        </record>
+
+        <record id="emission_factor_natural_gas" model="esg.emission.factor">
+            <field name="name">Natural Gas</field>
+            <field name="factor">0.002</field>
+            <field name="unit">m3</field>
+            <field name="category">heating</field>
+            <field name="description">Natural gas emission factor (t CO2/m³)</field>
+        </record>
+
+        <record id="emission_factor_diesel" model="esg.emission.factor">
+            <field name="name">Diesel Fuel</field>
+            <field name="factor">2.7</field>
+            <field name="unit">liter</field>
+            <field name="category">transportation</field>
+            <field name="description">Diesel fuel emission factor (t CO2/liter)</field>
+        </record>
+
+        <record id="emission_factor_gasoline" model="esg.emission.factor">
+            <field name="name">Gasoline</field>
+            <field name="factor">2.3</field>
+            <field name="unit">liter</field>
+            <field name="category">transportation</field>
+            <field name="description">Gasoline emission factor (t CO2/liter)</field>
+        </record>
+
+        <record id="emission_factor_waste" model="esg.emission.factor">
+            <field name="name">Waste Disposal</field>
+            <field name="factor">0.001</field>
+            <field name="unit">kg</field>
+            <field name="category">waste</field>
+            <field name="description">Waste disposal emission factor (t CO2/kg)</field>
+        </record>
+
+        <record id="emission_factor_water" model="esg.emission.factor">
+            <field name="name">Water Supply</field>
+            <field name="factor">0.0003</field>
+            <field name="unit">m3</field>
+            <field name="category">water</field>
+            <field name="description">Water supply emission factor (t CO2/m³)</field>
+        </record>
+
+        <!-- ESG Offset Types -->
+        <record id="offset_type_tree_planting" model="esg.offset.type">
+            <field name="name">Tree Planting</field>
+            <field name="factor">0.022</field>
+            <field name="unit">tree</field>
+            <field name="category">reforestation</field>
+            <field name="description">Tree planting offset factor (t CO2/tree/year)</field>
+        </record>
+
+        <record id="offset_type_renewable_energy" model="esg.offset.type">
+            <field name="name">Renewable Energy</field>
+            <field name="factor">0.0005</field>
+            <field name="unit">kwh</field>
+            <field name="category">renewable_energy</field>
+            <field name="description">Renewable energy offset factor (t CO2/kWh avoided)</field>
+        </record>
+
+        <record id="offset_type_energy_efficiency" model="esg.offset.type">
+            <field name="name">Energy Efficiency</field>
+            <field name="factor">0.0005</field>
+            <field name="unit">kwh</field>
+            <field name="category">energy_efficiency</field>
+            <field name="description">Energy efficiency offset factor (t CO2/kWh saved)</field>
+        </record>
+
+        <record id="offset_type_methane_capture" model="esg.offset.type">
+            <field name="name">Methane Capture</field>
+            <field name="factor">25</field>
+            <field name="unit">t_co2</field>
+            <field name="category">methane_capture</field>
+            <field name="description">Methane capture offset factor (t CO2 equivalent)</field>
+        </record>
+
+        <record id="offset_type_ocean_cleanup" model="esg.offset.type">
+            <field name="name">Ocean Cleanup</field>
+            <field name="factor">0.001</field>
+            <field name="unit">kg</field>
+            <field name="category">ocean_cleanup</field>
+            <field name="description">Ocean cleanup offset factor (t CO2/kg plastic removed)</field>
+        </record>
+
+        <!-- ESG Initiative Tags -->
+        <record id="initiative_tag_carbon_reduction" model="esg.initiative.tag">
+            <field name="name">Carbon Reduction</field>
+            <field name="color">1</field>
+            <field name="description">Initiatives focused on reducing carbon emissions</field>
+        </record>
+
+        <record id="initiative_tag_energy_efficiency" model="esg.initiative.tag">
+            <field name="name">Energy Efficiency</field>
+            <field name="color">2</field>
+            <field name="description">Initiatives focused on improving energy efficiency</field>
+        </record>
+
+        <record id="initiative_tag_renewable_energy" model="esg.initiative.tag">
+            <field name="name">Renewable Energy</field>
+            <field name="color">3</field>
+            <field name="description">Initiatives focused on renewable energy adoption</field>
+        </record>
+
+        <record id="initiative_tag_waste_reduction" model="esg.initiative.tag">
+            <field name="name">Waste Reduction</field>
+            <field name="color">4</field>
+            <field name="description">Initiatives focused on reducing waste</field>
+        </record>
+
+        <record id="initiative_tag_water_conservation" model="esg.initiative.tag">
+            <field name="name">Water Conservation</field>
+            <field name="color">5</field>
+            <field name="description">Initiatives focused on water conservation</field>
+        </record>
+
+        <record id="initiative_tag_biodiversity" model="esg.initiative.tag">
+            <field name="name">Biodiversity</field>
+            <field name="color">6</field>
+            <field name="description">Initiatives focused on biodiversity protection</field>
+        </record>
+
+        <record id="initiative_tag_community_development" model="esg.initiative.tag">
+            <field name="name">Community Development</field>
+            <field name="color">7</field>
+            <field name="description">Initiatives focused on community development</field>
+        </record>
+
+        <record id="initiative_tag_employee_wellbeing" model="esg.initiative.tag">
+            <field name="name">Employee Wellbeing</field>
+            <field name="color">8</field>
+            <field name="description">Initiatives focused on employee wellbeing</field>
+        </record>
+
+        <record id="initiative_tag_diversity_inclusion" model="esg.initiative.tag">
+            <field name="name">Diversity & Inclusion</field>
+            <field name="color">9</field>
+            <field name="description">Initiatives focused on diversity and inclusion</field>
+        </record>
+
+        <record id="initiative_tag_ethical_sourcing" model="esg.initiative.tag">
+            <field name="name">Ethical Sourcing</field>
+            <field name="color">10</field>
+            <field name="description">Initiatives focused on ethical sourcing</field>
+        </record>
+
+        <record id="initiative_tag_transparency" model="esg.initiative.tag">
+            <field name="name">Transparency</field>
+            <field name="color">11</field>
+            <field name="description">Initiatives focused on transparency</field>
+        </record>
+
+        <record id="initiative_tag_compliance" model="esg.initiative.tag">
+            <field name="name">Compliance</field>
+            <field name="color">12</field>
+            <field name="description">Initiatives focused on compliance</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="esg_dashboard" owl="1">
+        <div class="esg-dashboard">
+            <div class="container-fluid">
+                <!-- Loading State -->
+                <div t-if="state.loading" class="text-center p-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading ESG Dashboard...</p>
+                </div>
+
+                <!-- Error State -->
+                <div t-if="state.error" class="alert alert-danger" role="alert">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <span t-esc="state.error"/>
+                </div>
+
+                <!-- Dashboard Content -->
+                <div t-if="!state.loading and !state.error and state.dashboardData" class="row">
+                    <!-- ESG Analytics Overview -->
+                    <div class="col-lg-6 col-md-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-chart-line"></i>
+                                    ESG Analytics Overview
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="metric">
+                                            <div class="metric-value">
+                                                <span t-esc="state.dashboardData.analytics.total_emissions || 0"/>
+                                            </div>
+                                            <div class="metric-label">Total Emissions (t CO2)</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="metric">
+                                            <div class="metric-value">
+                                                <span t-esc="state.dashboardData.analytics.total_offsets || 0"/>
+                                            </div>
+                                            <div class="metric-label">Total Offsets (t CO2)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="metric">
+                                            <div class="metric-value">
+                                                <span t-esc="state.dashboardData.analytics.net_emissions || 0"/>
+                                            </div>
+                                            <div class="metric-label">Net Emissions (t CO2)</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="metric">
+                                            <div class="metric-value" t-attf-class="metric-value #{getESGScoreColor(state.dashboardData.analytics.overall_score || 0)}">
+                                                <span t-esc="state.dashboardData.analytics.overall_score || 0"/>%
+                                            </div>
+                                            <div class="metric-label">ESG Score</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gender Parity -->
+                    <div class="col-lg-6 col-md-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-users"></i>
+                                    Gender Parity
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="metric">
+                                            <div class="metric-value text-primary">
+                                                <span t-esc="state.dashboardData.genderParity.male_count || 0"/>
+                                            </div>
+                                            <div class="metric-label">Male</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="metric">
+                                            <div class="metric-value text-info">
+                                                <span t-esc="state.dashboardData.genderParity.female_count || 0"/>
+                                            </div>
+                                            <div class="metric-label">Female</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="metric">
+                                            <div class="metric-value text-secondary">
+                                                <span t-esc="state.dashboardData.genderParity.other_count || 0"/>
+                                            </div>
+                                            <div class="metric-label">Other</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="metric">
+                                            <div class="metric-value">
+                                                <span t-esc="state.dashboardData.genderParity.diversity_score || 0"/>%
+                                            </div>
+                                            <div class="metric-label">Diversity Score</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="metric">
+                                            <div class="metric-value">
+                                                <span t-esc="state.dashboardData.genderParity.leadership_ratio || 0"/>%
+                                            </div>
+                                            <div class="metric-label">Leadership Ratio</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pay Gap Analysis -->
+                    <div class="col-lg-6 col-md-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-balance-scale"></i>
+                                    Pay Gap Analysis
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <div class="metric">
+                                            <div class="metric-value" t-attf-class="metric-value #{getPayGapCategoryColor(state.dashboardData.payGap.pay_gap_category)}">
+                                                <span t-esc="state.dashboardData.payGap.mean_pay_gap || 0"/>%
+                                            </div>
+                                            <div class="metric-label">Mean Pay Gap</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="metric">
+                                            <div class="metric-value" t-attf-class="metric-value #{getPayGapCategoryColor(state.dashboardData.payGap.pay_gap_category)}">
+                                                <span t-esc="state.dashboardData.payGap.median_pay_gap || 0"/>%
+                                            </div>
+                                            <div class="metric-label">Median Pay Gap</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="metric">
+                                            <div class="metric-value" t-attf-class="metric-value #{getPayGapCategoryColor(state.dashboardData.payGap.pay_gap_category)}">
+                                                <span t-esc="state.dashboardData.payGap.leadership_pay_gap || 0"/>%
+                                            </div>
+                                            <div class="metric-label">Leadership Pay Gap</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Initiatives -->
+                    <div class="col-lg-6 col-md-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-lightbulb"></i>
+                                    Recent Initiatives
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div t-if="state.dashboardData.initiatives.length === 0" class="text-center text-muted">
+                                    <i class="fa fa-inbox fa-2x mb-2"></i>
+                                    <p>No recent initiatives</p>
+                                </div>
+                                <div t-else="" class="list-group list-group-flush">
+                                    <div t-foreach="state.dashboardData.initiatives" t-as="initiative" class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1" t-esc="initiative.name"/>
+                                            <small class="text-muted" t-esc="initiative.category"/>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="progress mb-1" style="width: 60px;">
+                                                <div class="progress-bar" t-attf-style="width: #{initiative.progress}%"></div>
+                                            </div>
+                                            <small t-esc="initiative.progress"/>%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

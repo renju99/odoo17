@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- ESG Dashboard Action -->
+        <record id="action_esg_dashboard" model="ir.actions.act_window">
+            <field name="name">ESG Dashboard</field>
+            <field name="res_model">esg.analytics</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_esg_dashboard_kanban"/>
+            <field name="context">{'search_default_completed': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Welcome to the ESG Dashboard!
+                </p>
+                <p>
+                    View comprehensive ESG metrics, carbon analytics, and sustainability performance indicators.
+                </p>
+            </field>
+        </record>
+
+        <!-- ESG Dashboard Kanban View -->
+        <record id="view_esg_dashboard_kanban" model="ir.ui.view">
+            <field name="name">esg.dashboard.kanban</field>
+            <field name="model">esg.analytics</field>
+            <field name="arch" type="xml">
+                <kanban string="ESG Dashboard" class="o_kanban_dashboard" default_group_by="analytics_type">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="analytics_type"/>
+                    <field name="total_emissions"/>
+                    <field name="total_offset"/>
+                    <field name="net_emissions"/>
+                    <field name="overall_score"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>Type:</strong> <field name="analytics_type"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong>Date:</strong> <field name="date"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <strong>Emissions:</strong> <field name="total_emissions"/> t CO2
+                                            </div>
+                                            <div class="col-4">
+                                                <strong>Offset:</strong> <field name="total_offset"/> t CO2
+                                            </div>
+                                            <div class="col-4">
+                                                <strong>Net:</strong> <field name="net_emissions"/> t CO2
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>ESG Score:</strong> <field name="overall_score"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'processing': 'info', 'completed': 'success', 'error': 'danger'}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- ESG Report Wizard Form View -->
+        <record id="view_esg_report_wizard_form" model="ir.ui.view">
+            <field name="name">esg.report.wizard.form</field>
+            <field name="model">esg.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate ESG Report">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Report Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="report_type"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="format"/>
+                            </group>
+                            <group>
+                                <field name="include_charts"/>
+                                <field name="include_summary"/>
+                                <field name="include_recommendations"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <group string="Data to Include">
+                            <group>
+                                <field name="include_emissions"/>
+                                <field name="include_offsets"/>
+                                <field name="include_community"/>
+                                <field name="include_initiatives"/>
+                            </group>
+                            <group>
+                                <field name="include_gender_parity"/>
+                                <field name="include_pay_gap"/>
+                                <field name="include_analytics"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_generate_report" string="Generate Report" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Report Wizard Action -->
+        <record id="action_esg_report_wizard" model="ir.actions.act_window">
+            <field name="name">Generate ESG Report</field>
+            <field name="res_model">esg.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Generate comprehensive ESG reports!
+                </p>
+                <p>
+                    Create detailed ESG reports with customizable data selection and output formats.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

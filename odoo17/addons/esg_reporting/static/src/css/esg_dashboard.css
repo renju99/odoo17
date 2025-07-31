@@ -1,0 +1,94 @@
+/* ESG Dashboard Styles */
+
+.esg-dashboard {
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.esg-dashboard .card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.esg-dashboard .card-header {
+    background-color: #28a745;
+    color: white;
+    border-radius: 8px 8px 0 0;
+    padding: 15px;
+}
+
+.esg-dashboard .card-body {
+    padding: 20px;
+}
+
+.esg-dashboard .metric {
+    text-align: center;
+    padding: 15px;
+}
+
+.esg-dashboard .metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.esg-dashboard .metric-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.esg-dashboard .progress {
+    height: 8px;
+    border-radius: 4px;
+}
+
+.esg-dashboard .chart-container {
+    height: 300px;
+    margin: 20px 0;
+}
+
+/* ESG Status Colors */
+.esg-status-draft {
+    color: #6c757d;
+}
+
+.esg-status-confirmed {
+    color: #ffc107;
+}
+
+.esg-status-validated {
+    color: #28a745;
+}
+
+.esg-status-cancelled {
+    color: #dc3545;
+}
+
+/* ESG Category Colors */
+.esg-category-environmental {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.esg-category-social {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+.esg-category-governance {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .esg-dashboard .metric-value {
+        font-size: 1.5rem;
+    }
+    
+    .esg-dashboard .card-body {
+        padding: 15px;
+    }
+}
