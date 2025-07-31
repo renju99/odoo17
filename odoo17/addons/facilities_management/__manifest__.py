@@ -57,13 +57,13 @@ Features:
 
         # Views - Core Facilities
         'views/facility_views.xml',
-        'views/facility_asset_menus.xml',
         'views/floor_views.xml',
         'views/room_views.xml',
         'views/building_views.xml',
 
         # Views - Assets
         'views/asset_calendar_views.xml',
+        'views/facility_asset_menus.xml',
         'views/facility_asset_views.xml',
         'views/asset_category_views.xml',
         'views/asset_dashboard_views.xml',
