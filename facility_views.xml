@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Facility Management Menu -->
+        <menuitem id="menu_facility_management"
+                  name="Facility Management"
+                  sequence="10"/>
+
+        <!-- Asset Operations Submenu - This is the missing menu that needs to be created -->
+        <menuitem id="menu_asset_operations"
+                  name="Asset Operations"
+                  parent="menu_facility_management"
+                  sequence="20"/>
+
+        <!-- Other facility management menus can be added here -->
+        <menuitem id="menu_facility_configuration"
+                  name="Configuration"
+                  parent="menu_facility_management"
+                  sequence="100"/>
+
+        <menuitem id="menu_facility_reports"
+                  name="Reports"
+                  parent="menu_facility_management"
+                  sequence="90"/>
+
+    </data>
+</odoo>
