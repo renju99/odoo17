@@ -26,7 +26,6 @@
         'stock',
         'project',
         'web',
-        'web_dashboard',
         'spreadsheet_dashboard',
     ],
     'data': [
