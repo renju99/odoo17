@@ -68,7 +68,7 @@
                                         <field name="business_hours_only"/>
                                         <field name="business_hours_start"/>
                                         <field name="business_hours_end"/>
-                                        <field name="business_days"/>
+                                        <field name="business_days" placeholder="monday,tuesday,wednesday,thursday,friday"/>
                                     </group>
                                 </group>
                             </page>
