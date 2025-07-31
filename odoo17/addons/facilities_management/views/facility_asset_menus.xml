@@ -20,65 +20,7 @@
         </field>
     </record>
 
-    <!-- Facilities Action -->
-    <record id="action_facility" model="ir.actions.act_window">
-        <field name="name">Facilities</field>
-        <field name="res_model">facilities.facility</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first facility!
-            </p>
-            <p>
-                Manage your facilities and their properties.
-            </p>
-        </field>
-    </record>
 
-    <!-- Asset Categories Action -->
-    <record id="action_asset_category" model="ir.actions.act_window">
-        <field name="name">Asset Categories</field>
-        <field name="res_model">facilities.asset.category</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first asset category!
-            </p>
-            <p>
-                Organize your assets by creating categories.
-            </p>
-        </field>
-    </record>
-
-    <!-- Maintenance Schedule Action -->
-    <record id="action_maintenance_schedule" model="ir.actions.act_window">
-        <field name="name">Maintenance Schedules</field>
-        <field name="res_model">asset.maintenance.schedule</field>
-        <field name="view_mode">calendar,tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first maintenance schedule!
-            </p>
-            <p>
-                Schedule maintenance activities for your assets.
-            </p>
-        </field>
-    </record>
-
-    <!-- Maintenance Work Orders Action -->
-    <record id="action_maintenance_workorder" model="ir.actions.act_window">
-        <field name="name">Maintenance Work Orders</field>
-        <field name="res_model">maintenance.workorder</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first work order!
-            </p>
-            <p>
-                Manage maintenance work orders and track their progress.
-            </p>
-        </field>
-    </record>
 
     <!-- Enhanced Dashboard Actions -->
     <record id="action_asset_overview" model="ir.actions.act_window">
@@ -470,7 +412,7 @@
     <menuitem id="menu_maintenance_schedule"
               name="Schedules"
               parent="menu_maintenance_operations"
-              action="action_maintenance_schedule"
+              action="action_asset_maintenance_schedule"
               sequence="20"/>
 
     <menuitem id="menu_maintenance_calendar_item"
