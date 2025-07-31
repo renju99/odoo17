@@ -26,7 +26,7 @@
                         <button class="oe_stat_button" name="%(action_facilities_floor)d" type="action" icon="fa-th-large">
                             <field name="floor_count" widget="statinfo" string="Floors"/>
                         </button>
-                        </div>
+                    </div>
                     <div class="oe_right">
                         <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
                     </div>
