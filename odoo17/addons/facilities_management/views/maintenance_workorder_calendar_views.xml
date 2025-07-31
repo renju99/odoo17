@@ -84,16 +84,6 @@
         </field>
     </record>
 
-    <menuitem id="menu_maintenance_workorder_technician_calendar"
-              name="Technician Calendar"
-              parent="menu_maintenance_operations"
-              action="action_workorder_technician_calendar"
-              sequence="40"/>
 
-    <menuitem id="menu_maintenance_workorder_team_calendar"
-              name="Team Calendar"
-              parent="menu_maintenance_operations"
-              action="action_workorder_team_calendar"
-              sequence="45"/>
     </data>
 </odoo>
