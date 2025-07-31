@@ -67,7 +67,6 @@ Features:
         'views/asset_category_views.xml',
         'views/asset_dashboard_views.xml',
         'views/asset_performance_views.xml',
-        'views/facility_asset_menus.xml',
         'views/asset_maintenance_schedule_views.xml',
         'views/asset_maintenance_calendar_views.xml',
         'views/asset_maintenance_scheduled_actions.xml',
@@ -105,6 +104,7 @@ Features:
         'views/hr_employee_views.xml',
         'views/hr_employee_tree_technician.xml',
         'views/product_views.xml',
+        'views/facility_asset_menus.xml',
     ],
     'demo': [
         'demo/facility_demo.xml',
