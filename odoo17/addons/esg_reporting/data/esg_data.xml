@@ -142,7 +142,7 @@
         </record>
 
         <record id="initiative_tag_diversity_inclusion" model="esg.initiative.tag">
-            <field name="name">Diversity & Inclusion</field>
+            <field name="name">Diversity &amp; Inclusion</field>
             <field name="color">9</field>
             <field name="description">Initiatives focused on diversity and inclusion</field>
         </record>
