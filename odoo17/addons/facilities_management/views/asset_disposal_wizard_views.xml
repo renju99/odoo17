@@ -213,12 +213,7 @@
             </field>
         </record>
 
-        <!-- Asset Disposal Menu -->
-        <menuitem id="menu_asset_disposal"
-                  name="Asset Disposals"
-                  parent="menu_asset_operations"
-                  action="action_asset_disposal"
-                  sequence="50"/>
+
 
     </data>
 </odoo>
