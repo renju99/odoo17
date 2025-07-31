@@ -55,3 +55,15 @@ class FacilityBuilding(models.Model):
         for rec in self:
             if not rec.facility_id:
                 raise fields.ValidationError("A building must be linked to a Facility.")
+
+    def action_view_floors(self):
+        """Open the floors view for this building."""
+        self.ensure_one()
+        return {
+            'name': 'Floors',
+            'type': 'ir.actions.act_window',
+            'res_model': 'facilities.floor',
+            'view_mode': 'tree,form',
+            'domain': [('building_id', '=', self.id)],
+            'context': {'default_building_id': self.id},
+        }
