@@ -2,6 +2,10 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class AssetMaintenanceSchedule(models.Model):
     _name = 'asset.maintenance.schedule'
@@ -110,3 +114,68 @@ class AssetMaintenanceSchedule(models.Model):
                 schedule.message_post(body=_("Maintenance schedule activated"))
             else:
                 schedule.message_post(body=_("Maintenance schedule deactivated"))
+
+    @api.model
+    def _generate_preventive_workorders(self):
+        """Cron job method to generate preventive maintenance work orders"""
+        today = fields.Date.today()
+        schedules = self.search([
+            ('active', '=', True),
+            ('maintenance_type', '=', 'preventive'),
+            ('next_maintenance_date', '<=', today),
+            ('status', 'in', ['planned', 'done'])
+        ])
+        
+        generated_count = 0
+        for schedule in schedules:
+            try:
+                # Check if a work order already exists for this schedule and date
+                existing_workorder = self.env['maintenance.workorder'].search([
+                    ('schedule_id', '=', schedule.id),
+                    ('start_date', '=', schedule.next_maintenance_date),
+                    ('state', 'not in', ['cancelled'])
+                ], limit=1)
+                
+                if not existing_workorder:
+                    schedule.action_generate_work_order()
+                    generated_count += 1
+                    
+            except Exception as e:
+                _logger.error(f"Error generating work order for schedule {schedule.name}: {str(e)}")
+                continue
+        
+        _logger.info(f"Generated {generated_count} preventive maintenance work orders")
+        return generated_count
+
+    @api.model
+    def send_maintenance_reminder(self):
+        """Send maintenance reminders for upcoming scheduled maintenance"""
+        today = fields.Date.today()
+        reminder_date = today + timedelta(days=7)  # Send reminders 7 days in advance
+        
+        schedules = self.search([
+            ('active', '=', True),
+            ('next_maintenance_date', '=', reminder_date),
+            ('status', 'in', ['planned'])
+        ])
+        
+        sent_count = 0
+        for schedule in schedules:
+            try:
+                # Send email notification to responsible person
+                if schedule.asset_id.responsible_id:
+                    template = self.env.ref('facilities_management.email_template_maintenance_reminder', raise_if_not_found=False)
+                    if template:
+                        template.with_context(
+                            schedule_name=schedule.name,
+                            asset_name=schedule.asset_id.name,
+                            next_maintenance_date=schedule.next_maintenance_date
+                        ).send_mail(schedule.id, force_send=True)
+                        sent_count += 1
+                        
+            except Exception as e:
+                _logger.error(f"Error sending maintenance reminder for schedule {schedule.name}: {str(e)}")
+                continue
+        
+        _logger.info(f"Sent {sent_count} maintenance reminders")
+        return sent_count

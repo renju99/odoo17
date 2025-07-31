@@ -75,7 +75,6 @@ Features:
         'views/asset_sensor_views.xml',
         'views/asset_scan_wizard_views.xml',
         'views/asset_disposal_wizard_views.xml',
-        'views/facilities_import_wizard_views.xml',
 
         # Views - Wizards and Actions (must be loaded before menus)
         'views/monthly_building_report_wizard_action.xml',
@@ -94,6 +93,9 @@ Features:
 
         # Views - Menus (must be loaded after actions)
         'views/facility_asset_menus.xml',
+
+        # Views - Import/Export (must be loaded after menus)
+        'views/facilities_import_wizard_views.xml',
 
         # Views - Other
         'views/sla_views.xml',
