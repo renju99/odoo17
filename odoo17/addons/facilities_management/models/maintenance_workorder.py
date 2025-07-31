@@ -16,6 +16,7 @@ class MaintenanceWorkOrder(models.Model):
                        default=lambda self: _('New'))
     asset_id = fields.Many2one('facilities.asset', string='Asset', required=True, tracking=True)
     schedule_id = fields.Many2one('asset.maintenance.schedule', string='Maintenance Schedule', tracking=True)
+    signature = fields.Binary(string='Signature', attachment=True)
     maintenance_type = fields.Selection([
         ('preventive', 'Preventive'),
         ('corrective', 'Corrective'),

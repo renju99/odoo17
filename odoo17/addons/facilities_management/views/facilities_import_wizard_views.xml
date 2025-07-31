@@ -90,11 +90,6 @@
         </field>
     </record>
 
-    <!-- Import/Export Menu -->
-    <menuitem id="menu_facilities_import_export"
-              name="Import/Export"
-              parent="menu_facilities_config"
-              action="action_facilities_import_wizard"
-              sequence="100"/>
+
     </data>
 </odoo>
