@@ -319,6 +319,12 @@
               action="action_asset_category"
               sequence="20"/>
 
+    <menuitem id="menu_asset_disposal"
+              name="Asset Disposals"
+              parent="menu_asset_operations"
+              action="action_asset_disposal"
+              sequence="30"/>
+
             <!-- Asset Analytics &amp; Dashboards -->
     <menuitem id="menu_asset_analytics"
               name="Analytics &amp; Dashboards"
@@ -420,6 +426,25 @@
               parent="menu_maintenance_operations"
               action="action_maintenance_calendar"
               sequence="30"/>
+
+    <menuitem id="menu_maintenance_workorder_mobile"
+              name="Work Orders (Mobile)"
+              parent="menu_maintenance_operations"
+              action="action_maintenance_workorder_mobile_list"
+              sequence="40"
+              groups="base.group_user"/>
+
+    <menuitem id="menu_maintenance_workorder_technician_calendar"
+              name="Technician Calendar"
+              parent="menu_maintenance_operations"
+              action="action_workorder_technician_calendar"
+              sequence="50"/>
+
+    <menuitem id="menu_maintenance_workorder_team_calendar"
+              name="Team Calendar"
+              parent="menu_maintenance_operations"
+              action="action_workorder_team_calendar"
+              sequence="55"/>
 
     <!-- Maintenance Planning -->
     <menuitem id="menu_maintenance_planning"

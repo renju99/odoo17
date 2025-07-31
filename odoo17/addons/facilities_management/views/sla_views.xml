@@ -233,7 +233,7 @@
         <!-- SLA Menu -->
         <menuitem id="menu_facilities_sla"
                   name="SLAs"
-                  parent="menu_facilities_maintenance"
+                  parent="menu_maintenance"
                   action="action_facilities_sla"
                   sequence="20"/>
 
