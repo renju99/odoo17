@@ -77,6 +77,9 @@ Features:
         'views/asset_disposal_wizard_views.xml',
         'views/facilities_import_wizard_views.xml',
 
+        # Views - Menus (must be loaded first)
+        'views/facility_asset_menus.xml',
+
         # Views - Maintenance
         'views/maintenance_team_views.xml',
         'views/maintenance_workorder_views.xml',
@@ -104,7 +107,6 @@ Features:
         'views/hr_employee_views.xml',
         'views/hr_employee_tree_technician.xml',
         'views/product_views.xml',
-        'views/facility_asset_menus.xml',
     ],
     'demo': [
         'demo/facility_demo.xml',
