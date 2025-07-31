@@ -54,6 +54,7 @@ class ESGOffset(models.Model):
         ('kwh', 'kWh'),
         ('acre', 'Acre'),
         ('hectare', 'Hectare'),
+        ('kg', 'kg'),
     ], string='Unit', required=True, default='t_co2')
     
     offset_amount = fields.Float(
@@ -201,6 +202,7 @@ class ESGOffsetType(models.Model):
         ('tree', 'Tree'),
         ('kwh', 'kWh'),
         ('acre', 'Acre'),
+        ('kg', 'kg'),
         ('hectare', 'Hectare'),
     ], string='Unit', required=True, default='t_co2')
     
