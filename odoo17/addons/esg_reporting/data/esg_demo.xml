@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Demo ESG Emissions -->
+        <record id="demo_emission_electricity" model="esg.emission">
+            <field name="name">Office Electricity Usage</field>
+            <field name="date">2024-01-15</field>
+            <field name="emission_factor_id" ref="emission_factor_electricity"/>
+            <field name="quantity">1000</field>
+            <field name="unit">kwh</field>
+            <field name="amount">150.00</field>
+            <field name="state">validated</field>
+            <field name="notes">Monthly office electricity consumption</field>
+        </record>
+
+        <record id="demo_emission_transportation" model="esg.emission">
+            <field name="name">Company Vehicle Fleet</field>
+            <field name="date">2024-01-15</field>
+            <field name="emission_factor_id" ref="emission_factor_diesel"/>
+            <field name="quantity">200</field>
+            <field name="unit">liter</field>
+            <field name="amount">300.00</field>
+            <field name="state">validated</field>
+            <field name="notes">Monthly diesel consumption for company vehicles</field>
+        </record>
+
+        <record id="demo_emission_heating" model="esg.emission">
+            <field name="name">Office Heating</field>
+            <field name="date">2024-01-15</field>
+            <field name="emission_factor_id" ref="emission_factor_natural_gas"/>
+            <field name="quantity">500</field>
+            <field name="unit">m3</field>
+            <field name="amount">400.00</field>
+            <field name="state">validated</field>
+            <field name="notes">Monthly natural gas consumption for heating</field>
+        </record>
+
+        <!-- Demo ESG Offsets -->
+        <record id="demo_offset_tree_planting" model="esg.offset">
+            <field name="name">Tree Planting Project</field>
+            <field name="date">2024-01-20</field>
+            <field name="offset_type_id" ref="offset_type_tree_planting"/>
+            <field name="quantity">100</field>
+            <field name="unit">tree</field>
+            <field name="amount">500.00</field>
+            <field name="certificate_number">TP-2024-001</field>
+            <field name="state">validated</field>
+            <field name="notes">Tree planting initiative in local community</field>
+        </record>
+
+        <record id="demo_offset_renewable_energy" model="esg.offset">
+            <field name="name">Solar Panel Installation</field>
+            <field name="date">2024-01-25</field>
+            <field name="offset_type_id" ref="offset_type_renewable_energy"/>
+            <field name="quantity">5000</field>
+            <field name="unit">kwh</field>
+            <field name="amount">2000.00</field>
+            <field name="certificate_number">RE-2024-001</field>
+            <field name="state">validated</field>
+            <field name="notes">Solar panel installation on office roof</field>
+        </record>
+
+        <!-- Demo ESG Employee Community -->
+        <record id="demo_community_commute" model="esg.employee.community">
+            <field name="name">Employee Commute Tracking</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="date">2024-01-15</field>
+            <field name="activity_type">commute</field>
+            <field name="commute_type">public_transport</field>
+            <field name="distance">20</field>
+            <field name="duration">1.5</field>
+            <field name="cost">5.00</field>
+            <field name="state">approved</field>
+            <field name="notes">Daily commute using public transportation</field>
+        </record>
+
+        <record id="demo_community_volunteering" model="esg.employee.community">
+            <field name="name">Community Cleanup Event</field>
+            <field name="employee_id" ref="hr.employee_admin"/>
+            <field name="date">2024-01-20</field>
+            <field name="activity_type">volunteering</field>
+            <field name="duration">4.0</field>
+            <field name="location">Local Park</field>
+            <field name="state">approved</field>
+            <field name="notes">Volunteer event for community cleanup</field>
+        </record>
+
+        <!-- Demo ESG Initiatives -->
+        <record id="demo_initiative_carbon_reduction" model="esg.initiative">
+            <field name="name">Carbon Reduction Program</field>
+            <field name="date">2024-01-01</field>
+            <field name="end_date">2024-12-31</field>
+            <field name="initiative_type">carbon_reduction</field>
+            <field name="category">e</field>
+            <field name="priority">2</field>
+            <field name="budget">50000.00</field>
+            <field name="progress">25.0</field>
+            <field name="state">active</field>
+            <field name="description">Comprehensive program to reduce carbon emissions across all operations</field>
+            <field name="objectives">Reduce carbon emissions by 20% by end of year</field>
+            <field name="expected_impact">Significant reduction in carbon footprint and improved sustainability metrics</field>
+            <field name="tags" eval="[(6, 0, [ref('initiative_tag_carbon_reduction')])]"/>
+        </record>
+
+        <record id="demo_initiative_energy_efficiency" model="esg.initiative">
+            <field name="name">Energy Efficiency Upgrade</field>
+            <field name="date">2024-01-15</field>
+            <field name="end_date">2024-06-30</field>
+            <field name="initiative_type">energy_efficiency</field>
+            <field name="category">e</field>
+            <field name="priority">1</field>
+            <field name="budget">25000.00</field>
+            <field name="progress">50.0</field>
+            <field name="state">active</field>
+            <field name="description">Upgrade office lighting and HVAC systems for better energy efficiency</field>
+            <field name="objectives">Reduce energy consumption by 15% through system upgrades</field>
+            <field name="expected_impact">Lower energy bills and reduced carbon emissions</field>
+            <field name="tags" eval="[(6, 0, [ref('initiative_tag_energy_efficiency')])]"/>
+        </record>
+
+        <!-- Demo ESG Analytics -->
+        <record id="demo_analytics_carbon" model="esg.analytics">
+            <field name="name">Carbon Analytics Report - January 2024</field>
+            <field name="date">2024-01-31</field>
+            <field name="analytics_type">carbon_analytics</field>
+            <field name="period_type">monthly</field>
+            <field name="date_from">2024-01-01</field>
+            <field name="date_to">2024-01-31</field>
+            <field name="environmental_score">75.0</field>
+            <field name="social_score">80.0</field>
+            <field name="governance_score">85.0</field>
+            <field name="compliance_status">compliant</field>
+            <field name="state">completed</field>
+            <field name="notes">Monthly carbon analytics report for January 2024</field>
+        </record>
+
+        <!-- Demo ESG Gender Parity -->
+        <record id="demo_gender_parity_january" model="esg.gender.parity">
+            <field name="name">Gender Parity Report - January 2024</field>
+            <field name="date">2024-01-31</field>
+            <field name="male_count">45</field>
+            <field name="female_count">35</field>
+            <field name="other_count">5</field>
+            <field name="male_leaders">8</field>
+            <field name="female_leaders">6</field>
+            <field name="other_leaders">1</field>
+            <field name="period_type">monthly</field>
+            <field name="state">validated</field>
+            <field name="notes">Monthly gender parity report for January 2024</field>
+        </record>
+
+        <!-- Demo ESG Pay Gap -->
+        <record id="demo_pay_gap_january" model="esg.pay.gap">
+            <field name="name">Pay Gap Analysis - January 2024</field>
+            <field name="date">2024-01-31</field>
+            <field name="male_count">45</field>
+            <field name="female_count">35</field>
+            <field name="other_count">5</field>
+            <field name="male_avg_salary">65000.00</field>
+            <field name="female_avg_salary">62000.00</field>
+            <field name="other_avg_salary">63000.00</field>
+            <field name="male_leaders_avg_salary">85000.00</field>
+            <field name="female_leaders_avg_salary">82000.00</field>
+            <field name="experience_level">all</field>
+            <field name="period_type">yearly</field>
+            <field name="state">validated</field>
+            <field name="notes">Annual pay gap analysis for 2024</field>
+        </record>
+
+    </data>
+</odoo>

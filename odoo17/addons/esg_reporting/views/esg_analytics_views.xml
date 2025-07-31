@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- ESG Analytics List View -->
+        <record id="view_esg_analytics_list" model="ir.ui.view">
+            <field name="name">esg.analytics.list</field>
+            <field name="model">esg.analytics</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Analytics">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="analytics_type"/>
+                    <field name="period_type"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="total_emissions"/>
+                    <field name="total_offset"/>
+                    <field name="net_emissions"/>
+                    <field name="overall_score"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'processing'" decoration-success="state == 'completed'" decoration-danger="state == 'error'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Analytics Form View -->
+        <record id="view_esg_analytics_form" model="ir.ui.view">
+            <field name="name">esg.analytics.form</field>
+            <field name="model">esg.analytics</field>
+            <field name="arch" type="xml">
+                <form string="ESG Analytics">
+                    <header>
+                        <button name="action_process" string="Process" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" states="error"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,processing,completed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Analytics Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="analytics_type"/>
+                                <field name="period_type"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                            <group>
+                                <field name="chart_type"/>
+                                <field name="compliance_status"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <group string="Carbon Analytics">
+                            <group>
+                                <field name="total_emissions"/>
+                                <field name="total_offset"/>
+                                <field name="net_emissions"/>
+                                <field name="emission_intensity"/>
+                            </group>
+                        </group>
+                        <group string="ESG Performance Scores">
+                            <group>
+                                <field name="environmental_score"/>
+                                <field name="social_score"/>
+                                <field name="governance_score"/>
+                                <field name="overall_score"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Compliance Notes">
+                                <field name="compliance_notes"/>
+                            </page>
+                            <page string="Report Data">
+                                <field name="report_data"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Analytics Graph View -->
+        <record id="view_esg_analytics_graph" model="ir.ui.view">
+            <field name="name">esg.analytics.graph</field>
+            <field name="model">esg.analytics</field>
+            <field name="arch" type="xml">
+                <graph string="ESG Analytics" type="bar">
+                    <field name="analytics_type"/>
+                    <field name="total_emissions" type="measure"/>
+                    <field name="total_offset" type="measure"/>
+                    <field name="net_emissions" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- ESG Analytics Pivot View -->
+        <record id="view_esg_analytics_pivot" model="ir.ui.view">
+            <field name="name">esg.analytics.pivot</field>
+            <field name="model">esg.analytics</field>
+            <field name="arch" type="xml">
+                <pivot string="ESG Analytics">
+                    <field name="analytics_type" type="row"/>
+                    <field name="date" type="col" interval="month"/>
+                    <field name="total_emissions" type="measure"/>
+                    <field name="total_offset" type="measure"/>
+                    <field name="net_emissions" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- ESG Analytics Search View -->
+        <record id="view_esg_analytics_search" model="ir.ui.view">
+            <field name="name">esg.analytics.search</field>
+            <field name="model">esg.analytics</field>
+            <field name="arch" type="xml">
+                <search string="ESG Analytics">
+                    <field name="name"/>
+                    <field name="analytics_type"/>
+                    <field name="date"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Processing" name="processing" domain="[('state', '=', 'processing')]"/>
+                    <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                    <filter string="Error" name="error" domain="[('state', '=', 'error')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Analytics Type" name="analytics_type" context="{'group_by': 'analytics_type'}"/>
+                        <filter string="Period Type" name="period_type" context="{'group_by': 'period_type'}"/>
+                        <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Compliance Status" name="compliance_status" context="{'group_by': 'compliance_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ESG Analytics Action -->
+        <record id="action_esg_analytics" model="ir.actions.act_window">
+            <field name="name">ESG Analytics</field>
+            <field name="res_model">esg.analytics</field>
+            <field name="view_mode">list,form,graph,pivot</field>
+            <field name="context">{'search_default_completed': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first ESG analytics report!
+                </p>
+                <p>
+                    Generate comprehensive analytics reports for carbon emissions, ESG performance, and compliance.
+                </p>
+            </field>
+        </record>
+
+        <!-- ESG Carbon Footprint List View -->
+        <record id="view_esg_carbon_footprint_list" model="ir.ui.view">
+            <field name="name">esg.carbon.footprint.list</field>
+            <field name="model">esg.carbon.footprint</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Carbon Footprint">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="scope"/>
+                    <field name="emission_source"/>
+                    <field name="emission_amount"/>
+                    <field name="uncertainty"/>
+                    <field name="verification_status"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'validated'" decoration-danger="state == 'cancelled'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Carbon Footprint Form View -->
+        <record id="view_esg_carbon_footprint_form" model="ir.ui.view">
+            <field name="name">esg.carbon.footprint.form</field>
+            <field name="model">esg.carbon.footprint</field>
+            <field name="arch" type="xml">
+                <form string="ESG Carbon Footprint">
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_validate" string="Validate" type="object" class="oe_highlight" states="confirmed"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="draft,confirmed"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" states="cancelled"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,validated"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Footprint Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="scope"/>
+                                <field name="emission_source"/>
+                                <field name="emission_amount"/>
+                            </group>
+                            <group>
+                                <field name="uncertainty"/>
+                                <field name="verification_status"/>
+                                <field name="verified_by"/>
+                                <field name="verification_date"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Methodology">
+                                <field name="methodology"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Carbon Footprint Action -->
+        <record id="action_esg_carbon_footprint" model="ir.actions.act_window">
+            <field name="name">ESG Carbon Footprint</field>
+            <field name="res_model">esg.carbon.footprint</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_validated': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first carbon footprint record!
+                </p>
+                <p>
+                    Track detailed carbon footprint calculations with scope, methodology, and verification status.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

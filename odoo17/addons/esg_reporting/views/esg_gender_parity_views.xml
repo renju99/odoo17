@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- ESG Gender Parity List View -->
+        <record id="view_esg_gender_parity_list" model="ir.ui.view">
+            <field name="name">esg.gender.parity.list</field>
+            <field name="model">esg.gender.parity</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Gender Parity">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="male_count"/>
+                    <field name="female_count"/>
+                    <field name="other_count"/>
+                    <field name="total_count"/>
+                    <field name="male_ratio"/>
+                    <field name="female_ratio"/>
+                    <field name="other_ratio"/>
+                    <field name="diversity_score"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'validated'" decoration-danger="state == 'cancelled'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Gender Parity Form View -->
+        <record id="view_esg_gender_parity_form" model="ir.ui.view">
+            <field name="name">esg.gender.parity.form</field>
+            <field name="model">esg.gender.parity</field>
+            <field name="arch" type="xml">
+                <form string="ESG Gender Parity">
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_validate" string="Validate" type="object" class="oe_highlight" states="confirmed"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="draft,confirmed"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" states="cancelled"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,validated"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Report Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                                <field name="period_type"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <group string="Gender Counts">
+                            <group>
+                                <field name="male_count"/>
+                                <field name="female_count"/>
+                                <field name="other_count"/>
+                                <field name="total_count"/>
+                            </group>
+                            <group>
+                                <field name="male_ratio"/>
+                                <field name="female_ratio"/>
+                                <field name="other_ratio"/>
+                                <field name="diversity_score"/>
+                            </group>
+                        </group>
+                        <group string="Leadership Metrics">
+                            <group>
+                                <field name="male_leaders"/>
+                                <field name="female_leaders"/>
+                                <field name="other_leaders"/>
+                            </group>
+                            <group>
+                                <field name="leadership_gender_ratio"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Gender Parity Graph View -->
+        <record id="view_esg_gender_parity_graph" model="ir.ui.view">
+            <field name="name">esg.gender.parity.graph</field>
+            <field name="model">esg.gender.parity</field>
+            <field name="arch" type="xml">
+                <graph string="ESG Gender Parity" type="pie">
+                    <field name="male_count" type="measure"/>
+                    <field name="female_count" type="measure"/>
+                    <field name="other_count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- ESG Gender Parity Pivot View -->
+        <record id="view_esg_gender_parity_pivot" model="ir.ui.view">
+            <field name="name">esg.gender.parity.pivot</field>
+            <field name="model">esg.gender.parity</field>
+            <field name="arch" type="xml">
+                <pivot string="ESG Gender Parity">
+                    <field name="department_id" type="row"/>
+                    <field name="date" type="col" interval="month"/>
+                    <field name="male_count" type="measure"/>
+                    <field name="female_count" type="measure"/>
+                    <field name="other_count" type="measure"/>
+                    <field name="diversity_score" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- ESG Gender Parity Search View -->
+        <record id="view_esg_gender_parity_search" model="ir.ui.view">
+            <field name="name">esg.gender.parity.search</field>
+            <field name="model">esg.gender.parity</field>
+            <field name="arch" type="xml">
+                <search string="ESG Gender Parity">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="date"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Validated" name="validated" domain="[('state', '=', 'validated')]"/>
+                    <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+                        <filter string="Job Position" name="job" context="{'group_by': 'job_id'}"/>
+                        <filter string="Period Type" name="period_type" context="{'group_by': 'period_type'}"/>
+                        <filter string="Month" name="month" context="{'group_by': 'month'}"/>
+                        <filter string="Year" name="year" context="{'group_by': 'year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ESG Gender Parity Action -->
+        <record id="action_esg_gender_parity" model="ir.actions.act_window">
+            <field name="name">ESG Gender Parity</field>
+            <field name="res_model">esg.gender.parity</field>
+            <field name="view_mode">list,form,graph,pivot</field>
+            <field name="context">{'search_default_validated': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first gender parity report!
+                </p>
+                <p>
+                    Track gender diversity metrics including ratios, leadership representation, and diversity scores.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- ESG Pay Gap List View -->
+        <record id="view_esg_pay_gap_list" model="ir.ui.view">
+            <field name="name">esg.pay.gap.list</field>
+            <field name="model">esg.pay.gap</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Pay Gap">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="male_count"/>
+                    <field name="female_count"/>
+                    <field name="other_count"/>
+                    <field name="male_avg_salary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="female_avg_salary"/>
+                    <field name="other_avg_salary"/>
+                    <field name="mean_pay_gap"/>
+                    <field name="median_pay_gap"/>
+                    <field name="pay_gap_category"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'validated'" decoration-danger="state == 'cancelled'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Pay Gap Form View -->
+        <record id="view_esg_pay_gap_form" model="ir.ui.view">
+            <field name="name">esg.pay.gap.form</field>
+            <field name="model">esg.pay.gap</field>
+            <field name="arch" type="xml">
+                <form string="ESG Pay Gap">
+                    <header>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_validate" string="Validate" type="object" class="oe_highlight" states="confirmed"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="draft,confirmed"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" states="cancelled"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,validated"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Report Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="department_id"/>
+                                <field name="job_id"/>
+                                <field name="experience_level"/>
+                                <field name="period_type"/>
+                            </group>
+                            <group>
+                                <field name="compliance_status"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <group string="Employee Counts">
+                            <group>
+                                <field name="male_count"/>
+                                <field name="female_count"/>
+                                <field name="other_count"/>
+                            </group>
+                        </group>
+                        <group string="Average Salaries">
+                            <group>
+                                <field name="male_avg_salary"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="female_avg_salary"/>
+                                <field name="other_avg_salary"/>
+                            </group>
+                            <group>
+                                <field name="mean_pay_gap"/>
+                                <field name="median_pay_gap"/>
+                                <field name="pay_gap_category"/>
+                            </group>
+                        </group>
+                        <group string="Leadership Pay Gap">
+                            <group>
+                                <field name="male_leaders_avg_salary"/>
+                                <field name="female_leaders_avg_salary"/>
+                            </group>
+                            <group>
+                                <field name="leadership_pay_gap"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Action Required">
+                                <field name="action_required"/>
+                            </page>
+                            <page string="Notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Pay Gap Graph View -->
+        <record id="view_esg_pay_gap_graph" model="ir.ui.view">
+            <field name="name">esg.pay.gap.graph</field>
+            <field name="model">esg.pay.gap</field>
+            <field name="arch" type="xml">
+                <graph string="ESG Pay Gap" type="bar">
+                    <field name="department_id"/>
+                    <field name="mean_pay_gap" type="measure"/>
+                    <field name="median_pay_gap" type="measure"/>
+                    <field name="leadership_pay_gap" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- ESG Pay Gap Pivot View -->
+        <record id="view_esg_pay_gap_pivot" model="ir.ui.view">
+            <field name="name">esg.pay.gap.pivot</field>
+            <field name="model">esg.pay.gap</field>
+            <field name="arch" type="xml">
+                <pivot string="ESG Pay Gap">
+                    <field name="department_id" type="row"/>
+                    <field name="experience_level" type="col"/>
+                    <field name="mean_pay_gap" type="measure"/>
+                    <field name="median_pay_gap" type="measure"/>
+                    <field name="leadership_pay_gap" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- ESG Pay Gap Search View -->
+        <record id="view_esg_pay_gap_search" model="ir.ui.view">
+            <field name="name">esg.pay.gap.search</field>
+            <field name="model">esg.pay.gap</field>
+            <field name="arch" type="xml">
+                <search string="ESG Pay Gap">
+                    <field name="name"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="date"/>
+                    <field name="experience_level"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Validated" name="validated" domain="[('state', '=', 'validated')]"/>
+                    <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <filter string="Low Pay Gap" name="low_gap" domain="[('pay_gap_category', '=', 'low')]"/>
+                    <filter string="Moderate Pay Gap" name="moderate_gap" domain="[('pay_gap_category', '=', 'moderate')]"/>
+                    <filter string="High Pay Gap" name="high_gap" domain="[('pay_gap_category', '=', 'high')]"/>
+                    <filter string="Very High Pay Gap" name="very_high_gap" domain="[('pay_gap_category', '=', 'very_high')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+                        <filter string="Job Position" name="job" context="{'group_by': 'job_id'}"/>
+                        <filter string="Experience Level" name="experience_level" context="{'group_by': 'experience_level'}"/>
+                        <filter string="Pay Gap Category" name="pay_gap_category" context="{'group_by': 'pay_gap_category'}"/>
+                        <filter string="Compliance Status" name="compliance_status" context="{'group_by': 'compliance_status'}"/>
+                        <filter string="Period Type" name="period_type" context="{'group_by': 'period_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ESG Pay Gap Action -->
+        <record id="action_esg_pay_gap" model="ir.actions.act_window">
+            <field name="name">ESG Pay Gap</field>
+            <field name="res_model">esg.pay.gap</field>
+            <field name="view_mode">list,form,graph,pivot</field>
+            <field name="context">{'search_default_validated': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first pay gap analysis!
+                </p>
+                <p>
+                    Track and analyze pay gaps between different gender groups and experience levels.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

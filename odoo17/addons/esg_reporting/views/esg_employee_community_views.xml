@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- ESG Employee Community List View -->
+        <record id="view_esg_employee_community_list" model="ir.ui.view">
+            <field name="name">esg.employee.community.list</field>
+            <field name="model">esg.employee.community</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Employee Community">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="activity_type"/>
+                    <field name="commute_type"/>
+                    <field name="distance"/>
+                    <field name="duration"/>
+                    <field name="emission_amount"/>
+                    <field name="cost"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'submitted'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Employee Community Form View -->
+        <record id="view_esg_employee_community_form" model="ir.ui.view">
+            <field name="name">esg.employee.community.form</field>
+            <field name="model">esg.employee.community</field>
+            <field name="arch" type="xml">
+                <form string="ESG Employee Community">
+                    <header>
+                        <button name="action_submit" string="Submit" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_approve" string="Approve" type="object" class="oe_highlight" states="submitted"/>
+                        <button name="action_reject" string="Reject" type="object" states="submitted"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" states="rejected"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Activity Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="employee_id"/>
+                                <field name="activity_type"/>
+                                <field name="commute_type" attrs="{'invisible': [('activity_type', '!=', 'commute')]}"/>
+                                <field name="distance" attrs="{'invisible': [('activity_type', '!=', 'commute')]}"/>
+                            </group>
+                            <group>
+                                <field name="duration"/>
+                                <field name="emission_amount"/>
+                                <field name="cost"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="location"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Employee Community Kanban View -->
+        <record id="view_esg_employee_community_kanban" model="ir.ui.view">
+            <field name="name">esg.employee.community.kanban</field>
+            <field name="model">esg.employee.community</field>
+            <field name="arch" type="xml">
+                <kanban string="ESG Employee Community" class="o_kanban_dashboard">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="activity_type"/>
+                    <field name="emission_amount"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>Employee:</strong> <field name="employee_id"/>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong>Type:</strong> <field name="activity_type"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <strong>Emission:</strong> <field name="emission_amount"/> t CO2
+                                            </div>
+                                            <div class="col-6">
+                                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'submitted': 'info', 'approved': 'success', 'rejected': 'danger'}}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- ESG Employee Community Graph View -->
+        <record id="view_esg_employee_community_graph" model="ir.ui.view">
+            <field name="name">esg.employee.community.graph</field>
+            <field name="model">esg.employee.community</field>
+            <field name="arch" type="xml">
+                <graph string="ESG Employee Community" type="bar">
+                    <field name="activity_type"/>
+                    <field name="emission_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- ESG Employee Community Pivot View -->
+        <record id="view_esg_employee_community_pivot" model="ir.ui.view">
+            <field name="name">esg.employee.community.pivot</field>
+            <field name="model">esg.employee.community</field>
+            <field name="arch" type="xml">
+                <pivot string="ESG Employee Community">
+                    <field name="activity_type" type="row"/>
+                    <field name="date" type="col" interval="month"/>
+                    <field name="emission_amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- ESG Employee Community Search View -->
+        <record id="view_esg_employee_community_search" model="ir.ui.view">
+            <field name="name">esg.employee.community.search</field>
+            <field name="model">esg.employee.community</field>
+            <field name="arch" type="xml">
+                <search string="ESG Employee Community">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="activity_type"/>
+                    <field name="date"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Submitted" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                    <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                    <filter string="Rejected" name="rejected" domain="[('state', '=', 'rejected')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Activity Type" name="activity_type" context="{'group_by': 'activity_type'}"/>
+                        <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Month" name="month" context="{'group_by': 'month'}"/>
+                        <filter string="Year" name="year" context="{'group_by': 'year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ESG Employee Community Action -->
+        <record id="action_esg_employee_community" model="ir.actions.act_window">
+            <field name="name">ESG Employee Community</field>
+            <field name="res_model">esg.employee.community</field>
+            <field name="view_mode">list,form,kanban,graph,pivot</field>
+            <field name="context">{'search_default_approved': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first employee community activity!
+                </p>
+                <p>
+                    Track employee commute patterns, community service activities, and volunteer work.
+                </p>
+            </field>
+        </record>
+
+        <!-- ESG Community Initiatives List View -->
+        <record id="view_esg_community_initiative_list" model="ir.ui.view">
+            <field name="name">esg.community.initiative.list</field>
+            <field name="model">esg.community.initiative</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Community Initiatives">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="initiative_type"/>
+                    <field name="participants_count"/>
+                    <field name="hours_spent"/>
+                    <field name="impact_score"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'active'" decoration-success="state == 'completed'" decoration-danger="state == 'cancelled'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Community Initiatives Form View -->
+        <record id="view_esg_community_initiative_form" model="ir.ui.view">
+            <field name="name">esg.community.initiative.form</field>
+            <field name="model">esg.community.initiative</field>
+            <field name="arch" type="xml">
+                <form string="ESG Community Initiative">
+                    <header>
+                        <button name="action_activate" string="Activate" type="object" class="oe_highlight" states="draft"/>
+                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" states="active"/>
+                        <button name="action_cancel" string="Cancel" type="object" states="draft,active"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" states="cancelled"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,active,completed"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Initiative Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="initiative_type"/>
+                                <field name="participants_count"/>
+                                <field name="hours_spent"/>
+                            </group>
+                            <group>
+                                <field name="impact_score"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Community Initiatives Action -->
+        <record id="action_esg_community_initiative" model="ir.actions.act_window">
+            <field name="name">ESG Community Initiatives</field>
+            <field name="res_model">esg.community.initiative</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first community initiative!
+                </p>
+                <p>
+                    Track community service initiatives, volunteer programs, and social impact activities.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
