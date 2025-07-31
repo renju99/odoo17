@@ -45,3 +45,15 @@ class FacilityFloor(models.Model):
         for rec in self:
             if not rec.building_id:
                 raise fields.ValidationError("A floor must be linked to a Building.")
+
+    def action_view_rooms(self):
+        """Open the rooms view for this floor."""
+        self.ensure_one()
+        return {
+            'name': 'Rooms',
+            'type': 'ir.actions.act_window',
+            'res_model': 'facilities.room',
+            'view_mode': 'kanban,tree,form',
+            'domain': [('floor_id', '=', self.id)],
+            'context': {'default_floor_id': self.id},
+        }
