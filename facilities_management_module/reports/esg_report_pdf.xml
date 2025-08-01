@@ -31,8 +31,11 @@
                 <div class="row">
                     <div class="col-12">
                         <h1 style="text-align: center; color: #2E8B57; margin-bottom: 20px;">
-                            ESG Compliance Report
+                            <t t-esc="data.get('report_title', 'ESG Compliance Report')"/>
                         </h1>
+                        <p style="text-align: center; color: #666; margin-bottom: 10px;">
+                            <t t-esc="data.get('report_description', '')"/>
+                        </p>
                         <p style="text-align: center; color: #666; margin-bottom: 30px;">
                             Generated on <t t-esc="data.get('generation_date', '')"/>
                         </p>
@@ -48,22 +51,33 @@
                         <table class="table table-bordered">
                             <tr>
                                 <td><strong>Report Type:</strong></td>
-                                <td><t t-esc="data.get('wizard', {}).report_type or ''"/></td>
+                                <td><t t-esc="data.get('report_title', 'ESG Report')"/></td>
                                 <td><strong>Date Range:</strong></td>
                                 <td><t t-esc="data.get('wizard', {}).date_from or ''"/> to <t t-esc="data.get('wizard', {}).date_to or ''"/></td>
                             </tr>
                             <tr>
                                 <td><strong>Total Assets:</strong></td>
                                 <td><t t-esc="data.get('total_assets', 0)"/></td>
+                                <td><strong>Report Focus:</strong></td>
+                                <td>
+                                    <t t-if="data.get('report_type') == 'environmental'">Environmental Impact</t>
+                                    <t t-elif="data.get('report_type') == 'social'">Social Impact</t>
+                                    <t t-elif="data.get('report_type') == 'governance'">Governance & Compliance</t>
+                                    <t t-else="">Comprehensive ESG</t>
+                                </td>
+                            </tr>
+                            <tr t-if="data.get('report_type') == 'comprehensive'">
                                 <td><strong>Compliance Rate:</strong></td>
                                 <td><t t-esc="'%.1f' % data.get('compliance_rate', 0)"/>%</td>
+                                <td><strong>Asset Type Filter:</strong></td>
+                                <td><t t-esc="data.get('wizard', {}).asset_type or 'All'"/></td>
                             </tr>
                         </table>
                     </div>
                 </div>
 
                 <!-- Environmental Metrics -->
-                <div class="row" style="margin-bottom: 30px;">
+                <div t-if="data.get('report_type') in ['environmental', 'comprehensive']" class="row" style="margin-bottom: 30px;">
                     <div class="col-12">
                         <h3 style="color: #2E8B57;">Environmental Metrics</h3>
                         <div t-if="data.get('environmental_metrics')" class="row">
@@ -92,7 +106,7 @@
                 </div>
 
                 <!-- Social Metrics -->
-                <div class="row" style="margin-bottom: 30px;">
+                <div t-if="data.get('report_type') in ['social', 'comprehensive']" class="row" style="margin-bottom: 30px;">
                     <div class="col-12">
                         <h3 style="color: #2E8B57;">Social Impact Metrics</h3>
                         <div t-if="data.get('social_metrics')" class="row">
@@ -117,7 +131,7 @@
                 </div>
 
                 <!-- Governance Metrics -->
-                <div class="row" style="margin-bottom: 30px;">
+                <div t-if="data.get('report_type') in ['governance', 'comprehensive']" class="row" style="margin-bottom: 30px;">
                     <div class="col-12">
                         <h3 style="color: #2E8B57;">Governance Metrics</h3>
                         <div t-if="data.get('governance_metrics')" class="row">
@@ -149,28 +163,106 @@
                 <div class="row" style="margin-bottom: 30px;">
                     <div class="col-12">
                         <h3 style="color: #2E8B57;">Asset Details</h3>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Asset Name</th>
-                                    <th>Type</th>
-                                    <th>Environmental Impact</th>
-                                    <th>Energy Rating</th>
-                                    <th>Safety Compliant</th>
-                                    <th>Regulatory Compliant</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="data.get('assets', [])" t-as="asset">
-                                    <td><t t-esc="asset.name"/></td>
-                                    <td><t t-esc="asset.asset_type"/></td>
-                                    <td><t t-esc="asset.environmental_impact or 'N/A'"/></td>
-                                    <td><t t-esc="asset.energy_efficiency_rating or 'N/A'"/></td>
-                                    <td><t t-esc="'Yes' if asset.safety_compliance else 'No'"/></td>
-                                    <td><t t-esc="'Yes' if asset.regulatory_compliance else 'No'"/></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        
+                        <!-- Environmental Report Asset Table -->
+                        <div t-if="data.get('report_type') == 'environmental'">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Type</th>
+                                        <th>Environmental Impact</th>
+                                        <th>Energy Rating</th>
+                                        <th>Carbon Footprint</th>
+                                        <th>Renewable Energy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="data.get('assets', [])" t-as="asset">
+                                        <td><t t-esc="asset.name"/></td>
+                                        <td><t t-esc="asset.asset_type"/></td>
+                                        <td><t t-esc="asset.environmental_impact or 'N/A'"/></td>
+                                        <td><t t-esc="asset.energy_efficiency_rating or 'N/A'"/></td>
+                                        <td><t t-esc="asset.carbon_footprint or 'N/A'"/></td>
+                                        <td><t t-esc="'Yes' if asset.renewable_energy else 'No'"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Social Report Asset Table -->
+                        <div t-if="data.get('report_type') == 'social'">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Type</th>
+                                        <th>Safety Compliant</th>
+                                        <th>Accessibility Compliant</th>
+                                        <th>Social Impact Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="data.get('assets', [])" t-as="asset">
+                                        <td><t t-esc="asset.name"/></td>
+                                        <td><t t-esc="asset.asset_type"/></td>
+                                        <td><t t-esc="'Yes' if asset.safety_compliance else 'No'"/></td>
+                                        <td><t t-esc="'Yes' if asset.accessibility_compliant else 'No'"/></td>
+                                        <td><t t-esc="asset.social_impact_score or 'N/A'"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Governance Report Asset Table -->
+                        <div t-if="data.get('report_type') == 'governance'">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Type</th>
+                                        <th>Regulatory Compliant</th>
+                                        <th>Certifications</th>
+                                        <th>Next Audit Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="data.get('assets', [])" t-as="asset">
+                                        <td><t t-esc="asset.name"/></td>
+                                        <td><t t-esc="asset.asset_type"/></td>
+                                        <td><t t-esc="'Yes' if asset.regulatory_compliance else 'No'"/></td>
+                                        <td><t t-esc="len(asset.certification_ids) or '0'"/></td>
+                                        <td><t t-esc="asset.next_audit_date or 'N/A'"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Comprehensive Report Asset Table -->
+                        <div t-if="data.get('report_type') == 'comprehensive'">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Type</th>
+                                        <th>Environmental Impact</th>
+                                        <th>Energy Rating</th>
+                                        <th>Safety Compliant</th>
+                                        <th>Regulatory Compliant</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="data.get('assets', [])" t-as="asset">
+                                        <td><t t-esc="asset.name"/></td>
+                                        <td><t t-esc="asset.asset_type"/></td>
+                                        <td><t t-esc="asset.environmental_impact or 'N/A'"/></td>
+                                        <td><t t-esc="asset.energy_efficiency_rating or 'N/A'"/></td>
+                                        <td><t t-esc="'Yes' if asset.safety_compliance else 'No'"/></td>
+                                        <td><t t-esc="'Yes' if asset.regulatory_compliance else 'No'"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -178,13 +270,50 @@
                 <div t-if="data.get('wizard', {}).include_recommendations" class="row" style="margin-bottom: 30px;">
                     <div class="col-12">
                         <h3 style="color: #2E8B57;">Recommendations</h3>
-                        <ul>
-                            <li>Consider upgrading assets with low energy efficiency ratings to improve environmental performance.</li>
-                            <li>Implement renewable energy solutions for assets with high carbon footprints.</li>
-                            <li>Ensure all assets meet accessibility compliance requirements.</li>
-                            <li>Schedule regular audits for assets approaching their audit due dates.</li>
-                            <li>Obtain relevant certifications for assets that currently lack them.</li>
-                        </ul>
+                        
+                        <!-- Environmental Report Recommendations -->
+                        <div t-if="data.get('report_type') == 'environmental'">
+                            <ul>
+                                <li>Consider upgrading assets with low energy efficiency ratings to improve environmental performance.</li>
+                                <li>Implement renewable energy solutions for assets with high carbon footprints.</li>
+                                <li>Monitor and reduce carbon emissions from high-impact assets.</li>
+                                <li>Invest in energy-efficient equipment to lower overall environmental impact.</li>
+                                <li>Consider retrofitting existing assets with renewable energy capabilities.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Social Report Recommendations -->
+                        <div t-if="data.get('report_type') == 'social'">
+                            <ul>
+                                <li>Ensure all assets meet accessibility compliance requirements.</li>
+                                <li>Improve safety protocols for assets that are not safety compliant.</li>
+                                <li>Work on improving social impact scores for assets with low scores.</li>
+                                <li>Implement training programs for staff on safety and accessibility requirements.</li>
+                                <li>Regularly review and update safety and accessibility standards.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Governance Report Recommendations -->
+                        <div t-if="data.get('report_type') == 'governance'">
+                            <ul>
+                                <li>Schedule regular audits for assets approaching their audit due dates.</li>
+                                <li>Obtain relevant certifications for assets that currently lack them.</li>
+                                <li>Ensure all assets meet regulatory compliance requirements.</li>
+                                <li>Implement a certification tracking system to monitor expiry dates.</li>
+                                <li>Develop a governance framework for asset management.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Comprehensive Report Recommendations -->
+                        <div t-if="data.get('report_type') == 'comprehensive'">
+                            <ul>
+                                <li>Consider upgrading assets with low energy efficiency ratings to improve environmental performance.</li>
+                                <li>Implement renewable energy solutions for assets with high carbon footprints.</li>
+                                <li>Ensure all assets meet accessibility compliance requirements.</li>
+                                <li>Schedule regular audits for assets approaching their audit due dates.</li>
+                                <li>Obtain relevant certifications for assets that currently lack them.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
