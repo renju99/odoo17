@@ -45,20 +45,15 @@ class ESGReportWizard(models.TransientModel):
         
         assets = self.env['facility.asset'].search(domain)
         
-        # Prepare report data
-        report_data = {
-            'wizard': self,
-            'assets': assets,
-            'total_assets': len(assets),
-            'environmental_assets': assets.filtered(lambda a: a.environmental_impact),
-            'social_assets': assets.filtered(lambda a: a.safety_compliance or a.accessibility_compliant),
-            'governance_assets': assets.filtered(lambda a: a.regulatory_compliance),
-            'compliance_rate': self._calculate_compliance_rate(assets),
-            'environmental_metrics': self._calculate_environmental_metrics(assets),
-            'social_metrics': self._calculate_social_metrics(assets),
-            'governance_metrics': self._calculate_governance_metrics(assets),
-            'generation_date': fields.Date.today(),
-        }
+        # Generate report data based on report type
+        if self.report_type == 'environmental':
+            report_data = self._prepare_environmental_report(assets)
+        elif self.report_type == 'social':
+            report_data = self._prepare_social_report(assets)
+        elif self.report_type == 'governance':
+            report_data = self._prepare_governance_report(assets)
+        else:  # comprehensive
+            report_data = self._prepare_comprehensive_report(assets)
         
         # Return report action
         return self.env.ref('facilities_management_module.action_esg_report_pdf').report_action(self, data=report_data)
