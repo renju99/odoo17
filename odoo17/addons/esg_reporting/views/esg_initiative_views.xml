@@ -159,7 +159,7 @@
             <field name="name">esg.initiative.calendar</field>
             <field name="model">esg.initiative</field>
             <field name="arch" type="xml">
-                <calendar string="ESG Initiatives" date_start="date" color="user_id" quick_add="false">
+                <calendar string="ESG Initiatives" date_start="date" color="user_id">
                     <field name="name"/>
                     <field name="initiative_type"/>
                     <field name="priority"/>
