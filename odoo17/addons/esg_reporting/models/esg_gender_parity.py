@@ -242,3 +242,163 @@ class ESGGenderParity(models.Model):
             'avg_leadership_ratio': sum(reports.mapped('leadership_gender_ratio')) / len(reports),
             'count': len(reports),
         }
+    
+    @api.model
+    def auto_collect_social_data(self):
+        """Automatically collect social data from HR module"""
+        _logger.info("Starting automatic social data collection")
+        
+        collected_data = {
+            'gender_parity': {},
+            'employee_diversity': {},
+            'leadership_diversity': {},
+            'records_created': 0
+        }
+        
+        try:
+            # 1. Collect Gender Parity Data
+            gender_data = self._collect_gender_parity_data()
+            collected_data['gender_parity'] = gender_data
+            
+            # 2. Collect Employee Diversity Data
+            diversity_data = self._collect_employee_diversity_data()
+            collected_data['employee_diversity'] = diversity_data
+            
+            # 3. Collect Leadership Diversity Data
+            leadership_data = self._collect_leadership_diversity_data()
+            collected_data['leadership_diversity'] = leadership_data
+            
+            _logger.info(f"Social data collection completed: {collected_data}")
+            return collected_data
+            
+        except Exception as e:
+            _logger.error(f"Error in automatic social data collection: {e}")
+            return collected_data
+    
+    def _collect_gender_parity_data(self):
+        """Collect gender parity data from HR employees"""
+        hr_employee = self.env.get('hr.employee')
+        
+        if not hr_employee:
+            return {}
+        
+        # Get all active employees
+        employees = hr_employee.search([
+            ('active', '=', True),
+            ('company_id', '=', self.env.company.id)
+        ])
+        
+        # Count by gender
+        male_count = 0
+        female_count = 0
+        other_count = 0
+        
+        for employee in employees:
+            gender = getattr(employee, 'gender', 'male')
+            if gender == 'male':
+                male_count += 1
+            elif gender == 'female':
+                female_count += 1
+            else:
+                other_count += 1
+        
+        # Create gender parity record
+        gender_parity_record = self.create({
+            'name': f'Gender Parity Report - {fields.Date.today().strftime("%B %Y")}',
+            'date': fields.Date.today(),
+            'male_count': male_count,
+            'female_count': female_count,
+            'other_count': other_count,
+            'period_type': 'monthly',
+            'state': 'draft',
+            'notes': 'Automatically collected from HR employee data'
+        })
+        
+        return {
+            'male_count': male_count,
+            'female_count': female_count,
+            'other_count': other_count,
+            'total_count': male_count + female_count + other_count,
+            'record_id': gender_parity_record.id
+        }
+    
+    def _collect_employee_diversity_data(self):
+        """Collect employee diversity data"""
+        hr_employee = self.env.get('hr.employee')
+        
+        if not hr_employee:
+            return {}
+        
+        # Get employees by department
+        departments = self.env['hr.department'].search([
+            ('company_id', '=', self.env.company.id)
+        ])
+        
+        diversity_data = {}
+        
+        for dept in departments:
+            employees = hr_employee.search([
+                ('department_id', '=', dept.id),
+                ('active', '=', True)
+            ])
+            
+            if employees:
+                male_count = len(employees.filtered(lambda e: getattr(e, 'gender', 'male') == 'male'))
+                female_count = len(employees.filtered(lambda e: getattr(e, 'gender', 'female') == 'female'))
+                other_count = len(employees) - male_count - female_count
+                
+                diversity_data[dept.name] = {
+                    'total': len(employees),
+                    'male': male_count,
+                    'female': female_count,
+                    'other': other_count,
+                    'diversity_ratio': (min(male_count, female_count) / len(employees)) * 100 if len(employees) > 0 else 0
+                }
+        
+        return diversity_data
+    
+    def _collect_leadership_diversity_data(self):
+        """Collect leadership diversity data"""
+        hr_employee = self.env.get('hr.employee')
+        
+        if not hr_employee:
+            return {}
+        
+        # Define leadership job titles (this would be configurable)
+        leadership_titles = [
+            'manager', 'director', 'executive', 'chief', 'president', 'ceo', 'cfo', 'cto',
+            'vp', 'vice president', 'head of', 'lead', 'senior'
+        ]
+        
+        # Get employees in leadership positions
+        leadership_employees = hr_employee.search([
+            ('active', '=', True),
+            ('company_id', '=', self.env.company.id)
+        ])
+        
+        # Filter for leadership positions
+        leaders = leadership_employees.filtered(lambda e: 
+            any(title in (e.job_title or '').lower() for title in leadership_titles) or
+            any(title in (e.job_id.name or '').lower() for title in leadership_titles)
+        )
+        
+        male_leaders = len(leaders.filtered(lambda e: getattr(e, 'gender', 'male') == 'male'))
+        female_leaders = len(leaders.filtered(lambda e: getattr(e, 'gender', 'female') == 'female'))
+        other_leaders = len(leaders) - male_leaders - female_leaders
+        
+        # Update the gender parity record with leadership data
+        latest_record = self.search([], order='date desc', limit=1)
+        if latest_record:
+            latest_record.write({
+                'male_leaders': male_leaders,
+                'female_leaders': female_leaders,
+                'other_leaders': other_leaders
+            })
+        
+        return {
+            'total_leaders': len(leaders),
+            'male_leaders': male_leaders,
+            'female_leaders': female_leaders,
+            'other_leaders': other_leaders,
+            'leadership_ratio': (female_leaders / len(leaders)) * 100 if len(leaders) > 0 else 0
+        }

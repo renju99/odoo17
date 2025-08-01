@@ -82,12 +82,30 @@
                   action="action_esg_pay_gap"
                   sequence="40"/>
 
+        <menuitem id="menu_esg_targets"
+                  name="ESG Targets"
+                  parent="menu_esg_social"
+                  action="action_esg_target"
+                  sequence="50"/>
+
         <!-- Governance Submenus -->
         <menuitem id="menu_esg_initiatives"
                   name="ESG Initiatives"
                   parent="menu_esg_governance"
                   action="action_esg_initiative"
                   sequence="10"/>
+
+        <menuitem id="menu_esg_frameworks"
+                  name="ESG Frameworks"
+                  parent="menu_esg_governance"
+                  action="action_esg_framework"
+                  sequence="20"/>
+
+        <menuitem id="menu_esg_materiality_assessments"
+                  name="Materiality Assessments"
+                  parent="menu_esg_governance"
+                  action="action_esg_materiality_assessment"
+                  sequence="30"/>
 
         <!-- Analytics Submenus -->
         <menuitem id="menu_esg_analytics_reports"
@@ -101,6 +119,12 @@
                   parent="menu_esg_analytics"
                   action="action_esg_dashboard"
                   sequence="20"/>
+
+        <menuitem id="menu_esg_advanced_dashboard"
+                  name="Advanced Dashboard"
+                  parent="menu_esg_analytics"
+                  action="action_esg_advanced_dashboard"
+                  sequence="25"/>
 
         <!-- Configuration Submenus -->
         <menuitem id="menu_esg_emission_factors"
