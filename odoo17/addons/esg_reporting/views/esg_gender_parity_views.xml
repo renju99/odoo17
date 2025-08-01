@@ -142,8 +142,7 @@
                         <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
                         <filter string="Job Position" name="job" context="{'group_by': 'job_id'}"/>
                         <filter string="Period Type" name="period_type" context="{'group_by': 'period_type'}"/>
-                        <filter string="Month" name="month" context="{'group_by': 'month'}"/>
-                        <filter string="Year" name="year" context="{'group_by': 'year'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
