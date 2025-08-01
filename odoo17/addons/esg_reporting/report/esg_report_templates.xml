@@ -298,27 +298,27 @@
                             <h2><t t-esc="o.name"/></h2>
                             <p><strong>Generated Date:</strong> <t t-esc="o.date"/></p>
                             <p><strong>Analytics Type:</strong> <t t-esc="o.analytics_type"/></p>
-                            <p><strong>Period:</strong> <t t-esc="o.date_from"/> to <t t-esc="o.date_to"/></p>
+                            <p><strong>Period:</strong> <t t-esc="o.date_from or ''"/> to <t t-esc="o.date_to or ''"/></p>
                             
                             <h3>Executive Summary</h3>
                             <p>This comprehensive ESG report provides a complete overview of environmental, social, and governance performance metrics.</p>
                             
                             <h3>Environmental Performance</h3>
-                            <p><strong>Total Emissions:</strong> <t t-esc="o.total_emissions"/> t CO2</p>
-                            <p><strong>Total Offset:</strong> <t t-esc="o.total_offset"/> t CO2</p>
-                            <p><strong>Net Emissions:</strong> <t t-esc="o.net_emissions"/> t CO2</p>
-                            <p><strong>Emission Intensity:</strong> <t t-esc="o.emission_intensity"/> t CO2/employee</p>
-                            <p><strong>Environmental Score:</strong> <t t-esc="o.environmental_score"/></p>
+                            <p><strong>Total Emissions:</strong> <t t-esc="o.total_emissions or 0.0"/> t CO2</p>
+                            <p><strong>Total Offset:</strong> <t t-esc="o.total_offset or 0.0"/> t CO2</p>
+                            <p><strong>Net Emissions:</strong> <t t-esc="o.net_emissions or 0.0"/> t CO2</p>
+                            <p><strong>Emission Intensity:</strong> <t t-esc="o.emission_intensity or 0.0"/> t CO2/employee</p>
+                            <p><strong>Environmental Score:</strong> <t t-esc="o.environmental_score or 0.0"/></p>
                             
                             <h3>Social Performance</h3>
-                            <p><strong>Social Score:</strong> <t t-esc="o.social_score"/></p>
+                            <p><strong>Social Score:</strong> <t t-esc="o.social_score or 0.0"/></p>
                             
                             <h3>Governance Performance</h3>
-                            <p><strong>Governance Score:</strong> <t t-esc="o.governance_score"/></p>
+                            <p><strong>Governance Score:</strong> <t t-esc="o.governance_score or 0.0"/></p>
                             
                             <h3>Overall ESG Performance</h3>
-                            <p><strong>Overall ESG Score:</strong> <t t-esc="o.overall_score"/></p>
-                            <p><strong>Compliance Status:</strong> <t t-esc="o.compliance_status"/></p>
+                            <p><strong>Overall ESG Score:</strong> <t t-esc="o.overall_score or 0.0"/></p>
+                            <p><strong>Compliance Status:</strong> <t t-esc="o.compliance_status or 'Pending'"/></p>
                             
                             <h3>Recommendations</h3>
                             <p>Based on the analysis, the following recommendations are provided:</p>
