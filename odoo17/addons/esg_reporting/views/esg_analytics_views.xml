@@ -158,6 +158,30 @@
             </field>
         </record>
 
+        <!-- ESG Carbon Footprint Search View -->
+        <record id="view_esg_carbon_footprint_search" model="ir.ui.view">
+            <field name="name">esg.carbon.footprint.search</field>
+            <field name="model">esg.carbon.footprint</field>
+            <field name="arch" type="xml">
+                <search string="ESG Carbon Footprint">
+                    <field name="name"/>
+                    <field name="scope"/>
+                    <field name="emission_source"/>
+                    <field name="date"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Validated" name="validated" domain="[('state', '=', 'validated')]"/>
+                    <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Scope" name="scope" context="{'group_by': 'scope'}"/>
+                        <filter string="Emission Source" name="emission_source" context="{'group_by': 'emission_source'}"/>
+                        <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                        <filter string="Verification Status" name="verification_status" context="{'group_by': 'verification_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <!-- ESG Carbon Footprint List View -->
         <record id="view_esg_carbon_footprint_list" model="ir.ui.view">
             <field name="name">esg.carbon.footprint.list</field>
