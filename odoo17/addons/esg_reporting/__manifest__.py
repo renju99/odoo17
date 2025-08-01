@@ -51,11 +51,11 @@
     'application': True,
     'auto_install': False,
     'license': 'LGPL-3',
-                'assets': {
-                'web.assets_backend': [
-                    'esg_reporting/static/src/js/esg_dashboard.js',
-                    'esg_reporting/static/src/css/esg_dashboard.css',
-                    'esg_reporting/static/src/xml/esg_dashboard.xml',
-                ],
-            },
+    'assets': {
+        'web.assets_backend': [
+            'esg_reporting/static/src/js/esg_dashboard.js',
+            'esg_reporting/static/src/css/esg_dashboard.css',
+            'esg_reporting/static/src/xml/esg_dashboard.xml',
+        ],
+    },
 }

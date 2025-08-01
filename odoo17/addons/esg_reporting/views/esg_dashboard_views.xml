@@ -2,23 +2,6 @@
 <odoo>
     <data>
         
-        <!-- ESG Dashboard Action -->
-        <record id="action_esg_dashboard" model="ir.actions.act_window">
-            <field name="name">ESG Dashboard</field>
-            <field name="res_model">esg.analytics</field>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="view_esg_dashboard_kanban"/>
-            <field name="context">{'search_default_completed': 1}</field>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Welcome to the ESG Dashboard!
-                </p>
-                <p>
-                    View comprehensive ESG metrics, carbon analytics, and sustainability performance indicators.
-                </p>
-            </field>
-        </record>
-
         <!-- ESG Dashboard Kanban View -->
         <record id="view_esg_dashboard_kanban" model="ir.ui.view">
             <field name="name">esg.dashboard.kanban</field>
@@ -79,6 +62,23 @@
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <!-- ESG Dashboard Action -->
+        <record id="action_esg_dashboard" model="ir.actions.act_window">
+            <field name="name">ESG Dashboard</field>
+            <field name="res_model">esg.analytics</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_esg_dashboard_kanban"/>
+            <field name="context">{'search_default_completed': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Welcome to the ESG Dashboard!
+                </p>
+                <p>
+                    View comprehensive ESG metrics, carbon analytics, and sustainability performance indicators.
+                </p>
             </field>
         </record>
 

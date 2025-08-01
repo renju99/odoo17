@@ -108,6 +108,78 @@
             </field>
         </record>
 
+        <!-- ESG Emission Factor Form View -->
+        <record id="esg_emission_factor_form" model="ir.ui.view">
+            <field name="name">esg.emission.factor.form</field>
+            <field name="model">esg.emission.factor</field>
+            <field name="arch" type="xml">
+                <form string="ESG Emission Factor">
+                    <sheet>
+                        <group>
+                            <group string="Basic Information">
+                                <field name="name"/>
+                                <field name="factor"/>
+                                <field name="unit"/>
+                                <field name="category"/>
+                                <field name="active"/>
+                            </group>
+                            <group string="Additional Information">
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Emission Factor Tree View -->
+        <record id="esg_emission_factor_tree" model="ir.ui.view">
+            <field name="name">esg.emission.factor.tree</field>
+            <field name="model">esg.emission.factor</field>
+            <field name="arch" type="xml">
+                <tree string="ESG Emission Factors">
+                    <field name="name"/>
+                    <field name="factor"/>
+                    <field name="unit"/>
+                    <field name="category"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ESG Emission Factor Search View -->
+        <record id="esg_emission_factor_search" model="ir.ui.view">
+            <field name="name">esg.emission.factor.search</field>
+            <field name="model">esg.emission.factor</field>
+            <field name="arch" type="xml">
+                <search string="Search ESG Emission Factors">
+                    <field name="name"/>
+                    <field name="category"/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_category" context="{'group_by': 'category'}"/>
+                        <filter string="Unit" name="group_unit" context="{'group_by': 'unit'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ESG Emission Factor Action -->
+        <record id="action_esg_emission_factor" model="ir.actions.act_window">
+            <field name="name">Emission Factors</field>
+            <field name="res_model">esg.emission.factor</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="esg_emission_factor_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first emission factor!
+                </p>
+                <p>
+                    Define emission factors for different types of activities and energy sources.
+                </p>
+            </field>
+        </record>
 
     </data>
 </odoo>
