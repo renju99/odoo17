@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ESG Report Wizard Form View -->
+        <record id="view_esg_report_wizard_form" model="ir.ui.view">
+            <field name="name">esg.report.wizard.form</field>
+            <field name="model">esg.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate ESG Report">
+                    <group>
+                        <group>
+                            <field name="report_type"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="asset_type"/>
+                            <field name="include_compliance_only"/>
+                            <field name="include_charts"/>
+                            <field name="include_recommendations"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Generate ESG Report" type="object" name="action_generate_esg_report" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- ESG Report Wizard Action -->
+        <record id="action_esg_report_wizard" model="ir.actions.act_window">
+            <field name="name">ESG Report</field>
+            <field name="res_model">esg.report.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_esg_report_wizard_form"/>
+        </record>
+    </data>
+</odoo>
