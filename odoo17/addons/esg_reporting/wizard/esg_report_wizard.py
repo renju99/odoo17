@@ -202,19 +202,37 @@ class ESGReportWizard(models.TransientModel):
         
         return data
     
-    def _generate_pdf_report(self, data):
-        """Generate PDF report"""
-        # Create a temporary record to pass data to the report
-        report_record = self.env['esg.analytics'].create({
+    def _get_analytics_type_mapping(self):
+        """Get mapping from wizard report types to analytics types"""
+        return {
+            'comprehensive': 'esg_performance',
+            'environmental': 'carbon_analytics',
+            'social': 'esg_performance',
+            'governance': 'esg_performance',
+            'carbon_analytics': 'carbon_analytics',
+            'gender_parity': 'esg_performance',
+            'pay_gap': 'esg_performance',
+            'initiatives': 'esg_performance',
+        }
+    
+    def _create_analytics_record(self, data):
+        """Create an analytics record with proper type mapping"""
+        analytics_type_mapping = self._get_analytics_type_mapping()
+        return self.env['esg.analytics'].create({
             'name': self.name,
             'date': fields.Date.today(),
-            'analytics_type': self.report_type,
-            'period_type': 'custom',
+            'analytics_type': analytics_type_mapping.get(self.report_type, 'esg_performance'),
+            'period_type': 'monthly',  # Use monthly as default since 'custom' is not available
             'date_from': self.date_from,
             'date_to': self.date_to,
             'state': 'completed',
             'report_data': str(data),  # Store the data as JSON string
         })
+    
+    def _generate_pdf_report(self, data):
+        """Generate PDF report"""
+        # Create a temporary record to pass data to the report
+        report_record = self._create_analytics_record(data)
         
         # Return the report action
         return {
@@ -255,16 +273,7 @@ class ESGReportWizard(models.TransientModel):
     def _generate_html_report(self, data):
         """Generate HTML report"""
         # Create a temporary record to pass data to the report
-        report_record = self.env['esg.analytics'].create({
-            'name': self.name,
-            'date': fields.Date.today(),
-            'analytics_type': self.report_type,
-            'period_type': 'custom',
-            'date_from': self.date_from,
-            'date_to': self.date_to,
-            'state': 'completed',
-            'report_data': str(data),  # Store the data as JSON string
-        })
+        report_record = self._create_analytics_record(data)
         
         # Return the report action for HTML
         return {
