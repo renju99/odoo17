@@ -2,170 +2,340 @@
 <odoo>
     <data noupdate="1">
         
-        <!-- Demo ESG Emissions -->
-        <record id="demo_emission_electricity" model="esg.emission">
-            <field name="name">Office Electricity Usage</field>
+        <!-- ESG Frameworks Demo Data -->
+        <record id="esg_framework_gri" model="esg.framework">
+            <field name="name">Global Reporting Initiative (GRI)</field>
+            <field name="code">GRI</field>
+            <field name="framework_type">gri</field>
+            <field name="version">2021</field>
+            <field name="description">The Global Reporting Initiative (GRI) is the independent, international organization that helps businesses and other organizations take responsibility for their impacts, by providing them with the global common language to communicate those impacts.</field>
+            <field name="materiality_threshold">5.0</field>
+            <field name="reporting_frequency">annual</field>
+            <field name="compliance_status">implementing</field>
+            <field name="compliance_score">75.0</field>
+            <field name="last_assessment_date">2024-01-15</field>
+            <field name="next_assessment_date">2024-12-31</field>
+            <field name="auto_collect_data">True</field>
+            <field name="data_sources">HR Module, Fleet Module, Manufacturing Module, Energy Consumption Data</field>
+        </record>
+
+        <record id="esg_framework_sasb" model="esg.framework">
+            <field name="name">Sustainability Accounting Standards Board (SASB)</field>
+            <field name="code">SASB</field>
+            <field name="framework_type">sasb</field>
+            <field name="version">2018</field>
+            <field name="description">SASB provides industry-specific standards that identify the subset of environmental, social, and governance issues most relevant to financial performance in each of 77 industries.</field>
+            <field name="materiality_threshold">5.0</field>
+            <field name="reporting_frequency">annual</field>
+            <field name="compliance_status">planning</field>
+            <field name="compliance_score">45.0</field>
+            <field name="last_assessment_date">2024-01-10</field>
+            <field name="next_assessment_date">2024-12-31</field>
+            <field name="auto_collect_data">True</field>
+            <field name="data_sources">Financial Data, Energy Consumption, Employee Data, Supply Chain Information</field>
+        </record>
+
+        <record id="esg_framework_tcfd" model="esg.framework">
+            <field name="name">Task Force on Climate-related Financial Disclosures (TCFD)</field>
+            <field name="code">TCFD</field>
+            <field name="framework_type">tcfd</field>
+            <field name="version">2017</field>
+            <field name="description">The TCFD develops recommendations for more effective climate-related disclosures that could promote more informed investment, credit, and insurance underwriting decisions.</field>
+            <field name="materiality_threshold">5.0</field>
+            <field name="reporting_frequency">annual</field>
+            <field name="compliance_status">implementing</field>
+            <field name="compliance_score">60.0</field>
+            <field name="last_assessment_date">2024-01-20</field>
+            <field name="next_assessment_date">2024-12-31</field>
+            <field name="auto_collect_data">True</field>
+            <field name="data_sources">Climate Risk Data, Energy Consumption, Carbon Emissions, Financial Impact Analysis</field>
+        </record>
+
+        <!-- ESG Framework Standards Demo Data -->
+        <record id="esg_standard_gri_103" model="esg.framework.standard">
+            <field name="name">GRI 103: Management Approach</field>
+            <field name="code">GRI 103</field>
+            <field name="framework_id" ref="esg_framework_gri"/>
+            <field name="category">general</field>
+            <field name="subcategory">Management Approach</field>
+            <field name="description">This standard describes the reporting organization's management approach to material topics.</field>
+            <field name="requirements">Organizations must disclose their management approach to material topics, including policies, commitments, and governance mechanisms.</field>
+            <field name="required">True</field>
+            <field name="sequence">10</field>
+            <field name="is_compliant">True</field>
+            <field name="last_assessment_date">2024-01-15</field>
+            <field name="data_source_model">esg.initiative</field>
+            <field name="data_source_field">state</field>
+            <field name="calculation_method">Check if ESG initiatives are properly managed and documented</field>
+        </record>
+
+        <record id="esg_standard_gri_305" model="esg.framework.standard">
+            <field name="name">GRI 305: Emissions</field>
+            <field name="code">GRI 305</field>
+            <field name="framework_id" ref="esg_framework_gri"/>
+            <field name="category">environmental</field>
+            <field name="subcategory">Emissions</field>
+            <field name="description">This standard addresses the reporting organization's emissions of greenhouse gases and other significant emissions to air.</field>
+            <field name="requirements">Organizations must disclose their greenhouse gas emissions, including scope 1, 2, and 3 emissions.</field>
+            <field name="required">True</field>
+            <field name="sequence">20</field>
+            <field name="is_compliant">True</field>
+            <field name="last_assessment_date">2024-01-15</field>
+            <field name="data_source_model">esg.emission</field>
+            <field name="data_source_field">emission_amount</field>
+            <field name="calculation_method">Sum of all emission amounts for the reporting period</field>
+        </record>
+
+        <record id="esg_standard_sasb_en_1" model="esg.framework.standard">
+            <field name="name">SASB EN-AC-410a.1: GHG Emissions</field>
+            <field name="code">SASB EN-AC-410a.1</field>
+            <field name="framework_id" ref="esg_framework_sasb"/>
+            <field name="category">environmental</field>
+            <field name="subcategory">GHG Emissions</field>
+            <field name="description">Total greenhouse gas emissions from operations, in metric tons CO2 equivalent.</field>
+            <field name="requirements">Report total GHG emissions from operations, including scope 1 and 2 emissions.</field>
+            <field name="required">True</field>
+            <field name="sequence">10</field>
+            <field name="is_compliant">True</field>
+            <field name="last_assessment_date">2024-01-10</field>
+            <field name="data_source_model">esg.emission</field>
+            <field name="data_source_field">emission_amount</field>
+            <field name="calculation_method">Sum of scope 1 and 2 emissions for the reporting period</field>
+        </record>
+
+        <!-- ESG Targets Demo Data -->
+        <record id="esg_target_carbon_reduction" model="esg.target">
+            <field name="name">Carbon Emissions Reduction 2030</field>
+            <field name="target_type">emission_reduction</field>
+            <field name="category">environmental</field>
+            <field name="baseline_year">2020</field>
+            <field name="baseline_value">1000.0</field>
+            <field name="baseline_unit">t_co2</field>
+            <field name="target_year">2030</field>
+            <field name="target_value">500.0</field>
+            <field name="target_unit">t_co2</field>
+            <field name="is_science_based">True</field>
+            <field name="sbti_category">below_2c</field>
+            <field name="sbti_approved">True</field>
+            <field name="approval_date">2023-06-15</field>
+            <field name="risk_level">medium</field>
+            <field name="risk_factors">Technology adoption delays, regulatory changes, economic constraints</field>
+            <field name="mitigation_strategies">Invest in renewable energy, improve energy efficiency, implement carbon pricing</field>
+            <field name="state">active</field>
+            <field name="data_source_model">esg.emission</field>
+            <field name="data_source_field">emission_amount</field>
+            <field name="calculation_method">Sum of all emission amounts for current year</field>
+            <field name="description">Reduce carbon emissions by 50% by 2030 compared to 2020 baseline, aligned with SBTi 2°C pathway.</field>
+            <field name="rationale">To align with Paris Agreement goals and reduce climate-related risks to the business.</field>
+            <field name="stakeholders">Executive team, sustainability committee, operations department, investors</field>
+            <field name="budget">500000.0</field>
+        </record>
+
+        <record id="esg_target_diversity" model="esg.target">
+            <field name="name">Leadership Diversity Improvement</field>
+            <field name="target_type">diversity_inclusion</field>
+            <field name="category">social</field>
+            <field name="baseline_year">2023</field>
+            <field name="baseline_value">25.0</field>
+            <field name="baseline_unit">percent</field>
+            <field name="target_year">2025</field>
+            <field name="target_value">40.0</field>
+            <field name="target_unit">percent</field>
+            <field name="is_science_based">False</field>
+            <field name="risk_level">low</field>
+            <field name="risk_factors">Limited talent pool, unconscious bias in hiring</field>
+            <field name="mitigation_strategies">Implement inclusive hiring practices, provide leadership training, set diversity goals</field>
+            <field name="state">active</field>
+            <field name="data_source_model">esg.gender.parity</field>
+            <field name="data_source_field">leadership_gender_ratio</field>
+            <field name="calculation_method">Calculate percentage of women in leadership positions</field>
+            <field name="description">Increase women in leadership positions from 25% to 40% by 2025.</field>
+            <field name="rationale">To improve organizational diversity and create a more inclusive workplace culture.</field>
+            <field name="stakeholders">HR department, leadership team, diversity committee</field>
+            <field name="budget">100000.0</field>
+        </record>
+
+        <!-- ESG Target Milestones Demo Data -->
+        <record id="esg_milestone_carbon_2025" model="esg.target.milestone">
+            <field name="name">Carbon Reduction Milestone 2025</field>
+            <field name="target_id" ref="esg_target_carbon_reduction"/>
+            <field name="date">2025-12-31</field>
+            <field name="expected_value">750.0</field>
+            <field name="actual_value">720.0</field>
+            <field name="state">achieved</field>
+            <field name="notes">Achieved 28% reduction by 2025, exceeding the expected 25% milestone.</field>
+        </record>
+
+        <record id="esg_milestone_carbon_2027" model="esg.target.milestone">
+            <field name="name">Carbon Reduction Milestone 2027</field>
+            <field name="target_id" ref="esg_target_carbon_reduction"/>
+            <field name="date">2027-12-31</field>
+            <field name="expected_value">625.0</field>
+            <field name="actual_value">0.0</field>
+            <field name="state">pending</field>
+            <field name="notes">Target: 37.5% reduction by 2027</field>
+        </record>
+
+        <record id="esg_milestone_diversity_2024" model="esg.target.milestone">
+            <field name="name">Diversity Milestone 2024</field>
+            <field name="target_id" ref="esg_target_diversity"/>
+            <field name="date">2024-12-31</field>
+            <field name="expected_value">30.0</field>
+            <field name="actual_value">32.0</field>
+            <field name="state">achieved</field>
+            <field name="notes">Exceeded the 2024 target of 30% women in leadership positions.</field>
+        </record>
+
+        <!-- ESG Materiality Assessment Demo Data -->
+        <record id="esg_materiality_assessment_2024" model="esg.materiality.assessment">
+            <field name="name">Materiality Assessment 2024</field>
             <field name="date">2024-01-15</field>
-            <field name="emission_factor_id" ref="emission_factor_electricity"/>
-            <field name="quantity">1000</field>
+            <field name="framework_id" ref="esg_framework_gri"/>
+            <field name="assessment_type">periodic</field>
+            <field name="materiality_threshold">5.0</field>
+            <field name="stakeholders_consulted">150</field>
+            <field name="stakeholder_engagement">Comprehensive stakeholder engagement process including employees, customers, suppliers, investors, and community representatives. Conducted through surveys, interviews, and focus groups.</field>
+            <field name="state">validated</field>
+            <field name="notes">Annual materiality assessment completed with stakeholder input from all key groups.</field>
+        </record>
+
+        <!-- ESG Materiality Topics Demo Data -->
+        <record id="esg_topic_climate_change" model="esg.materiality.topic">
+            <field name="name">Climate Change and Carbon Emissions</field>
+            <field name="assessment_id" ref="esg_materiality_assessment_2024"/>
+            <field name="category">environmental</field>
+            <field name="subcategory">Climate</field>
+            <field name="description">Management of greenhouse gas emissions and climate-related risks and opportunities.</field>
+            <field name="impact_score">9.0</field>
+            <field name="probability_score">8.0</field>
+            <field name="sequence">10</field>
+            <field name="notes">High impact on business operations and stakeholder expectations.</field>
+        </record>
+
+        <record id="esg_topic_diversity" model="esg.materiality.topic">
+            <field name="name">Diversity and Inclusion</field>
+            <field name="assessment_id" ref="esg_materiality_assessment_2024"/>
+            <field name="category">social</field>
+            <field name="subcategory">Workforce</field>
+            <field name="description">Workforce diversity, equity, and inclusion practices and outcomes.</field>
+            <field name="impact_score">7.0</field>
+            <field name="probability_score">8.0</field>
+            <field name="sequence">20</field>
+            <field name="notes">Important for talent attraction and retention, as well as stakeholder expectations.</field>
+        </record>
+
+        <record id="esg_topic_energy_efficiency" model="esg.materiality.topic">
+            <field name="name">Energy Efficiency</field>
+            <field name="assessment_id" ref="esg_materiality_assessment_2024"/>
+            <field name="category">environmental</field>
+            <field name="subcategory">Energy</field>
+            <field name="description">Energy consumption and efficiency improvements in operations.</field>
+            <field name="impact_score">6.0</field>
+            <field name="probability_score">7.0</field>
+            <field name="sequence">30</field>
+            <field name="notes">Direct impact on operational costs and carbon footprint.</field>
+        </record>
+
+        <record id="esg_topic_supply_chain" model="esg.materiality.topic">
+            <field name="name">Supply Chain Sustainability</field>
+            <field name="assessment_id" ref="esg_materiality_assessment_2024"/>
+            <field name="category">social</field>
+            <field name="subcategory">Supply Chain</field>
+            <field name="description">Environmental and social impacts of supply chain operations.</field>
+            <field name="impact_score">6.0</field>
+            <field name="probability_score">6.0</field>
+            <field name="sequence">40</field>
+            <field name="notes">Important for risk management and stakeholder trust.</field>
+        </record>
+
+        <record id="esg_topic_governance" model="esg.materiality.topic">
+            <field name="name">Corporate Governance</field>
+            <field name="assessment_id" ref="esg_materiality_assessment_2024"/>
+            <field name="category">governance</field>
+            <field name="subcategory">Governance</field>
+            <field name="description">Board composition, ethics, and corporate governance practices.</field>
+            <field name="impact_score">8.0</field>
+            <field name="probability_score">5.0</field>
+            <field name="sequence">50</field>
+            <field name="notes">Critical for investor confidence and regulatory compliance.</field>
+        </record>
+
+        <!-- Enhanced Emission Factors Demo Data -->
+        <record id="esg_emission_factor_electricity_2024" model="esg.emission.factor">
+            <field name="name">Grid Electricity 2024</field>
+            <field name="factor">0.5</field>
             <field name="unit">kwh</field>
-            <field name="amount">150.00</field>
-            <field name="state">validated</field>
-            <field name="notes">Monthly office electricity consumption</field>
+            <field name="category">electricity</field>
+            <field name="description">Average grid electricity emission factor for 2024 (kg CO2 per kWh)</field>
+            <field name="active">True</field>
         </record>
 
-        <record id="demo_emission_transportation" model="esg.emission">
-            <field name="name">Company Vehicle Fleet</field>
-            <field name="date">2024-01-15</field>
-            <field name="emission_factor_id" ref="emission_factor_diesel"/>
-            <field name="quantity">200</field>
-            <field name="unit">liter</field>
-            <field name="amount">300.00</field>
-            <field name="state">validated</field>
-            <field name="notes">Monthly diesel consumption for company vehicles</field>
-        </record>
-
-        <record id="demo_emission_heating" model="esg.emission">
-            <field name="name">Office Heating</field>
-            <field name="date">2024-01-15</field>
-            <field name="emission_factor_id" ref="emission_factor_natural_gas"/>
-            <field name="quantity">500</field>
+        <record id="esg_emission_factor_natural_gas_2024" model="esg.emission.factor">
+            <field name="name">Natural Gas 2024</field>
+            <field name="factor">2.0</field>
             <field name="unit">m3</field>
-            <field name="amount">400.00</field>
-            <field name="state">validated</field>
-            <field name="notes">Monthly natural gas consumption for heating</field>
+            <field name="category">heating</field>
+            <field name="description">Natural gas emission factor for 2024 (kg CO2 per m3)</field>
+            <field name="active">True</field>
         </record>
 
-        <!-- Demo ESG Offsets -->
-        <record id="demo_offset_tree_planting" model="esg.offset">
-            <field name="name">Tree Planting Project</field>
-            <field name="date">2024-01-20</field>
-            <field name="offset_type_id" ref="offset_type_tree_planting"/>
-            <field name="quantity">100</field>
-            <field name="unit">tree</field>
-            <field name="amount">500.00</field>
-            <field name="certificate_number">TP-2024-001</field>
-            <field name="state">validated</field>
-            <field name="notes">Tree planting initiative in local community</field>
+        <record id="esg_emission_factor_diesel_2024" model="esg.emission.factor">
+            <field name="name">Diesel Fuel 2024</field>
+            <field name="factor">2.68</field>
+            <field name="unit">liter</field>
+            <field name="category">transportation</field>
+            <field name="description">Diesel fuel emission factor for 2024 (kg CO2 per liter)</field>
+            <field name="active">True</field>
         </record>
 
-        <record id="demo_offset_renewable_energy" model="esg.offset">
-            <field name="name">Solar Panel Installation</field>
-            <field name="date">2024-01-25</field>
-            <field name="offset_type_id" ref="offset_type_renewable_energy"/>
-            <field name="quantity">5000</field>
-            <field name="unit">kwh</field>
-            <field name="amount">2000.00</field>
-            <field name="certificate_number">RE-2024-001</field>
-            <field name="state">validated</field>
-            <field name="notes">Solar panel installation on office roof</field>
+        <record id="esg_emission_factor_gasoline_2024" model="esg.emission.factor">
+            <field name="name">Gasoline Fuel 2024</field>
+            <field name="factor">2.31</field>
+            <field name="unit">liter</field>
+            <field name="category">transportation</field>
+            <field name="description">Gasoline fuel emission factor for 2024 (kg CO2 per liter)</field>
+            <field name="active">True</field>
         </record>
 
-        <!-- Demo ESG Employee Community -->
-        <record id="demo_community_commute" model="esg.employee.community">
-            <field name="name">Employee Commute Tracking</field>
-            <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="date">2024-01-15</field>
-            <field name="activity_type">commute</field>
-            <field name="commute_type">public_transport</field>
-            <field name="distance">20</field>
-            <field name="duration">1.5</field>
-            <field name="cost">5.00</field>
-            <field name="state">approved</field>
-            <field name="notes">Daily commute using public transportation</field>
-        </record>
-
-        <record id="demo_community_volunteering" model="esg.employee.community">
-            <field name="name">Community Cleanup Event</field>
-            <field name="employee_id" ref="hr.employee_admin"/>
-            <field name="date">2024-01-20</field>
-            <field name="activity_type">volunteering</field>
-            <field name="duration">4.0</field>
-            <field name="location">Local Park</field>
-            <field name="state">approved</field>
-            <field name="notes">Volunteer event for community cleanup</field>
-        </record>
-
-        <!-- Demo ESG Initiatives -->
-        <record id="demo_initiative_carbon_reduction" model="esg.initiative">
-            <field name="name">Carbon Reduction Program</field>
-            <field name="date">2024-01-01</field>
-            <field name="end_date">2024-12-31</field>
-            <field name="initiative_type">carbon_reduction</field>
-            <field name="category">e</field>
-            <field name="priority">2</field>
-            <field name="budget">50000.00</field>
-            <field name="progress">25.0</field>
-            <field name="state">active</field>
-            <field name="description">Comprehensive program to reduce carbon emissions across all operations</field>
-            <field name="objectives">Reduce carbon emissions by 20% by end of year</field>
-            <field name="expected_impact">Significant reduction in carbon footprint and improved sustainability metrics</field>
-            <field name="tags" eval="[(6, 0, [ref('initiative_tag_carbon_reduction')])]"/>
-        </record>
-
-        <record id="demo_initiative_energy_efficiency" model="esg.initiative">
-            <field name="name">Energy Efficiency Upgrade</field>
-            <field name="date">2024-01-15</field>
-            <field name="end_date">2024-06-30</field>
-            <field name="initiative_type">energy_efficiency</field>
-            <field name="category">e</field>
-            <field name="priority">1</field>
-            <field name="budget">25000.00</field>
-            <field name="progress">50.0</field>
-            <field name="state">active</field>
-            <field name="description">Upgrade office lighting and HVAC systems for better energy efficiency</field>
-            <field name="objectives">Reduce energy consumption by 15% through system upgrades</field>
-            <field name="expected_impact">Lower energy bills and reduced carbon emissions</field>
-            <field name="tags" eval="[(6, 0, [ref('initiative_tag_energy_efficiency')])]"/>
-        </record>
-
-        <!-- Demo ESG Analytics -->
-        <record id="demo_analytics_carbon" model="esg.analytics">
-            <field name="name">Carbon Analytics Report - January 2024</field>
-            <field name="date">2024-01-31</field>
-            <field name="analytics_type">carbon_analytics</field>
-            <field name="period_type">monthly</field>
+        <!-- Enhanced Analytics Demo Data -->
+        <record id="esg_analytics_q1_2024" model="esg.analytics">
+            <field name="name">Q1 2024 ESG Analytics</field>
+            <field name="date">2024-03-31</field>
+            <field name="analytics_type">esg_performance</field>
+            <field name="period_type">quarterly</field>
             <field name="date_from">2024-01-01</field>
-            <field name="date_to">2024-01-31</field>
+            <field name="date_to">2024-03-31</field>
+            <field name="total_emissions">850.0</field>
+            <field name="total_offset">120.0</field>
+            <field name="net_emissions">730.0</field>
+            <field name="emission_intensity">0.85</field>
             <field name="environmental_score">75.0</field>
-            <field name="social_score">80.0</field>
-            <field name="governance_score">85.0</field>
+            <field name="social_score">82.0</field>
+            <field name="governance_score">88.0</field>
+            <field name="overall_score">81.7</field>
             <field name="compliance_status">compliant</field>
+            <field name="compliance_notes">All major ESG frameworks are being followed with good progress on targets.</field>
             <field name="state">completed</field>
-            <field name="notes">Monthly carbon analytics report for January 2024</field>
         </record>
 
-        <!-- Demo ESG Gender Parity -->
-        <record id="demo_gender_parity_january" model="esg.gender.parity">
-            <field name="name">Gender Parity Report - January 2024</field>
-            <field name="date">2024-01-31</field>
-            <field name="male_count">45</field>
-            <field name="female_count">35</field>
-            <field name="other_count">5</field>
-            <field name="male_leaders">8</field>
-            <field name="female_leaders">6</field>
-            <field name="other_leaders">1</field>
-            <field name="period_type">monthly</field>
-            <field name="state">validated</field>
-            <field name="notes">Monthly gender parity report for January 2024</field>
-        </record>
-
-        <!-- Demo ESG Pay Gap -->
-        <record id="demo_pay_gap_january" model="esg.pay.gap">
-            <field name="name">Pay Gap Analysis - January 2024</field>
-            <field name="date">2024-01-31</field>
-            <field name="male_count">45</field>
-            <field name="female_count">35</field>
-            <field name="other_count">5</field>
-            <field name="male_avg_salary">65000.00</field>
-            <field name="female_avg_salary">62000.00</field>
-            <field name="other_avg_salary">63000.00</field>
-            <field name="male_leaders_avg_salary">85000.00</field>
-            <field name="female_leaders_avg_salary">82000.00</field>
-            <field name="experience_level">all</field>
-            <field name="period_type">yearly</field>
-            <field name="state">validated</field>
-            <field name="notes">Annual pay gap analysis for 2024</field>
+        <record id="esg_analytics_q2_2024" model="esg.analytics">
+            <field name="name">Q2 2024 ESG Analytics</field>
+            <field name="date">2024-06-30</field>
+            <field name="analytics_type">esg_performance</field>
+            <field name="period_type">quarterly</field>
+            <field name="date_from">2024-04-01</field>
+            <field name="date_to">2024-06-30</field>
+            <field name="total_emissions">780.0</field>
+            <field name="total_offset">150.0</field>
+            <field name="net_emissions">630.0</field>
+            <field name="emission_intensity">0.78</field>
+            <field name="environmental_score">78.0</field>
+            <field name="social_score">85.0</field>
+            <field name="governance_score">90.0</field>
+            <field name="overall_score">84.3</field>
+            <field name="compliance_status">compliant</field>
+            <field name="compliance_notes">Continued improvement in ESG performance with new initiatives showing positive results.</field>
+            <field name="state">completed</field>
         </record>
 
     </data>

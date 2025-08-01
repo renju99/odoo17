@@ -39,6 +39,8 @@
         'views/esg_analytics_views.xml',
         'views/esg_gender_parity_views.xml',
         'views/esg_pay_gap_views.xml',
+        'views/esg_framework_views.xml',
+        'views/esg_target_views.xml',
         'views/esg_dashboard_views.xml',
         'views/esg_menu_views.xml',
         'report/esg_reports.xml',
@@ -54,8 +56,10 @@
     'assets': {
         'web.assets_backend': [
             'esg_reporting/static/src/js/esg_dashboard.js',
+            'esg_reporting/static/src/js/esg_advanced_dashboard.js',
             'esg_reporting/static/src/css/esg_dashboard.css',
             'esg_reporting/static/src/xml/esg_dashboard.xml',
+            'esg_reporting/static/src/xml/esg_advanced_dashboard.xml',
         ],
     },
 }
