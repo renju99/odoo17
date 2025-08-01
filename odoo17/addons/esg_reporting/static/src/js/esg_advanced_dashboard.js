@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onMounted, useState, onWillStart } from "@odoo/owl";
-import { Chart } from "chart.js/auto";
+// Chart.js is loaded globally
 
 export class ESGAdvancedDashboard extends Component {
     setup() {

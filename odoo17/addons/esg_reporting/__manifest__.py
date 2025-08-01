@@ -55,6 +55,7 @@
     'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': [
+            ('include', 'web.chartjs_lib'),
             'esg_reporting/static/src/js/esg_dashboard.js',
             'esg_reporting/static/src/js/esg_advanced_dashboard.js',
             'esg_reporting/static/src/css/esg_dashboard.css',

@@ -198,11 +198,11 @@
                                         <div class="alert" t-attf-class="alert-#{alert.level}">
                                             <div class="d-flex justify-content-between">
                                                 <div>
-                                                    <strong><t t-esc="alert.title"/></strong>
-                                                    <p class="mb-0 small"><t t-esc="alert.message"/></p>
+                                                    <strong><t t-esc="alert.title or ''"/></strong>
+                                                    <p class="mb-0 small"><t t-esc="alert.message or ''"/></p>
                                                 </div>
                                                 <small class="text-muted">
-                                                    <t t-esc="alert.date"/>
+                                                    <t t-esc="alert.date or ''"/>
                                                 </small>
                                             </div>
                                         </div>
@@ -228,10 +228,10 @@
                                                 <i class="fa" t-attf-class="fa-#{insight.icon}"></i>
                                             </div>
                                             <div>
-                                                <h6 class="mb-1"><t t-esc="insight.title"/></h6>
-                                                <p class="mb-1 small"><t t-esc="insight.description"/></p>
+                                                <h6 class="mb-1"><t t-esc="insight.title or ''"/></h6>
+                                                <p class="mb-1 small"><t t-esc="insight.description or ''"/></p>
                                                 <small class="text-muted">
-                                                    Confidence: <t t-esc="insight.confidence"/>%
+                                                    Confidence: <t t-esc="insight.confidence or 0"/>%
                                                 </small>
                                             </div>
                                         </div>
