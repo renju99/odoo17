@@ -123,6 +123,12 @@ class ESGAnalytics(models.Model):
         tracking=True
     )
     
+    notes = fields.Text(
+        string='Notes',
+        tracking=True,
+        help="Additional notes about the analytics report"
+    )
+    
     # Reporting Fields
     report_data = fields.Text(
         string='Report Data (JSON)',
