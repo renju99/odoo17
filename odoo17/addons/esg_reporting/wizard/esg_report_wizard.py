@@ -204,49 +204,99 @@ class ESGReportWizard(models.TransientModel):
     
     def _generate_pdf_report(self, data):
         """Generate PDF report"""
-        # This would typically use a report template
-        # For now, we'll return a simple action
+        # Create a temporary record to pass data to the report
+        report_record = self.env['esg.analytics'].create({
+            'name': self.name,
+            'date': fields.Date.today(),
+            'analytics_type': self.report_type,
+            'period_type': 'custom',
+            'date_from': self.date_from,
+            'date_to': self.date_to,
+            'state': 'completed',
+            'report_data': str(data),  # Store the data as JSON string
+        })
+        
+        # Return the report action
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('ESG Report'),
-            'res_model': 'esg.report.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'default_report_data': str(data)},
+            'type': 'ir.actions.report',
+            'report_name': 'esg_reporting.report_esg_comprehensive',
+            'report_type': 'qweb-pdf',
+            'context': {
+                'active_ids': [report_record.id],
+                'active_model': 'esg.analytics',
+            }
         }
     
     def _generate_excel_report(self, data):
         """Generate Excel report"""
-        # Implementation for Excel report generation
+        # For Excel reports, we'll create a downloadable file
+        import base64
+        import json
+        
+        # Convert data to JSON for Excel export
+        json_data = json.dumps(data, default=str)
+        excel_content = base64.b64encode(json_data.encode('utf-8'))
+        
+        # Create attachment
+        attachment = self.env['ir.attachment'].create({
+            'name': f'{self.name}.json',
+            'type': 'binary',
+            'datas': excel_content,
+            'res_model': self._name,
+            'res_id': self.id,
+        })
+        
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('ESG Report'),
-            'res_model': 'esg.report.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'default_report_data': str(data)},
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{attachment.id}?download=true',
+            'target': 'self',
         }
     
     def _generate_html_report(self, data):
         """Generate HTML report"""
-        # Implementation for HTML report generation
+        # Create a temporary record to pass data to the report
+        report_record = self.env['esg.analytics'].create({
+            'name': self.name,
+            'date': fields.Date.today(),
+            'analytics_type': self.report_type,
+            'period_type': 'custom',
+            'date_from': self.date_from,
+            'date_to': self.date_to,
+            'state': 'completed',
+            'report_data': str(data),  # Store the data as JSON string
+        })
+        
+        # Return the report action for HTML
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('ESG Report'),
-            'res_model': 'esg.report.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'default_report_data': str(data)},
+            'type': 'ir.actions.report',
+            'report_name': 'esg_reporting.report_esg_comprehensive',
+            'report_type': 'qweb-html',
+            'context': {
+                'active_ids': [report_record.id],
+                'active_model': 'esg.analytics',
+            }
         }
     
     def _generate_json_report(self, data):
         """Generate JSON report"""
-        # Implementation for JSON report generation
+        import base64
+        import json
+        
+        # Convert data to JSON
+        json_data = json.dumps(data, default=str, indent=2)
+        json_content = base64.b64encode(json_data.encode('utf-8'))
+        
+        # Create attachment
+        attachment = self.env['ir.attachment'].create({
+            'name': f'{self.name}.json',
+            'type': 'binary',
+            'datas': json_content,
+            'res_model': self._name,
+            'res_id': self.id,
+        })
+        
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('ESG Report'),
-            'res_model': 'esg.report.wizard',
-            'view_mode': 'form',
-            'target': 'new',
-            'context': {'default_report_data': str(data)},
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{attachment.id}?download=true',
+            'target': 'self',
         }
