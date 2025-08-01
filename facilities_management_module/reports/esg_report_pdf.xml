@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- ESG Report PDF Action -->
+        <record id="action_esg_report_pdf" model="ir.actions.report">
+            <field name="name">ESG Report</field>
+            <field name="model">esg.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">facilities_management_module.esg_report_pdf</field>
+            <field name="report_file">facilities_management_module.esg_report_pdf</field>
+            <field name="print_report_name">'ESG_Report_%s' % (object.report_type)</field>
+            <field name="binding_model_id" ref="model_esg_report_wizard"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- ESG Report PDF Template -->
+        <template id="esg_report_pdf">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="facilities_management_module.esg_report_document"/>
+                </t>
+            </t>
+        </template>
+
+        <!-- ESG Report Document Template -->
+        <template id="esg_report_document">
+            <div class="page">
+                <div class="oe_structure"/>
+                
+                <!-- Header -->
+                <div class="row">
+                    <div class="col-12">
+                        <h1 style="text-align: center; color: #2E8B57; margin-bottom: 20px;">
+                            ESG Compliance Report
+                        </h1>
+                        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+                            Generated on <t t-esc="data.get('generation_date', '')"/>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Report Summary -->
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-12">
+                        <h2 style="color: #2E8B57; border-bottom: 2px solid #2E8B57; padding-bottom: 10px;">
+                            Report Summary
+                        </h2>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td><strong>Report Type:</strong></td>
+                                <td><t t-esc="data.get('wizard', {}).report_type or ''"/></td>
+                                <td><strong>Date Range:</strong></td>
+                                <td><t t-esc="data.get('wizard', {}).date_from or ''"/> to <t t-esc="data.get('wizard', {}).date_to or ''"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Assets:</strong></td>
+                                <td><t t-esc="data.get('total_assets', 0)"/></td>
+                                <td><strong>Compliance Rate:</strong></td>
+                                <td><t t-esc="'%.1f' % data.get('compliance_rate', 0)"/>%</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Environmental Metrics -->
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-12">
+                        <h3 style="color: #2E8B57;">Environmental Metrics</h3>
+                        <div t-if="data.get('environmental_metrics')" class="row">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Total Carbon Footprint:</strong></td>
+                                        <td><t t-esc="'%.2f' % data.get('environmental_metrics', {}).get('total_carbon_footprint', 0)"/> kg CO2/year</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Renewable Energy Assets:</strong></td>
+                                        <td><t t-esc="data.get('environmental_metrics', {}).get('renewable_energy_assets', 0)"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <h5>Energy Efficiency Distribution:</h5>
+                                <ul>
+                                    <li t-foreach="data.get('environmental_metrics', {}).get('energy_efficiency_distribution', {}).items()" t-as="rating, count">
+                                        Rating <t t-esc="rating"/>: <t t-esc="count"/> assets
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Metrics -->
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-12">
+                        <h3 style="color: #2E8B57;">Social Impact Metrics</h3>
+                        <div t-if="data.get('social_metrics')" class="row">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Safety Compliant Assets:</strong></td>
+                                        <td><t t-esc="data.get('social_metrics', {}).get('safety_compliant_assets', 0)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Accessibility Compliant Assets:</strong></td>
+                                        <td><t t-esc="data.get('social_metrics', {}).get('accessibility_compliant_assets', 0)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Average Social Impact Score:</strong></td>
+                                        <td><t t-esc="'%.2f' % data.get('social_metrics', {}).get('average_social_impact_score', 0)"/>/10</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Governance Metrics -->
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-12">
+                        <h3 style="color: #2E8B57;">Governance Metrics</h3>
+                        <div t-if="data.get('governance_metrics')" class="row">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td><strong>Regulatory Compliant Assets:</strong></td>
+                                        <td><t t-esc="data.get('governance_metrics', {}).get('regulatory_compliant_assets', 0)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Assets with Certifications:</strong></td>
+                                        <td><t t-esc="data.get('governance_metrics', {}).get('assets_with_certifications', 0)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Certifications:</strong></td>
+                                        <td><t t-esc="data.get('governance_metrics', {}).get('total_certifications', 0)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Audits Due Soon (30 days):</strong></td>
+                                        <td><t t-esc="data.get('governance_metrics', {}).get('audits_due_soon', 0)"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asset Details -->
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-12">
+                        <h3 style="color: #2E8B57;">Asset Details</h3>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Asset Name</th>
+                                    <th>Type</th>
+                                    <th>Environmental Impact</th>
+                                    <th>Energy Rating</th>
+                                    <th>Safety Compliant</th>
+                                    <th>Regulatory Compliant</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="data.get('assets', [])" t-as="asset">
+                                    <td><t t-esc="asset.name"/></td>
+                                    <td><t t-esc="asset.asset_type"/></td>
+                                    <td><t t-esc="asset.environmental_impact or 'N/A'"/></td>
+                                    <td><t t-esc="asset.energy_efficiency_rating or 'N/A'"/></td>
+                                    <td><t t-esc="'Yes' if asset.safety_compliance else 'No'"/></td>
+                                    <td><t t-esc="'Yes' if asset.regulatory_compliance else 'No'"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div t-if="data.get('wizard', {}).include_recommendations" class="row" style="margin-bottom: 30px;">
+                    <div class="col-12">
+                        <h3 style="color: #2E8B57;">Recommendations</h3>
+                        <ul>
+                            <li>Consider upgrading assets with low energy efficiency ratings to improve environmental performance.</li>
+                            <li>Implement renewable energy solutions for assets with high carbon footprints.</li>
+                            <li>Ensure all assets meet accessibility compliance requirements.</li>
+                            <li>Schedule regular audits for assets approaching their audit due dates.</li>
+                            <li>Obtain relevant certifications for assets that currently lack them.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="row">
+                    <div class="col-12">
+                        <hr style="border-top: 2px solid #2E8B57; margin-top: 40px;"/>
+                        <p style="text-align: center; color: #666; font-size: 12px;">
+                            This ESG report was generated by the Facilities Management System
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

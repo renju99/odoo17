@@ -41,6 +41,35 @@ class Asset(models.Model):
         ('other', 'Other')
     ], string='Disposal Method')
     
+    # ESG Compliance Fields
+    esg_compliance = fields.Boolean(string='ESG Compliance Required', default=False, tracking=True)
+    environmental_impact = fields.Selection([
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High')
+    ], string='Environmental Impact', tracking=True)
+    energy_efficiency_rating = fields.Selection([
+        ('a', 'A - Excellent'),
+        ('b', 'B - Good'),
+        ('c', 'C - Average'),
+        ('d', 'D - Poor'),
+        ('e', 'E - Very Poor')
+    ], string='Energy Efficiency Rating', tracking=True)
+    carbon_footprint = fields.Float(string='Carbon Footprint (kg CO2/year)', tracking=True)
+    renewable_energy = fields.Boolean(string='Uses Renewable Energy', default=False, tracking=True)
+    
+    # Social Impact Fields
+    safety_compliance = fields.Boolean(string='Safety Compliant', default=True, tracking=True)
+    accessibility_compliant = fields.Boolean(string='Accessibility Compliant', default=False, tracking=True)
+    social_impact_score = fields.Float(string='Social Impact Score (1-10)', tracking=True)
+    
+    # Governance Fields
+    regulatory_compliance = fields.Boolean(string='Regulatory Compliant', default=True, tracking=True)
+    certification_ids = fields.Many2many('asset.certification', string='Certifications', tracking=True)
+    audit_date = fields.Date(string='Last Audit Date', tracking=True)
+    next_audit_date = fields.Date(string='Next Audit Date', tracking=True)
+    compliance_notes = fields.Text(string='Compliance Notes')
+    
     @api.constrains('purchase_date', 'disposal_date')
     def _check_dates(self):
         for record in self:
@@ -52,3 +81,15 @@ class Asset(models.Model):
     def _onchange_status(self):
         if self.status == 'disposed' and not self.disposal_date:
             self.disposal_date = fields.Date.today()
+    
+    @api.constrains('social_impact_score')
+    def _check_social_impact_score(self):
+        for record in self:
+            if record.social_impact_score and (record.social_impact_score < 1 or record.social_impact_score > 10):
+                raise ValidationError(_('Social Impact Score must be between 1 and 10.'))
+    
+    @api.constrains('carbon_footprint')
+    def _check_carbon_footprint(self):
+        for record in self:
+            if record.carbon_footprint and record.carbon_footprint < 0:
+                raise ValidationError(_('Carbon footprint cannot be negative.'))
