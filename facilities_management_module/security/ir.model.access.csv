@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_facility_asset_user,facility.asset.user,model_facility_asset,base.group_user,1,1,1,0
+access_facility_asset_manager,facility.asset.manager,model_facility_asset,base.group_system,1,1,1,1
+access_asset_disposal_wizard_user,asset.disposal.wizard.user,model_asset_disposal_wizard,base.group_user,1,1,1,0
