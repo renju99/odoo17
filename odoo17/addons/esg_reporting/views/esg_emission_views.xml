@@ -108,11 +108,6 @@
             </field>
         </record>
 
-        <!-- Menu Item -->
-        <menuitem id="menu_esg_emission"
-                  name="Emissions"
-                  parent="menu_esg_environmental"
-                  action="action_esg_emission"
-                  sequence="10"/>
+
     </data>
 </odoo>
