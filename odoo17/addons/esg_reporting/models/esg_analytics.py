@@ -331,6 +331,13 @@ class ESGCarbonFootprint(models.Model):
         required=True
     )
     
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('validated', 'Validated'),
+        ('cancelled', 'Cancelled'),
+    ], string='Status', default='draft', tracking=True)
+    
     @api.constrains('emission_amount')
     def _check_emission_amount(self):
         for record in self:
@@ -342,3 +349,31 @@ class ESGCarbonFootprint(models.Model):
         for record in self:
             if record.uncertainty < 0 or record.uncertainty > 100:
                 raise ValidationError(_('Uncertainty must be between 0 and 100.'))
+    
+    def action_confirm(self):
+        """Confirm the carbon footprint record"""
+        for record in self:
+            if record.state == 'draft':
+                record.state = 'confirmed'
+        return True
+    
+    def action_validate(self):
+        """Validate the carbon footprint record"""
+        for record in self:
+            if record.state == 'confirmed':
+                record.state = 'validated'
+        return True
+    
+    def action_cancel(self):
+        """Cancel the carbon footprint record"""
+        for record in self:
+            if record.state in ['draft', 'confirmed']:
+                record.state = 'cancelled'
+        return True
+    
+    def action_draft(self):
+        """Reset the carbon footprint record to draft"""
+        for record in self:
+            if record.state == 'cancelled':
+                record.state = 'draft'
+        return True
