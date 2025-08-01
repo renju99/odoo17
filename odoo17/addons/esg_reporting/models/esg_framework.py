@@ -125,6 +125,14 @@ class ESGFramework(models.Model):
         required=True
     )
     
+    # Purchase Activities (for ESG-related purchases)
+    activity_purchase_ids = fields.One2many(
+        'purchase.order',
+        'esg_framework_id',
+        string='Purchase Activities',
+        help="Purchase orders related to ESG framework activities"
+    )
+    
     @api.constrains('materiality_threshold')
     def _check_materiality_threshold(self):
         for record in self:
