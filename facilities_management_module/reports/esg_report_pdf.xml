@@ -62,7 +62,7 @@
                                 <td>
                                     <t t-if="data.get('report_type') == 'environmental'">Environmental Impact</t>
                                     <t t-elif="data.get('report_type') == 'social'">Social Impact</t>
-                                    <t t-elif="data.get('report_type') == 'governance'">Governance & Compliance</t>
+                                    <t t-elif="data.get('report_type') == 'governance'">Governance &amp; Compliance</t>
                                     <t t-else="">Comprehensive ESG</t>
                                 </td>
                             </tr>
