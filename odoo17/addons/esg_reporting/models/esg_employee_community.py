@@ -97,6 +97,12 @@ class ESGEmployeeCommunity(models.Model):
         help="Detailed description of the activity"
     )
     
+    notes = fields.Text(
+        string='Notes',
+        tracking=True,
+        help="Additional notes about the activity"
+    )
+    
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submitted', 'Submitted'),
