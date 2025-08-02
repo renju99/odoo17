@@ -2,10 +2,11 @@
 <odoo>
     <data>
         
-        <!-- Main ESG Menu -->
+        <!-- Main ESG Application Menu -->
         <menuitem id="menu_esg_root"
                   name="ESG Reporting"
                   web_icon="esg_reporting,static/description/icon.png"
+                  action="action_esg_dashboard"
                   sequence="50"/>
 
         <!-- Environmental Menu -->
@@ -32,11 +33,17 @@
                   parent="menu_esg_root"
                   sequence="40"/>
 
+        <!-- Reports Menu -->
+        <menuitem id="menu_esg_reports"
+                  name="Reports"
+                  parent="menu_esg_root"
+                  sequence="50"/>
+
         <!-- Configuration Menu -->
         <menuitem id="menu_esg_configuration"
                   name="Configuration"
                   parent="menu_esg_root"
-                  sequence="50"/>
+                  sequence="60"/>
 
         <!-- Environmental Submenus -->
         <menuitem id="menu_esg_emissions"
@@ -50,12 +57,6 @@
                   parent="menu_esg_environmental"
                   action="action_esg_offset"
                   sequence="20"/>
-
-        <menuitem id="menu_esg_emission"
-                  name="Emissions"
-                  parent="menu_esg_environmental"
-                  action="action_esg_emission"
-                  sequence="30"/>
 
         <!-- Social Submenus -->
         <menuitem id="menu_esg_employee_community"
@@ -126,6 +127,13 @@
                   action="action_esg_advanced_dashboard"
                   sequence="25"/>
 
+        <!-- Reports Submenus -->
+        <menuitem id="menu_esg_report_wizard"
+                  name="Generate ESG Report"
+                  parent="menu_esg_reports"
+                  action="action_enhanced_esg_wizard"
+                  sequence="10"/>
+
         <!-- Configuration Submenus -->
         <menuitem id="menu_esg_emission_factors"
                   name="Emission Factors"
@@ -144,18 +152,6 @@
                   parent="menu_esg_configuration"
                   action="action_esg_initiative_tag"
                   sequence="30"/>
-
-        <!-- Reports Menu -->
-        <menuitem id="menu_esg_reports"
-                  name="Reports"
-                  parent="menu_esg_root"
-                  sequence="60"/>
-
-        <menuitem id="menu_esg_report_wizard"
-                  name="Generate ESG Report"
-                  parent="menu_esg_reports"
-                  action="action_esg_report_wizard"
-                  sequence="10"/>
 
     </data>
 </odoo>
