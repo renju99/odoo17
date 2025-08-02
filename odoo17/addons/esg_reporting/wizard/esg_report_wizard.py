@@ -100,7 +100,10 @@ class EnhancedESGWizard(models.TransientModel):
         ('equipment', 'Equipment'),
         ('furniture', 'Furniture'),
         ('vehicle', 'Vehicle'),
-        ('building', 'Building'),
+        ('it', 'IT Hardware'),
+        ('building', 'Building Component'),
+        ('infrastructure', 'Infrastructure'),
+        ('tool', 'Tool'),
         ('other', 'Other')
     ], string='Asset Type', default='all')
 
@@ -239,7 +242,7 @@ class EnhancedESGWizard(models.TransientModel):
             ])
         
         if self.asset_type != 'all':
-            domain.append(('asset_type', '=', self.asset_type))
+            domain.append(('category_id.category_type', '=', self.asset_type))
 
         if self.include_compliance_only:
             domain.append(('esg_compliance', '=', True))
@@ -250,7 +253,7 @@ class EnhancedESGWizard(models.TransientModel):
         if not assets and domain:
             fallback_domain = []
             if self.asset_type != 'all':
-                fallback_domain.append(('asset_type', '=', self.asset_type))
+                fallback_domain.append(('category_id.category_type', '=', self.asset_type))
             if self.include_compliance_only:
                 fallback_domain.append(('esg_compliance', '=', True))
             
