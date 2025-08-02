@@ -303,41 +303,31 @@
         <!-- Enhanced Analytics Demo Data -->
         <record id="esg_analytics_q1_2024" model="esg.analytics">
             <field name="name">Q1 2024 ESG Analytics</field>
-            <field name="date">2024-03-31</field>
-            <field name="analytics_type">esg_performance</field>
-            <field name="period_type">quarterly</field>
+            <field name="analytics_type">performance</field>
             <field name="date_from">2024-01-01</field>
             <field name="date_to">2024-03-31</field>
-            <field name="total_emissions">850.0</field>
-            <field name="total_offset">120.0</field>
-            <field name="net_emissions">730.0</field>
-            <field name="emission_intensity">0.85</field>
-            <field name="environmental_score">75.0</field>
-            <field name="social_score">82.0</field>
-            <field name="governance_score">88.0</field>
-            <field name="overall_score">81.7</field>
-            <field name="compliance_status">compliant</field>
-            <field name="compliance_notes">All major ESG frameworks are being followed with good progress on targets.</field>
+            <field name="include_environmental">True</field>
+            <field name="include_social">True</field>
+            <field name="include_governance">True</field>
+            <field name="include_correlation_analysis">True</field>
+            <field name="include_anomaly_detection">False</field>
+            <field name="include_predictive_modeling">False</field>
+            <field name="include_risk_scoring">True</field>
             <field name="state">completed</field>
         </record>
 
         <record id="esg_analytics_q2_2024" model="esg.analytics">
             <field name="name">Q2 2024 ESG Analytics</field>
-            <field name="date">2024-06-30</field>
-            <field name="analytics_type">esg_performance</field>
-            <field name="period_type">quarterly</field>
+            <field name="analytics_type">performance</field>
             <field name="date_from">2024-04-01</field>
             <field name="date_to">2024-06-30</field>
-            <field name="total_emissions">780.0</field>
-            <field name="total_offset">150.0</field>
-            <field name="net_emissions">630.0</field>
-            <field name="emission_intensity">0.78</field>
-            <field name="environmental_score">78.0</field>
-            <field name="social_score">85.0</field>
-            <field name="governance_score">90.0</field>
-            <field name="overall_score">84.3</field>
-            <field name="compliance_status">compliant</field>
-            <field name="compliance_notes">Continued improvement in ESG performance with new initiatives showing positive results.</field>
+            <field name="include_environmental">True</field>
+            <field name="include_social">True</field>
+            <field name="include_governance">True</field>
+            <field name="include_correlation_analysis">True</field>
+            <field name="include_anomaly_detection">True</field>
+            <field name="include_predictive_modeling">False</field>
+            <field name="include_risk_scoring">True</field>
             <field name="state">completed</field>
         </record>
 

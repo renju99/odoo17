@@ -8,10 +8,8 @@
             <field name="model">esg.analytics</field>
             <field name="arch" type="xml">
                 <tree string="ESG Analytics">
-                    <field name="date"/>
                     <field name="name"/>
                     <field name="analytics_type"/>
-                    <field name="period_type"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="total_emissions"/>
@@ -42,40 +40,38 @@
                         </div>
                         <group>
                             <group>
-                                <field name="date"/>
                                 <field name="analytics_type"/>
-                                <field name="period_type"/>
                                 <field name="date_from"/>
                                 <field name="date_to"/>
-                            </group>
-                            <group>
-                                <field name="chart_type"/>
-                                <field name="compliance_status"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
+                            <group>
+                                <field name="include_environmental"/>
+                                <field name="include_social"/>
+                                <field name="include_governance"/>
+                            </group>
                         </group>
-                        <group string="Carbon Analytics">
+                        <group string="Advanced Analytics Options">
+                            <group>
+                                <field name="include_correlation_analysis"/>
+                                <field name="include_anomaly_detection"/>
+                            </group>
+                            <group>
+                                <field name="include_predictive_modeling"/>
+                                <field name="include_risk_scoring"/>
+                            </group>
+                        </group>
+                        <group string="Results">
                             <group>
                                 <field name="total_emissions"/>
                                 <field name="total_offset"/>
                                 <field name="net_emissions"/>
-                                <field name="emission_intensity"/>
-                            </group>
-                        </group>
-                        <group string="ESG Performance Scores">
-                            <group>
-                                <field name="environmental_score"/>
-                                <field name="social_score"/>
-                                <field name="governance_score"/>
                                 <field name="overall_score"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Compliance Notes">
-                                <field name="compliance_notes"/>
-                            </page>
-                            <page string="Report Data">
-                                <field name="report_data"/>
+                            <page string="Analytics Results">
+                                <field name="analytics_results"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -109,7 +105,7 @@
             <field name="arch" type="xml">
                 <pivot string="ESG Analytics">
                     <field name="analytics_type" type="row"/>
-                    <field name="date" type="col" interval="month"/>
+                    <field name="date_from" type="col" interval="month"/>
                     <field name="total_emissions" type="measure"/>
                     <field name="total_offset" type="measure"/>
                     <field name="net_emissions" type="measure"/>
@@ -125,7 +121,6 @@
                 <search string="ESG Analytics">
                     <field name="name"/>
                     <field name="analytics_type"/>
-                    <field name="date"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
@@ -134,9 +129,7 @@
                     <filter string="Error" name="error" domain="[('state', '=', 'error')]"/>
                     <group expand="0" string="Group By">
                         <filter string="Analytics Type" name="analytics_type" context="{'group_by': 'analytics_type'}"/>
-                        <filter string="Period Type" name="period_type" context="{'group_by': 'period_type'}"/>
                         <filter string="State" name="state" context="{'group_by': 'state'}"/>
-                        <filter string="Compliance Status" name="compliance_status" context="{'group_by': 'compliance_status'}"/>
                     </group>
                 </search>
             </field>
