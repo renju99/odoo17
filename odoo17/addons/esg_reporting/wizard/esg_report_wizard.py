@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from datetime import datetime, timedelta
 import json
+import logging
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import _
 
@@ -224,12 +225,16 @@ class EnhancedESGWizard(models.TransientModel):
             except json.JSONDecodeError:
                 raise ValidationError(_('Invalid JSON format in Custom Metrics field.'))
 
-        # Get assets based on filters
-        domain = [
-            ('purchase_date', '>=', self.date_from),
-            ('purchase_date', '<=', self.date_to)
-        ]
-
+        # Get assets based on filters - start with less restrictive domain
+        domain = []
+        
+        # Only add date filters if dates are provided and reasonable
+        if self.date_from and self.date_to and self.date_from <= self.date_to:
+            domain.extend([
+                ('purchase_date', '>=', self.date_from),
+                ('purchase_date', '<=', self.date_to)
+            ])
+        
         if self.asset_type != 'all':
             domain.append(('asset_type', '=', self.asset_type))
 
@@ -237,9 +242,29 @@ class EnhancedESGWizard(models.TransientModel):
             domain.append(('esg_compliance', '=', True))
 
         assets = self.env['facilities.asset'].search(domain)
+        
+        # If no assets found with filters, try without date filters
+        if not assets and domain:
+            fallback_domain = []
+            if self.asset_type != 'all':
+                fallback_domain.append(('asset_type', '=', self.asset_type))
+            if self.include_compliance_only:
+                fallback_domain.append(('esg_compliance', '=', True))
+            
+            if fallback_domain:
+                assets = self.env['facilities.asset'].search(fallback_domain)
+            
+            # If still no assets, get all assets
+            if not assets:
+                assets = self.env['facilities.asset'].search([])
 
         # Generate comprehensive report data
         report_data = self._prepare_enhanced_report_data(assets)
+        
+        # Debug logging
+        _logger = logging.getLogger(__name__)
+        _logger.info(f"ESG Report Generation - Assets found: {len(assets)}")
+        _logger.info(f"ESG Report Generation - Report data keys: {list(report_data.keys())}")
 
         # Return report action based on output format
         if self.output_format == 'pdf':
@@ -256,6 +281,39 @@ class EnhancedESGWizard(models.TransientModel):
 
     def _prepare_enhanced_report_data(self, assets):
         """Prepare comprehensive report data with advanced analytics"""
+        # Handle case when no assets are found
+        if not assets:
+            return {
+                'report_info': {
+                    'name': self.report_name,
+                    'type': self.report_type,
+                    'date_from': self.date_from,
+                    'date_to': self.date_to,
+                    'company': self.company_name,
+                    'generated_at': fields.Datetime.now(),
+                    'total_assets': 0,
+                    'granularity': self.granularity,
+                    'theme': self.report_theme,
+                    'note': 'No assets found matching the specified criteria. Please check your filters or add assets to the system.'
+                },
+                'environmental_metrics': {},
+                'social_metrics': {},
+                'governance_metrics': {},
+                'analytics': {},
+                'trends': {},
+                'benchmarks': {},
+                'risk_analysis': {},
+                'predictions': {},
+                'recommendations': [
+                    {'category': 'data', 'recommendation': 'Add assets to the system to generate meaningful ESG reports'},
+                    {'category': 'filters', 'recommendation': 'Try adjusting the date range or asset type filters'},
+                    {'category': 'setup', 'recommendation': 'Ensure ESG compliance data is filled in for existing assets'}
+                ],
+                'thresholds': {},
+                'custom_metrics': {},
+                'comparison_data': {}
+            }
+        
         report_data = {
             'report_info': {
                 'name': self.report_name,
