@@ -6,22 +6,29 @@
                   name="Facility Management"
                   sequence="10"/>
 
-        <!-- Asset Operations Submenu - This is the missing menu that needs to be created -->
+        <!-- Asset Operations Submenu -->
         <menuitem id="menu_asset_operations"
                   name="Asset Operations"
                   parent="menu_facility_management"
                   sequence="20"/>
 
-        <!-- Other facility management menus can be added here -->
-        <menuitem id="menu_facility_configuration"
-                  name="Configuration"
+        <!-- Asset Management Submenu -->
+        <menuitem id="menu_asset_management"
+                  name="Asset Management"
                   parent="menu_facility_management"
-                  sequence="100"/>
+                  sequence="30"/>
 
+        <!-- Facility Reports Submenu -->
         <menuitem id="menu_facility_reports"
                   name="Reports"
                   parent="menu_facility_management"
                   sequence="90"/>
+
+        <!-- Facility Configuration Submenu -->
+        <menuitem id="menu_facility_configuration"
+                  name="Configuration"
+                  parent="menu_facility_management"
+                  sequence="100"/>
 
     </data>
 </odoo>
