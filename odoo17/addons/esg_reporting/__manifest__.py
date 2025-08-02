@@ -1,5 +1,5 @@
 {
-    'name': 'Facilities Management Module',
+    'name': 'ESG',
     'version': '1.0',
     'category': 'Facilities Management',
     'summary': 'Enhanced ESG Reporting and Analytics',
