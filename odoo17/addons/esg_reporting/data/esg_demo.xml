@@ -163,6 +163,7 @@
             <field name="expected_value">750.0</field>
             <field name="actual_value">720.0</field>
             <field name="state">achieved</field>
+            <field name="sequence">10</field>
             <field name="notes">Achieved 28% reduction by 2025, exceeding the expected 25% milestone.</field>
         </record>
 
@@ -173,6 +174,7 @@
             <field name="expected_value">625.0</field>
             <field name="actual_value">0.0</field>
             <field name="state">pending</field>
+            <field name="sequence">20</field>
             <field name="notes">Target: 37.5% reduction by 2027</field>
         </record>
 
@@ -183,6 +185,7 @@
             <field name="expected_value">30.0</field>
             <field name="actual_value">32.0</field>
             <field name="state">achieved</field>
+            <field name="sequence">10</field>
             <field name="notes">Exceeded the 2024 target of 30% women in leadership positions.</field>
         </record>
 
