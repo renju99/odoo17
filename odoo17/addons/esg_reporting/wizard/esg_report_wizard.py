@@ -198,12 +198,16 @@ class EnhancedESGWizard(models.TransientModel):
     def _get_report_data(self):
         """Ensure report_data is always a dictionary"""
         try:
-            if not hasattr(self, 'report_data') or self.report_data is None:
+            if not hasattr(self, 'report_data'):
+                return {}
+            if self.report_data is None:
                 return {}
             if not isinstance(self.report_data, dict):
                 return {}
             return self.report_data
-        except Exception:
+        except Exception as e:
+            _logger = logging.getLogger(__name__)
+            _logger.error(f"Error in _get_report_data: {str(e)}")
             return {}
 
     @api.onchange('report_type')
@@ -339,13 +343,13 @@ class EnhancedESGWizard(models.TransientModel):
         if self.output_format == 'pdf':
             return self.env.ref('esg_reporting.action_enhanced_esg_report_pdf').report_action(self)
         elif self.output_format == 'excel':
-            return self._generate_excel_report(report_data)
+            return self._generate_excel_report(self.report_data)
         elif self.output_format == 'html':
-            return self._generate_html_report(report_data)
+            return self._generate_html_report(self.report_data)
         elif self.output_format == 'json':
-            return self._generate_json_report(report_data)
+            return self._generate_json_report(self.report_data)
         elif self.output_format == 'csv':
-            return self._generate_csv_report(report_data)
+            return self._generate_csv_report(self.report_data)
 
     def _prepare_enhanced_report_data(self, assets):
         """Prepare comprehensive report data with advanced analytics"""

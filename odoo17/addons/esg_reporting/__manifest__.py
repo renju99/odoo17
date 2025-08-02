@@ -30,6 +30,7 @@
         'project',
         'web',
         'spreadsheet_dashboard',
+        'facilities_management',
     ],
     'data': [
         'security/esg_security.xml',
