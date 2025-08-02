@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Enhanced ESG Report Wizard Form View -->
+        <record id="view_enhanced_esg_wizard_form" model="ir.ui.view">
+            <field name="name">enhanced.esg.wizard.form</field>
+            <field name="model">enhanced.esg.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generate Enhanced ESG Report">
+                    <sheet>
+                        <!-- Report Configuration Section -->
+                        <group string="Report Configuration" name="report_config">
+                            <group>
+                                <field name="report_name"/>
+                                <field name="report_type"/>
+                                <field name="company_name"/>
+                                <field name="output_format"/>
+                            </group>
+                            <group>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="granularity"/>
+                                <field name="report_theme"/>
+                            </group>
+                        </group>
+
+                        <!-- Asset Filtering Section -->
+                        <group string="Asset Filtering" name="asset_filtering">
+                            <group>
+                                <field name="asset_type"/>
+                                <field name="include_compliance_only"/>
+                            </group>
+                            <group>
+                                <field name="comparison_period"/>
+                                <field name="custom_comparison_from" attrs="{'invisible': [('comparison_period', '!=', 'custom')]}"/>
+                                <field name="custom_comparison_to" attrs="{'invisible': [('comparison_period', '!=', 'custom')]}"/>
+                            </group>
+                        </group>
+
+                        <!-- Advanced Analytics Section -->
+                        <group string="Advanced Analytics" name="advanced_analytics">
+                            <group>
+                                <field name="include_predictive_analysis"/>
+                                <field name="include_correlation_analysis"/>
+                                <field name="include_anomaly_detection"/>
+                                <field name="include_advanced_analytics"/>
+                            </group>
+                        </group>
+
+                        <!-- Report Content Section -->
+                        <group string="Report Content" name="report_content">
+                            <group>
+                                <field name="include_charts"/>
+                                <field name="include_executive_summary"/>
+                                <field name="include_recommendations"/>
+                                <field name="include_benchmarks"/>
+                            </group>
+                            <group>
+                                <field name="include_risk_analysis"/>
+                                <field name="include_trends"/>
+                                <field name="include_forecasting"/>
+                            </group>
+                        </group>
+
+                        <!-- Data Inclusion Section -->
+                        <group string="Data Inclusion" name="data_inclusion">
+                            <group>
+                                <field name="include_emissions_data"/>
+                                <field name="include_offset_data"/>
+                                <field name="include_community_data"/>
+                                <field name="include_initiatives_data"/>
+                            </group>
+                            <group>
+                                <field name="include_gender_parity_data"/>
+                                <field name="include_pay_gap_data"/>
+                                <field name="include_analytics_data"/>
+                            </group>
+                        </group>
+
+                        <!-- Report Sections Section -->
+                        <group string="Report Sections" name="report_sections">
+                            <group>
+                                <field name="include_section_environmental"/>
+                                <field name="include_section_social"/>
+                                <field name="include_section_governance"/>
+                            </group>
+                            <group>
+                                <field name="include_section_analytics"/>
+                                <field name="include_section_recommendations"/>
+                            </group>
+                        </group>
+
+                        <!-- Thresholds and Alerts Section -->
+                        <group string="Thresholds and Alerts" name="thresholds_alerts">
+                            <group>
+                                <field name="include_thresholds"/>
+                                <field name="carbon_threshold"/>
+                                <field name="compliance_threshold"/>
+                                <field name="social_impact_threshold"/>
+                            </group>
+                        </group>
+
+                        <!-- Report Styling Section -->
+                        <group string="Report Styling" name="report_styling">
+                            <group>
+                                <field name="include_logo"/>
+                                <field name="include_footer"/>
+                            </group>
+                        </group>
+
+                        <!-- Custom Configuration Section -->
+                        <group string="Custom Configuration" name="custom_config">
+                            <field name="custom_metrics" widget="ace" options="{'mode': 'json'}"/>
+                            <field name="custom_charts" widget="ace" options="{'mode': 'json'}"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Generate Enhanced ESG Report" type="object" name="action_generate_enhanced_esg_report" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Enhanced ESG Report Wizard Action -->
+        <record id="action_enhanced_esg_wizard" model="ir.actions.act_window">
+            <field name="name">Enhanced ESG Report</field>
+            <field name="res_model">enhanced.esg.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_enhanced_esg_wizard_form"/>
+        </record>
+    </data>
+</odoo>

@@ -56,3 +56,6 @@ access_esg_target_administrator,esg.target.administrator,model_esg_target,group_
 access_esg_target_milestone_user,esg.target.milestone.user,model_esg_target_milestone,group_esg_user,1,1,1,0
 access_esg_target_milestone_manager,esg.target.milestone.manager,model_esg_target_milestone,group_esg_manager,1,1,1,1
 access_esg_target_milestone_administrator,esg.target.milestone.administrator,model_esg_target_milestone,group_esg_administrator,1,1,1,1
+access_enhanced_esg_wizard_user,enhanced.esg.wizard.user,model_enhanced_esg_wizard,base.group_user,1,1,1,0
+access_enhanced_esg_dashboard_user,enhanced.esg.dashboard.user,model_enhanced_esg_dashboard,base.group_user,1,1,1,0
+access_esg_analytics_user,esg.analytics.user,model_esg_analytics,base.group_user,1,1,1,0
