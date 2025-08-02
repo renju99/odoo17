@@ -29,11 +29,11 @@
             <field name="arch" type="xml">
                 <form string="ESG Initiative">
                     <header>
-                        <button name="action_activate" string="Activate" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <button name="action_hold" string="Hold" type="object" attrs="{'invisible': [('state', '!=', 'active')]}"/>
-                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['active', 'on_hold'])]}"/>
-                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', ['draft', 'active', 'on_hold'])]}"/>
-                        <button name="action_draft" string="Reset to Draft" type="object" attrs="{'invisible': [('state', '!=', 'cancelled')]}"/>
+                        <button name="action_activate" string="Activate" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_hold" string="Hold" type="object" invisible="state != 'active'"/>
+                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" invisible="state not in ('active', 'on_hold')"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state not in ('draft', 'active', 'on_hold')"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" invisible="state != 'cancelled'"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,active,completed"/>
                     </header>
                     <sheet>

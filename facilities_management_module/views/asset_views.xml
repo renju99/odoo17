@@ -42,13 +42,13 @@
                                 <field name="purchase_date"/>
                                 <field name="purchase_cost"/>
                                 <field name="current_value"/>
-                                <field name="disposal_date" attrs="{'invisible': [('status', '!=', 'disposed')]}"/>
-                                <field name="disposal_method" attrs="{'invisible': [('status', '!=', 'disposed')]}"/>
+                                <field name="disposal_date" invisible="status != 'disposed'"/>
+                                <field name="disposal_method" invisible="status != 'disposed'"/>
                             </group>
                         </group>
                         <group>
                             <field name="description"/>
-                            <field name="disposal_reason" attrs="{'invisible': [('status', '!=', 'disposed')]}"/>
+                            <field name="disposal_reason" invisible="status != 'disposed'"/>
                             <field name="notes"/>
                         </group>
                         
