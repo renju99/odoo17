@@ -338,5 +338,111 @@
             </div>
         </template>
 
+        <!-- Enhanced ESG Wizard Report Template -->
+        <template id="report_enhanced_esg_wizard">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_enhanced_esg_wizard_document">
+            <div class="page">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1>Enhanced ESG Report</h1>
+                            <h2><t t-esc="o.report_name"/></h2>
+                            <p><strong>Report Type:</strong> <t t-esc="o.report_type"/></p>
+                            <p><strong>Date Range:</strong> <t t-esc="o.date_from"/> to <t t-esc="o.date_to"/></p>
+                            <p><strong>Granularity:</strong> <t t-esc="o.granularity"/></p>
+                            <p><strong>Company:</strong> <t t-esc="o.company_name"/></p>
+                            
+                            <h3>Executive Summary</h3>
+                            <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
+                            
+                            <t t-if="o.include_section_environmental">
+                                <h3>Environmental Performance</h3>
+                                <p>Environmental metrics and analysis based on selected criteria and data sources.</p>
+                                <ul>
+                                    <li>Carbon footprint analysis</li>
+                                    <li>Energy efficiency metrics</li>
+                                    <li>Renewable energy usage</li>
+                                    <li>Waste management performance</li>
+                                    <li>Water consumption tracking</li>
+                                    <li>Biodiversity impact assessment</li>
+                                </ul>
+                            </t>
+                            
+                            <t t-if="o.include_section_social">
+                                <h3>Social Performance</h3>
+                                <p>Social responsibility metrics and community impact analysis.</p>
+                                <ul>
+                                    <li>Community impact assessment</li>
+                                    <li>Employee satisfaction metrics</li>
+                                    <li>Diversity and inclusion analysis</li>
+                                    <li>Health and safety performance</li>
+                                    <li>Training and development tracking</li>
+                                    <li>Local procurement analysis</li>
+                                </ul>
+                            </t>
+                            
+                            <t t-if="o.include_section_governance">
+                                <h3>Governance Performance</h3>
+                                <p>Governance and compliance metrics with risk management analysis.</p>
+                                <ul>
+                                    <li>Compliance rate assessment</li>
+                                    <li>Risk management evaluation</li>
+                                    <li>Transparency index analysis</li>
+                                    <li>Board diversity metrics</li>
+                                    <li>Ethics and integrity scoring</li>
+                                    <li>Stakeholder engagement analysis</li>
+                                </ul>
+                            </t>
+                            
+                            <t t-if="o.include_section_analytics">
+                                <h3>Advanced Analytics</h3>
+                                <p>Comprehensive analytics and insights based on ESG data.</p>
+                                <ul>
+                                    <li>Performance trend analysis</li>
+                                    <li>Correlation analysis</li>
+                                    <li>Predictive insights</li>
+                                    <li>Anomaly detection</li>
+                                    <li>Benchmark comparisons</li>
+                                </ul>
+                            </t>
+                            
+                            <t t-if="o.include_section_recommendations">
+                                <h3>Recommendations</h3>
+                                <p>Strategic recommendations based on ESG performance analysis:</p>
+                                <ul>
+                                    <li>Continue monitoring and reducing carbon emissions</li>
+                                    <li>Increase investment in carbon offset projects</li>
+                                    <li>Enhance social and governance practices</li>
+                                    <li>Improve ESG reporting and transparency</li>
+                                    <li>Implement advanced analytics for better insights</li>
+                                    <li>Strengthen stakeholder engagement programs</li>
+                                </ul>
+                            </t>
+                            
+                            <h3>Report Configuration</h3>
+                            <p><strong>Theme:</strong> <t t-esc="o.report_theme"/></p>
+                            <p><strong>Include Charts:</strong> <t t-esc="'Yes' if o.include_charts else 'No'"/></p>
+                            <p><strong>Include Executive Summary:</strong> <t t-esc="'Yes' if o.include_executive_summary else 'No'"/></p>
+                            <p><strong>Include Recommendations:</strong> <t t-esc="'Yes' if o.include_recommendations else 'No'"/></p>
+                            <p><strong>Include Benchmarks:</strong> <t t-esc="'Yes' if o.include_benchmarks else 'No'"/></p>
+                            <p><strong>Include Risk Analysis:</strong> <t t-esc="'Yes' if o.include_risk_analysis else 'No'"/></p>
+                            <p><strong>Include Trends:</strong> <t t-esc="'Yes' if o.include_trends else 'No'"/></p>
+                            <p><strong>Include Forecasting:</strong> <t t-esc="'Yes' if o.include_forecasting else 'No'"/></p>
+                            
+                            <p><strong>Generated at:</strong> <t t-esc="context_timestamp(datetime.datetime.now())"/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
     </data>
 </odoo>
