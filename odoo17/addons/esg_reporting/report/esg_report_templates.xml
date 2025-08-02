@@ -360,77 +360,150 @@
                             <p><strong>Granularity:</strong> <t t-esc="o.granularity"/></p>
                             <p><strong>Company:</strong> <t t-esc="o.company_name"/></p>
                             
-                            <t t-if="o.report_info and o.report_info.get('note')">
-                                <div class="alert alert-warning" role="alert">
-                                    <strong>Note:</strong> <t t-esc="o.report_info.get('note')"/>
-                                </div>
-                            </t>
+                            <!-- Access report data from the wizard object -->
+                            <t t-set="report_data" t-value="o.report_data or {}"/>
                             
-                            <h3>Executive Summary</h3>
-                            <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
+                            <!-- Debug information -->
+                            <div class="alert alert-info" role="alert">
+                                <h4>Debug Information</h4>
+                                <p><strong>Wizard report_data exists:</strong> <t t-esc="'Yes' if o.report_data else 'No'"/></p>
+                                <p><strong>Report data exists:</strong> <t t-esc="'Yes' if report_data else 'No'"/></p>
+                                <p><strong>Report data type:</strong> <t t-esc="type(report_data).__name__ if report_data else 'None'"/></p>
+                                <p><strong>Report data keys:</strong> <t t-esc="list(report_data.keys()) if report_data else 'None'"/></p>
+                                <p><strong>Wizard object keys:</strong> <t t-esc="list(o._fields.keys()) if o else 'None'"/></p>
+                            </div>
                             
-                            <t t-if="o.include_section_environmental">
-                                <h3>Environmental Performance</h3>
-                                <p>Environmental metrics and analysis based on selected criteria and data sources.</p>
-                                <ul>
-                                    <li>Carbon footprint analysis</li>
-                                    <li>Energy efficiency metrics</li>
-                                    <li>Renewable energy usage</li>
-                                    <li>Waste management performance</li>
-                                    <li>Water consumption tracking</li>
-                                    <li>Biodiversity impact assessment</li>
-                                </ul>
-                            </t>
-                            
-                            <t t-if="o.include_section_social">
-                                <h3>Social Performance</h3>
-                                <p>Social responsibility metrics and community impact analysis.</p>
-                                <ul>
-                                    <li>Community impact assessment</li>
-                                    <li>Employee satisfaction metrics</li>
-                                    <li>Diversity and inclusion analysis</li>
-                                    <li>Health and safety performance</li>
-                                    <li>Training and development tracking</li>
-                                    <li>Local procurement analysis</li>
-                                </ul>
-                            </t>
-                            
-                            <t t-if="o.include_section_governance">
-                                <h3>Governance Performance</h3>
-                                <p>Governance and compliance metrics with risk management analysis.</p>
-                                <ul>
-                                    <li>Compliance rate assessment</li>
-                                    <li>Risk management evaluation</li>
-                                    <li>Transparency index analysis</li>
-                                    <li>Board diversity metrics</li>
-                                    <li>Ethics and integrity scoring</li>
-                                    <li>Stakeholder engagement analysis</li>
-                                </ul>
-                            </t>
-                            
-                            <t t-if="o.include_section_analytics">
-                                <h3>Advanced Analytics</h3>
-                                <p>Comprehensive analytics and insights based on ESG data.</p>
-                                <ul>
-                                    <li>Performance trend analysis</li>
-                                    <li>Correlation analysis</li>
-                                    <li>Predictive insights</li>
-                                    <li>Anomaly detection</li>
-                                    <li>Benchmark comparisons</li>
-                                </ul>
-                            </t>
-                            
-                            <t t-if="o.include_section_recommendations">
-                                <h3>Recommendations</h3>
-                                <p>Strategic recommendations based on ESG performance analysis:</p>
-                                <ul>
-                                    <li>Continue monitoring and reducing carbon emissions</li>
-                                    <li>Increase investment in carbon offset projects</li>
-                                    <li>Enhance social and governance practices</li>
-                                    <li>Improve ESG reporting and transparency</li>
-                                    <li>Implement advanced analytics for better insights</li>
-                                    <li>Strengthen stakeholder engagement programs</li>
-                                </ul>
+                            <t t-if="report_data and report_data.get('report_info')">
+                                <t t-set="report_info" t-value="report_data.get('report_info')"/>
+                                
+                                <t t-if="report_info.get('note')">
+                                    <div class="alert alert-warning" role="alert">
+                                        <strong>Note:</strong> <t t-esc="report_info.get('note')"/>
+                                    </div>
+                                </t>
+                                
+                                <h3>Executive Summary</h3>
+                                <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
+                                <p><strong>Total Assets Analyzed:</strong> <t t-esc="report_info.get('total_assets', 0)"/></p>
+                                <p><strong>Report Theme:</strong> <t t-esc="report_info.get('theme', 'Default')"/></p>
+                                
+                                <!-- Environmental Metrics -->
+                                <t t-if="o.include_section_environmental and report_data.get('environmental_metrics')">
+                                    <h3>Environmental Performance</h3>
+                                    <t t-set="env_metrics" t-value="report_data.get('environmental_metrics')"/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4>Key Metrics</h4>
+                                            <ul>
+                                                <li><strong>Total Carbon Footprint:</strong> <t t-esc="env_metrics.get('total_carbon_footprint', 0)"/> kg CO2</li>
+                                                <li><strong>Energy Efficiency Score:</strong> <t t-esc="env_metrics.get('energy_efficiency_score', 0)"/>%</li>
+                                                <li><strong>Renewable Energy Usage:</strong> <t t-esc="env_metrics.get('renewable_energy_usage', 0)"/>%</li>
+                                                <li><strong>Waste Management Score:</strong> <t t-esc="env_metrics.get('waste_management_score', 0)"/>%</li>
+                                                <li><strong>Water Consumption:</strong> <t t-esc="env_metrics.get('water_consumption', 0)"/> liters</li>
+                                                <li><strong>Biodiversity Impact:</strong> <t t-esc="env_metrics.get('biodiversity_impact', 0)"/>/10</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4>Analysis</h4>
+                                            <p>Environmental performance analysis based on carbon footprint, energy efficiency, and sustainability metrics.</p>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Social Metrics -->
+                                <t t-if="o.include_section_social and report_data.get('social_metrics')">
+                                    <h3>Social Performance</h3>
+                                    <t t-set="social_metrics" t-value="report_data.get('social_metrics')"/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4>Key Metrics</h4>
+                                            <ul>
+                                                <li><strong>Community Impact Score:</strong> <t t-esc="social_metrics.get('community_impact_score', 0)"/>/10</li>
+                                                <li><strong>Employee Satisfaction:</strong> <t t-esc="social_metrics.get('employee_satisfaction', 0)"/>/10</li>
+                                                <li><strong>Diversity Index:</strong> <t t-esc="social_metrics.get('diversity_index', 0)"/></li>
+                                                <li><strong>Health & Safety Score:</strong> <t t-esc="social_metrics.get('health_safety_score', 0)"/>/10</li>
+                                                <li><strong>Training Hours:</strong> <t t-esc="social_metrics.get('training_hours', 0)"/> hours</li>
+                                                <li><strong>Local Procurement:</strong> <t t-esc="social_metrics.get('local_procurement', 0)"/>%</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4>Analysis</h4>
+                                            <p>Social responsibility metrics and community impact analysis.</p>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Governance Metrics -->
+                                <t t-if="o.include_section_governance and report_data.get('governance_metrics')">
+                                    <h3>Governance Performance</h3>
+                                    <t t-set="gov_metrics" t-value="report_data.get('governance_metrics')"/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4>Key Metrics</h4>
+                                            <ul>
+                                                <li><strong>Compliance Rate:</strong> <t t-esc="gov_metrics.get('compliance_rate', 0)"/>%</li>
+                                                <li><strong>Risk Management Score:</strong> <t t-esc="gov_metrics.get('risk_management_score', 0)"/>/10</li>
+                                                <li><strong>Transparency Index:</strong> <t t-esc="gov_metrics.get('transparency_index', 0)"/>/10</li>
+                                                <li><strong>Board Diversity:</strong> <t t-esc="gov_metrics.get('board_diversity', 0)"/></li>
+                                                <li><strong>Ethics Score:</strong> <t t-esc="gov_metrics.get('ethics_score', 0)"/>/10</li>
+                                                <li><strong>Stakeholder Engagement:</strong> <t t-esc="gov_metrics.get('stakeholder_engagement', 0)"/>/10</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4>Analysis</h4>
+                                            <p>Governance and compliance metrics with risk management analysis.</p>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Analytics -->
+                                <t t-if="o.include_section_analytics and report_data.get('analytics')">
+                                    <h3>Advanced Analytics</h3>
+                                    <t t-set="analytics_data" t-value="report_data.get('analytics')"/>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h4>Performance Trends</h4>
+                                            <ul>
+                                                <li><strong>Trend Direction:</strong> <t t-esc="analytics_data.get('performance_trends', {}).get('trend', 'N/A')"/></li>
+                                                <li><strong>Improvement Rate:</strong> <t t-esc="analytics_data.get('performance_trends', {}).get('rate', 0)"/>%</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h4>Predictive Insights</h4>
+                                            <ul>
+                                                <li><strong>Prediction:</strong> <t t-esc="analytics_data.get('predictive_insights', {}).get('prediction', 'N/A')"/></li>
+                                                <li><strong>Confidence:</strong> <t t-esc="analytics_data.get('predictive_insights', {}).get('confidence', 0)"/></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Recommendations -->
+                                <t t-if="o.include_section_recommendations and report_data.get('recommendations')">
+                                    <h3>Recommendations</h3>
+                                    <t t-set="recommendations" t-value="report_data.get('recommendations')"/>
+                                    <p>Strategic recommendations based on ESG performance analysis:</p>
+                                    <ul>
+                                        <t t-foreach="recommendations" t-as="rec">
+                                            <li><strong><t t-esc="rec.get('category', 'General')"/>:</strong> <t t-esc="rec.get('recommendation', '')"/></li>
+                                        </t>
+                                    </ul>
+                                </t>
+                                
+                                <!-- Thresholds -->
+                                <t t-if="o.include_thresholds and report_data.get('thresholds')">
+                                    <h3>Performance Thresholds</h3>
+                                    <t t-set="thresholds" t-value="report_data.get('thresholds')"/>
+                                    <div class="alert alert-info" role="alert">
+                                        <h4>Threshold Status</h4>
+                                        <ul>
+                                            <li><strong>Carbon Threshold:</strong> <t t-esc="'Exceeded' if thresholds.get('carbon_threshold_exceeded') else 'Within Limits'"/></li>
+                                            <li><strong>Compliance Threshold:</strong> <t t-esc="'Exceeded' if thresholds.get('compliance_threshold_exceeded') else 'Within Limits'"/></li>
+                                            <li><strong>Social Impact Threshold:</strong> <t t-esc="'Exceeded' if thresholds.get('social_impact_threshold_exceeded') else 'Within Limits'"/></li>
+                                        </ul>
+                                    </div>
+                                </t>
+                                
                             </t>
                             
                             <h3>Report Configuration</h3>
