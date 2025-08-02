@@ -602,6 +602,58 @@ class FacilityAsset(models.Model):
             }
         return True
 
+    # ESG (Environmental, Social, Governance) Fields
+    esg_compliance = fields.Boolean(string='ESG Compliant', default=True, tracking=True,
+                                   help="Indicates if this asset meets ESG compliance standards")
+    carbon_footprint = fields.Float(string='Carbon Footprint (kg CO2)', tracking=True,
+                                   help="Estimated carbon footprint of this asset")
+    energy_efficiency_rating = fields.Selection([
+        ('a', 'A - Excellent'),
+        ('b', 'B - Good'),
+        ('c', 'C - Average'),
+        ('d', 'D - Below Average'),
+        ('e', 'E - Poor')
+    ], string='Energy Efficiency Rating', tracking=True)
+    renewable_energy_usage = fields.Float(string='Renewable Energy Usage (%)', tracking=True,
+                                        help="Percentage of energy from renewable sources")
+    waste_management_score = fields.Float(string='Waste Management Score', tracking=True,
+                                        help="Score indicating waste management effectiveness")
+    water_consumption = fields.Float(string='Water Consumption (L/day)', tracking=True,
+                                   help="Daily water consumption of this asset")
+    biodiversity_impact = fields.Selection([
+        ('low', 'Low Impact'),
+        ('medium', 'Medium Impact'),
+        ('high', 'High Impact')
+    ], string='Biodiversity Impact', default='low', tracking=True)
+    
+    # Social Metrics
+    community_impact_score = fields.Float(string='Community Impact Score', tracking=True,
+                                        help="Score indicating positive community impact")
+    employee_satisfaction = fields.Float(string='Employee Satisfaction Score', tracking=True,
+                                       help="Employee satisfaction rating for this asset")
+    diversity_index = fields.Float(string='Diversity Index', tracking=True,
+                                 help="Diversity and inclusion metric")
+    health_safety_score = fields.Float(string='Health & Safety Score', tracking=True,
+                                     help="Health and safety performance score")
+    training_hours = fields.Float(string='Training Hours', tracking=True,
+                                help="Annual training hours provided")
+    local_procurement = fields.Float(string='Local Procurement (%)', tracking=True,
+                                   help="Percentage of procurement from local suppliers")
+    
+    # Governance Metrics
+    compliance_rate = fields.Float(string='Compliance Rate (%)', tracking=True,
+                                 help="Overall compliance rate for this asset")
+    risk_management_score = fields.Float(string='Risk Management Score', tracking=True,
+                                       help="Risk management effectiveness score")
+    transparency_index = fields.Float(string='Transparency Index', tracking=True,
+                                    help="Transparency and reporting score")
+    board_diversity = fields.Float(string='Board Diversity Score', tracking=True,
+                                 help="Board diversity and inclusion score")
+    ethics_score = fields.Float(string='Ethics Score', tracking=True,
+                              help="Ethical business practices score")
+    stakeholder_engagement = fields.Float(string='Stakeholder Engagement Score', tracking=True,
+                                        help="Stakeholder engagement effectiveness")
+    
     # Enhanced Asset Status and Risk Assessment
     risk_score = fields.Float(string='Risk Score', compute='_compute_risk_score', store=True)
     maintenance_cost_ytd = fields.Monetary(string='Maintenance Cost YTD', 

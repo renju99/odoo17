@@ -236,7 +236,7 @@ class EnhancedESGWizard(models.TransientModel):
         if self.include_compliance_only:
             domain.append(('esg_compliance', '=', True))
 
-        assets = self.env['facility.asset'].search(domain)
+        assets = self.env['facilities.asset'].search(domain)
 
         # Generate comprehensive report data
         report_data = self._prepare_enhanced_report_data(assets)
