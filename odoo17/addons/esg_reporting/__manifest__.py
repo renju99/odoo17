@@ -27,6 +27,7 @@
         'project',
         'web',
         'spreadsheet_dashboard',
+        'facilities_management_module',
     ],
     'data': [
         'security/esg_security.xml',
