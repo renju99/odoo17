@@ -1,7 +1,7 @@
 {
-    'name': 'Facilities Management Module',
+    'name': 'ESG Reporting and Analytics',
     'version': '1.0',
-    'category': 'Facilities Management',
+    'category': 'Reporting',
     'summary': 'Enhanced ESG Reporting and Analytics',
     'description': """
         Enhanced ESG Reporting and Analytics Module
@@ -29,7 +29,6 @@
         'project',
         'web',
         'spreadsheet_dashboard',
-        'facilities_management',
     ],
     'data': [
         'security/esg_security.xml',

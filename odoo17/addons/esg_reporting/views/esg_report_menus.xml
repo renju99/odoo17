@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Main ESG Reporting Menu -->
+        <menuitem id="menu_esg_reporting_root"
+                  name="ESG Reporting"
+                  sequence="50"/>
+
         <!-- Enhanced ESG Reports Menu -->
         <menuitem id="menu_enhanced_esg_reports"
-                  name="Enhanced ESG Reports"
-                  parent="facilities_management.menu_facilities_root"
-                  sequence="20"/>
+                  name="ESG Reports"
+                  parent="menu_esg_reporting_root"
+                  sequence="10"/>
 
         <!-- Enhanced ESG Report Wizard Menu -->
         <menuitem id="menu_enhanced_esg_wizard"
-                  name="Generate Enhanced ESG Report"
+                  name="Generate ESG Report"
                   parent="menu_enhanced_esg_reports"
                   action="action_enhanced_esg_wizard"
                   sequence="10"/>
@@ -17,15 +22,22 @@
         <!-- ESG Dashboard Menu -->
         <menuitem id="menu_esg_dashboard"
                   name="ESG Dashboard"
-                  parent="menu_enhanced_esg_reports"
+                  parent="menu_esg_reporting_root"
                   action="action_esg_dashboard"
                   sequence="20"/>
 
         <!-- ESG Analytics Menu -->
         <menuitem id="menu_esg_analytics"
                   name="ESG Analytics"
-                  parent="menu_enhanced_esg_reports"
+                  parent="menu_esg_reporting_root"
                   action="action_esg_analytics"
                   sequence="30"/>
+
+        <!-- ESG Configuration Menu -->
+        <menuitem id="menu_esg_configuration"
+                  name="Configuration"
+                  parent="menu_esg_reporting_root"
+                  sequence="100"/>
+
     </data>
 </odoo>

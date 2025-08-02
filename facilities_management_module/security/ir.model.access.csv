@@ -4,4 +4,3 @@ access_facility_asset_manager,facility.asset.manager,model_facility_asset,base.g
 access_asset_disposal_wizard_user,asset.disposal.wizard.user,model_asset_disposal_wizard,base.group_user,1,1,1,0
 access_asset_certification_user,asset.certification.user,model_asset_certification,base.group_user,1,1,1,0
 access_asset_certification_manager,asset.certification.manager,model_asset_certification,base.group_system,1,1,1,1
-access_esg_report_wizard_user,esg.report.wizard.user,model_esg_report_wizard,base.group_user,1,1,1,0

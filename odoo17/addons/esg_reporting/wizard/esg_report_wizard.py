@@ -243,7 +243,7 @@ class EnhancedESGWizard(models.TransientModel):
 
         # Return report action based on output format
         if self.output_format == 'pdf':
-            return self.env.ref('facilities_management_module.action_enhanced_esg_report_pdf').report_action(self,
+            return self.env.ref('esg_reporting.action_enhanced_esg_report_pdf').report_action(self,
                                                                                                              data=report_data)
         elif self.output_format == 'excel':
             return self._generate_excel_report(report_data)

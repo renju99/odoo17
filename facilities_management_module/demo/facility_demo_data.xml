@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Asset Certifications -->
+        <record id="demo_certification_1" model="asset.certification">
+            <field name="name">ISO 9001 Quality Management</field>
+            <field name="code">ISO9001</field>
+            <field name="certification_type">quality</field>
+            <field name="issuing_body">International Organization for Standardization</field>
+            <field name="issue_date">2023-01-15</field>
+            <field name="expiry_date">2026-01-15</field>
+            <field name="is_active">True</field>
+            <field name="description">Quality management system certification</field>
+            <field name="requirements">Implement quality management system, conduct audits, maintain documentation</field>
+        </record>
+
+        <record id="demo_certification_2" model="asset.certification">
+            <field name="name">ISO 14001 Environmental Management</field>
+            <field name="code">ISO14001</field>
+            <field name="certification_type">environmental</field>
+            <field name="issuing_body">International Organization for Standardization</field>
+            <field name="issue_date">2023-03-20</field>
+            <field name="expiry_date">2026-03-20</field>
+            <field name="is_active">True</field>
+            <field name="description">Environmental management system certification</field>
+            <field name="requirements">Implement environmental management system, monitor environmental impacts</field>
+        </record>
+
+        <record id="demo_certification_3" model="asset.certification">
+            <field name="name">OHSAS 18001 Occupational Health and Safety</field>
+            <field name="code">OHSAS18001</field>
+            <field name="certification_type">safety</field>
+            <field name="issuing_body">British Standards Institution</field>
+            <field name="issue_date">2023-06-10</field>
+            <field name="expiry_date">2026-06-10</field>
+            <field name="is_active">True</field>
+            <field name="description">Occupational health and safety management system</field>
+            <field name="requirements">Implement safety management system, conduct risk assessments</field>
+        </record>
+
+        <!-- Demo Assets -->
+        <record id="demo_asset_1" model="facility.asset">
+            <field name="name">Office Building A</field>
+            <field name="code">BLDG001</field>
+            <field name="asset_type">building</field>
+            <field name="purchase_date">2020-05-15</field>
+            <field name="purchase_cost">2500000.00</field>
+            <field name="current_value">2800000.00</field>
+            <field name="location">Downtown Business District</field>
+            <field name="status">active</field>
+            <field name="description">Main office building with 50,000 sq ft of space</field>
+            <field name="safety_compliance">True</field>
+            <field name="regulatory_compliance">True</field>
+            <field name="certification_ids" eval="[(6, 0, [ref('demo_certification_1'), ref('demo_certification_2')])]"/>
+            <field name="audit_date">2023-12-01</field>
+            <field name="next_audit_date">2024-12-01</field>
+        </record>
+
+        <record id="demo_asset_2" model="facility.asset">
+            <field name="name">HVAC System - Floor 1</field>
+            <field name="code">HVAC001</field>
+            <field name="asset_type">equipment</field>
+            <field name="purchase_date">2021-03-20</field>
+            <field name="purchase_cost">150000.00</field>
+            <field name="current_value">120000.00</field>
+            <field name="location">Building A - Floor 1</field>
+            <field name="status">active</field>
+            <field name="description">Central air conditioning system for first floor</field>
+            <field name="safety_compliance">True</field>
+            <field name="regulatory_compliance">True</field>
+            <field name="certification_ids" eval="[(6, 0, [ref('demo_certification_3')])]"/>
+            <field name="audit_date">2023-11-15</field>
+            <field name="next_audit_date">2024-11-15</field>
+        </record>
+
+        <record id="demo_asset_3" model="facility.asset">
+            <field name="name">Company Vehicle - Ford Transit</field>
+            <field name="code">VEH001</field>
+            <field name="asset_type">vehicle</field>
+            <field name="purchase_date">2022-08-10</field>
+            <field name="purchase_cost">45000.00</field>
+            <field name="current_value">38000.00</field>
+            <field name="location">Company Garage</field>
+            <field name="status">active</field>
+            <field name="description">Delivery van for company operations</field>
+            <field name="safety_compliance">True</field>
+            <field name="regulatory_compliance">True</field>
+            <field name="audit_date">2023-10-20</field>
+            <field name="next_audit_date">2024-10-20</field>
+        </record>
+
+        <record id="demo_asset_4" model="facility.asset">
+            <field name="name">Office Furniture Set</field>
+            <field name="code">FURN001</field>
+            <field name="asset_type">furniture</field>
+            <field name="purchase_date">2021-09-05</field>
+            <field name="purchase_cost">25000.00</field>
+            <field name="current_value">20000.00</field>
+            <field name="location">Building A - Floor 2</field>
+            <field name="status">active</field>
+            <field name="description">Complete office furniture set for 20 employees</field>
+            <field name="safety_compliance">True</field>
+            <field name="regulatory_compliance">True</field>
+            <field name="audit_date">2023-09-30</field>
+            <field name="next_audit_date">2024-09-30</field>
+        </record>
+
+    </data>
+</odoo>

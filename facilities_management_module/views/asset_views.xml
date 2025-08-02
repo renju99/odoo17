@@ -14,9 +14,8 @@
                     <field name="status"/>
                     <field name="purchase_cost"/>
                     <field name="current_value"/>
-                    <field name="esg_compliance"/>
-                    <field name="environmental_impact"/>
-                    <field name="energy_efficiency_rating"/>
+                    <field name="safety_compliance"/>
+                    <field name="regulatory_compliance"/>
                 </tree>
             </field>
         </record>
@@ -52,23 +51,14 @@
                             <field name="notes"/>
                         </group>
                         
-                        <!-- ESG Compliance Section -->
-                        <group string="ESG Compliance" name="esg_compliance">
-                            <group string="Environmental">
-                                <field name="esg_compliance"/>
-                                <field name="environmental_impact"/>
-                                <field name="energy_efficiency_rating"/>
-                                <field name="carbon_footprint"/>
-                                <field name="renewable_energy"/>
-                            </group>
-                            <group string="Social Impact">
+                        <!-- Compliance Section -->
+                        <group string="Compliance" name="compliance">
+                            <group string="Basic Compliance">
                                 <field name="safety_compliance"/>
-                                <field name="accessibility_compliant"/>
-                                <field name="social_impact_score"/>
-                            </group>
-                            <group string="Governance">
                                 <field name="regulatory_compliance"/>
                                 <field name="certification_ids" widget="many2many_tags"/>
+                            </group>
+                            <group string="Audit Information">
                                 <field name="audit_date"/>
                                 <field name="next_audit_date"/>
                             </group>
@@ -101,15 +91,12 @@
                     <filter string="Inactive" name="inactive" domain="[('status', '=', 'inactive')]"/>
                     <filter string="Under Maintenance" name="maintenance" domain="[('status', '=', 'maintenance')]"/>
                     <filter string="Disposed" name="disposed" domain="[('status', '=', 'disposed')]"/>
-                    <filter string="ESG Compliance Required" name="esg_compliance" domain="[('esg_compliance', '=', True)]"/>
                     <filter string="Safety Compliant" name="safety_compliant" domain="[('safety_compliance', '=', True)]"/>
                     <filter string="Regulatory Compliant" name="regulatory_compliant" domain="[('regulatory_compliance', '=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Asset Type" name="group_by_type" context="{'group_by': 'asset_type'}"/>
                         <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
                         <filter string="Location" name="group_by_location" context="{'group_by': 'location'}"/>
-                        <filter string="Environmental Impact" name="group_by_env_impact" context="{'group_by': 'environmental_impact'}"/>
-                        <filter string="Energy Efficiency" name="group_by_energy" context="{'group_by': 'energy_efficiency_rating'}"/>
                     </group>
                 </search>
             </field>
