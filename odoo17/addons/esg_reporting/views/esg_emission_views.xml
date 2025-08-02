@@ -8,10 +8,10 @@
             <field name="arch" type="xml">
                 <form string="ESG Emission">
                     <header>
-                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <button name="action_validate" string="Validate" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
-                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', ['draft', 'confirmed'])]}"/>
-                        <button name="action_draft" string="Set to Draft" type="object" attrs="{'invisible': [('state', '!=', 'cancelled')]}"/>
+                        <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                        <button name="action_validate" string="Validate" type="object" class="oe_highlight" invisible="state != 'confirmed'"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state not in ['draft', 'confirmed']"/>
+                        <button name="action_draft" string="Set to Draft" type="object" invisible="state != 'cancelled'"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,validated"/>
                     </header>
                     <sheet>
