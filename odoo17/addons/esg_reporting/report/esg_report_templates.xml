@@ -421,7 +421,7 @@
                                                 <li><strong>Community Impact Score:</strong> <t t-esc="social_metrics.get('community_impact_score', 0)"/>/10</li>
                                                 <li><strong>Employee Satisfaction:</strong> <t t-esc="social_metrics.get('employee_satisfaction', 0)"/>/10</li>
                                                 <li><strong>Diversity Index:</strong> <t t-esc="social_metrics.get('diversity_index', 0)"/></li>
-                                                <li><strong>Health & Safety Score:</strong> <t t-esc="social_metrics.get('health_safety_score', 0)"/>/10</li>
+                                                <li><strong>Health &amp; Safety Score:</strong> <t t-esc="social_metrics.get('health_safety_score', 0)"/>/10</li>
                                                 <li><strong>Training Hours:</strong> <t t-esc="social_metrics.get('training_hours', 0)"/> hours</li>
                                                 <li><strong>Local Procurement:</strong> <t t-esc="social_metrics.get('local_procurement', 0)"/>%</li>
                                             </ul>
