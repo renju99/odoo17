@@ -22,12 +22,9 @@
         'views/asset_views.xml',
         'views/asset_disposal_wizard_views.xml',
         'views/asset_certification_views.xml',
-        'views/esg_report_wizard_views.xml',
-        'views/esg_report_menus.xml',
-        'reports/esg_report_pdf.xml',
     ],
     'demo': [
-        'demo/esg_demo_data.xml',
+        'demo/facility_demo_data.xml',
     ],
     'installable': True,
     'application': True,
