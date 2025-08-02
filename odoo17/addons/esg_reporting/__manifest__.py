@@ -56,6 +56,8 @@
         'web.assets_backend': [
             'esg_reporting/static/src/js/esg_advanced_dashboard.js',
             'esg_reporting/static/src/js/esg_dashboard.js',
+            'esg_reporting/static/src/xml/esg_advanced_dashboard.xml',
+            'esg_reporting/static/src/xml/esg_dashboard.xml',
         ],
     },
     'demo': [
