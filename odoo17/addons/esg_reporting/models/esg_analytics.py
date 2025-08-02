@@ -131,3 +131,7 @@ class ESGAnalytics(models.Model):
         self.ensure_one()
         self.state = 'draft'
         self.analytics_results = ''
+
+    def action_draft(self):
+        """Reset to draft state"""
+        self.write({'state': 'draft'})
