@@ -34,7 +34,6 @@
     'data': [
         'security/esg_security.xml',
         'security/ir.model.access.csv',
-        'views/esg_report_wizard_views.xml',
         'views/enhanced_esg_wizard_views.xml',
         'views/esg_dashboard_views.xml',
         'views/esg_analytics_views.xml',
