@@ -1,0 +1,16 @@
+nohup: ignoring input
+/workspace/odoo17/odoo/modules/module.py:11: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+2025-08-02 13:59:35,461 15700 INFO ? odoo: Odoo version 17.0 
+2025-08-02 13:59:35,461 15700 INFO ? odoo: addons paths: ['/workspace/odoo17/odoo/addons', '/home/ubuntu/.local/share/Odoo/addons/17.0', '/workspace/odoo17/addons'] 
+2025-08-02 13:59:35,461 15700 INFO ? odoo: database: odoo@localhost:default 
+2025-08-02 13:59:35,523 15700 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2025-08-02 13:59:35,602 15700 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8070 
+2025-08-02 13:59:35,611 15700 INFO odoo17_test odoo.modules.loading: loading 1 modules... 
+2025-08-02 13:59:35,614 15700 INFO odoo17_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
+2025-08-02 13:59:35,619 15700 INFO odoo17_test odoo.modules.loading: loading 11 modules... 
+2025-08-02 13:59:35,646 15700 INFO odoo17_test odoo.modules.loading: 11 modules loaded in 0.03s, 0 queries (+0 extra) 
+2025-08-02 13:59:35,662 15700 INFO odoo17_test odoo.modules.loading: Modules loaded. 
+2025-08-02 13:59:35,663 15700 INFO odoo17_test odoo.modules.registry: Registry loaded in 0.061s 
+2025-08-02 13:59:52,266 15700 INFO odoo17_test odoo.addons.base.models.ir_http: Generating routing map for key None 
+2025-08-02 13:59:52,282 15700 INFO odoo17_test werkzeug: 127.0.0.1 - - [02/Aug/2025 13:59:52] "GET / HTTP/1.1" 303 - 5 0.005 0.016

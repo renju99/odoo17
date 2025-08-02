@@ -18,7 +18,6 @@
     """,
     'author': 'Your Company',
     'website': 'https://www.yourcompany.com',
-    'depends': ['base', 'mail', 'facilities_management_module'],
     'depends': [
         'base',
         'mail',
@@ -30,7 +29,7 @@
         'project',
         'web',
         'spreadsheet_dashboard',
-        'facilities_management_module',
+        'facilities_management',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -51,4 +50,5 @@
     'installable': True,
     'application': True,
     'auto_install': False,
+    'license': 'LGPL-3',
 }
