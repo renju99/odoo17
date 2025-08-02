@@ -360,6 +360,12 @@
                             <p><strong>Granularity:</strong> <t t-esc="o.granularity"/></p>
                             <p><strong>Company:</strong> <t t-esc="o.company_name"/></p>
                             
+                            <t t-if="o.report_info and o.report_info.get('note')">
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Note:</strong> <t t-esc="o.report_info.get('note')"/>
+                                </div>
+                            </t>
+                            
                             <h3>Executive Summary</h3>
                             <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
                             
