@@ -33,7 +33,6 @@
     'data': [
         'security/esg_security.xml',
         'security/ir.model.access.csv',
-        'views/assets.xml',
         'views/esg_offset_views.xml',
         'views/esg_emission_views.xml',
         'views/esg_employee_community_views.xml',
@@ -52,6 +51,12 @@
         'data/esg_data.xml',
         'data/esg_demo.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'esg_reporting/static/src/js/esg_advanced_dashboard.js',
+            'esg_reporting/static/src/js/esg_dashboard.js',
+        ],
+    },
     'demo': [
         'data/esg_demo.xml',
     ],
