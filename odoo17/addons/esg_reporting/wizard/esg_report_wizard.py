@@ -181,6 +181,9 @@ class EnhancedESGWizard(models.TransientModel):
 
     # Company Information
     company_name = fields.Char(string='Company', default='YourCompany')
+    
+    # Report data storage for template access
+    report_data = fields.Json(string='Report Data', readonly=True)
 
     @api.onchange('report_type')
     def _onchange_report_type(self):
@@ -266,10 +269,12 @@ class EnhancedESGWizard(models.TransientModel):
         _logger.info(f"ESG Report Generation - Assets found: {len(assets)}")
         _logger.info(f"ESG Report Generation - Report data keys: {list(report_data.keys())}")
 
+        # Store report data in the wizard object for template access
+        self.report_data = report_data
+
         # Return report action based on output format
         if self.output_format == 'pdf':
-            return self.env.ref('esg_reporting.action_enhanced_esg_report_pdf').report_action(self,
-                                                                                                             data=report_data)
+            return self.env.ref('esg_reporting.action_enhanced_esg_report_pdf').report_action(self)
         elif self.output_format == 'excel':
             return self._generate_excel_report(report_data)
         elif self.output_format == 'html':
