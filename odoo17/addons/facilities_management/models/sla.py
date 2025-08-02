@@ -14,7 +14,7 @@ class FacilitiesSLA(models.Model):
 
     name = fields.Char(string='SLA Name', required=True)
     description = fields.Text(string='Description')
-    active = fields.Boolean(string='Active', default=True)
+    active = fields.Boolean(string='Active', default=True, tracking=True)
     priority = fields.Integer(string='Priority', default=10, help="Higher number = higher priority")
     
     # SLA Timeframes
@@ -130,6 +130,14 @@ class FacilitiesSLA(models.Model):
         """Activate the SLA"""
         self.ensure_one()
         self.write({'active': True})
+        
+        # Log the activation in chatter
+        self.message_post(
+            body=_('SLA "%s" has been activated by %s.') % (self.name, self.env.user.name),
+            message_type='notification',
+            subtype_xmlid='mail.mt_note'
+        )
+        
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -144,6 +152,14 @@ class FacilitiesSLA(models.Model):
         """Deactivate the SLA"""
         self.ensure_one()
         self.write({'active': False})
+        
+        # Log the deactivation in chatter
+        self.message_post(
+            body=_('SLA "%s" has been deactivated by %s.') % (self.name, self.env.user.name),
+            message_type='notification',
+            subtype_xmlid='mail.mt_note'
+        )
+        
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
@@ -226,10 +242,18 @@ class FacilitiesSLA(models.Model):
     def action_bulk_activate(self):
         """Activate selected SLAs"""
         activated_count = 0
+        activated_names = []
         for sla in self:
             if not sla.active:
                 sla.write({'active': True})
+                # Log the activation in chatter
+                sla.message_post(
+                    body=_('SLA "%s" has been activated by %s via bulk operation.') % (sla.name, self.env.user.name),
+                    message_type='notification',
+                    subtype_xmlid='mail.mt_note'
+                )
                 activated_count += 1
+                activated_names.append(sla.name)
         
         return {
             'type': 'ir.actions.client',
@@ -244,10 +268,18 @@ class FacilitiesSLA(models.Model):
     def action_bulk_deactivate(self):
         """Deactivate selected SLAs"""
         deactivated_count = 0
+        deactivated_names = []
         for sla in self:
             if sla.active:
                 sla.write({'active': False})
+                # Log the deactivation in chatter
+                sla.message_post(
+                    body=_('SLA "%s" has been deactivated by %s via bulk operation.') % (sla.name, self.env.user.name),
+                    message_type='notification',
+                    subtype_xmlid='mail.mt_note'
+                )
                 deactivated_count += 1
+                deactivated_names.append(sla.name)
         
         return {
             'type': 'ir.actions.client',
