@@ -5,8 +5,6 @@
     'summary': 'Enhanced ESG Reporting and Analytics',
     'description': """
         Enhanced ESG Reporting and Analytics Module
-        =========================================
-
         This module provides comprehensive ESG reporting capabilities including:
 
         - Advanced Report Types (Sustainability, Compliance, Risk Assessment, etc.)
@@ -21,6 +19,19 @@
     'author': 'Your Company',
     'website': 'https://www.yourcompany.com',
     'depends': ['base', 'mail', 'facilities_management_module'],
+    'depends': [
+        'base',
+        'mail',
+        'hr',
+        'account',
+        'purchase',
+        'sale',
+        'stock',
+        'project',
+        'web',
+        'spreadsheet_dashboard',
+        'facilities_management_module',
+    ],
     'data': [
         'security/ir.model.access.csv',
         'views/asset_views.xml',
