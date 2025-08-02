@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Asset Disposal Wizard Form View -->
+        <record id="view_asset_disposal_wizard_form" model="ir.ui.view">
+            <field name="name">asset.disposal.wizard.form</field>
+            <field name="model">asset.disposal.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Asset Disposal Wizard">
+                    <group>
+                        <field name="asset_id" required="1"/>
+                        <field name="disposal_reason" required="1"/>
+                        <field name="disposal_date" required="1"/>
+                        <field name="disposal_method"/>
+                        <field name="notes"/>
+                    </group>
+                    <footer>
+                        <button name="action_dispose_asset" string="Dispose Asset" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Asset Disposal Wizard Action -->
+        <record id="action_asset_disposal" model="ir.actions.act_window">
+            <field name="name">Asset Disposal</field>
+            <field name="res_model">asset.disposal.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_asset_id': active_id}</field>
+        </record>
+
+        <!-- Asset Disposal Menu Item - Fixed to reference the correct parent menu -->
+        <menuitem id="menu_asset_disposal" 
+                  name="Asset Disposals" 
+                  parent="facilities_management.menu_asset_operations" 
+                  action="action_asset_disposal" 
+                  sequence="50"/>
+
+    </data>
+</odoo>
