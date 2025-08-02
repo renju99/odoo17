@@ -163,6 +163,7 @@
             <field name="model">esg.target.milestone</field>
             <field name="arch" type="xml">
                 <tree string="ESG Target Milestones">
+                    <field name="sequence" widget="handle"/>
                     <field name="target_id"/>
                     <field name="name"/>
                     <field name="date"/>

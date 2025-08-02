@@ -370,11 +370,17 @@ class ESGTarget(models.Model):
 class ESGTargetMilestone(models.Model):
     _name = 'esg.target.milestone'
     _description = 'ESG Target Milestone'
-    _order = 'target_id, date'
+    _order = 'target_id, sequence, date'
 
     name = fields.Char(
         string='Milestone Name',
         required=True
+    )
+    
+    sequence = fields.Integer(
+        string='Sequence',
+        default=10,
+        help="Determines the order of milestones"
     )
     
     target_id = fields.Many2one(
