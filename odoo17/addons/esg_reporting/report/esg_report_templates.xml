@@ -387,19 +387,6 @@
                                 <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
                                 <p><strong>Total Assets Analyzed:</strong> <t t-esc="report_info.get('total_assets', 0)"/></p>
                                 <p><strong>Report Theme:</strong> <t t-esc="report_info.get('theme', 'Default')"/></p>
-                            </t>
-                            <t t-else="">
-                                <div class="alert alert-warning" role="alert">
-                                    <h4>No Report Data Available</h4>
-                                    <p>The report data could not be generated. This might be due to:</p>
-                                    <ul>
-                                        <li>No assets found matching the specified criteria</li>
-                                        <li>Data processing error</li>
-                                        <li>Configuration issues</li>
-                                    </ul>
-                                    <p>Please check your report settings and try again.</p>
-                                </div>
-                            </t>
                                 
                                 <!-- Environmental Metrics -->
                                 <t t-if="o.include_section_environmental and report_data.get('environmental_metrics')">
@@ -518,6 +505,18 @@
                                     </div>
                                 </t>
                                 
+                            </t>
+                            <t t-else="">
+                                <div class="alert alert-warning" role="alert">
+                                    <h4>No Report Data Available</h4>
+                                    <p>The report data could not be generated. This might be due to:</p>
+                                    <ul>
+                                        <li>No assets found matching the specified criteria</li>
+                                        <li>Data processing error</li>
+                                        <li>Configuration issues</li>
+                                    </ul>
+                                    <p>Please check your report settings and try again.</p>
+                                </div>
                             </t>
                             
                             <h3>Report Configuration</h3>
