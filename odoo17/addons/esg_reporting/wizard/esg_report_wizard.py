@@ -183,7 +183,7 @@ class EnhancedESGWizard(models.TransientModel):
     company_name = fields.Char(string='Company', default='YourCompany')
     
     # Report data storage for template access
-    report_data = fields.Json(string='Report Data', readonly=True)
+    report_data = fields.Json(string='Report Data', readonly=True, default={})
 
     @api.onchange('report_type')
     def _onchange_report_type(self):
@@ -262,16 +262,56 @@ class EnhancedESGWizard(models.TransientModel):
                 assets = self.env['facilities.asset'].search([])
 
         # Generate comprehensive report data
-        report_data = self._prepare_enhanced_report_data(assets)
-        
-        # Debug logging
-        _logger = logging.getLogger(__name__)
-        _logger.info(f"ESG Report Generation - Assets found: {len(assets)}")
-        _logger.info(f"ESG Report Generation - Report data keys: {list(report_data.keys())}")
+        try:
+            report_data = self._prepare_enhanced_report_data(assets)
+            
+            # Debug logging
+            _logger = logging.getLogger(__name__)
+            _logger.info(f"ESG Report Generation - Assets found: {len(assets)}")
+            _logger.info(f"ESG Report Generation - Report data keys: {list(report_data.keys()) if report_data else 'None'}")
 
-        # Store report data in the wizard object for template access
-        # Ensure all date objects are converted to strings for JSON serialization
-        self.report_data = self._serialize_report_data(report_data)
+            # Store report data in the wizard object for template access
+            # Ensure all date objects are converted to strings for JSON serialization
+            serialized_data = self._serialize_report_data(report_data)
+            if serialized_data is None:
+                serialized_data = {}
+            self.report_data = serialized_data
+        except Exception as e:
+            # Log the error and set a default report data
+            _logger = logging.getLogger(__name__)
+            _logger.error(f"Error generating ESG report: {str(e)}")
+            
+            # Set a default report data with error information
+            self.report_data = {
+                'report_info': {
+                    'name': self.report_name,
+                    'type': self.report_type,
+                    'date_from': self.date_from.isoformat() if self.date_from else None,
+                    'date_to': self.date_to.isoformat() if self.date_to else None,
+                    'company': self.company_name,
+                    'generated_at': fields.Datetime.now().isoformat(),
+                    'total_assets': 0,
+                    'granularity': self.granularity,
+                    'theme': self.report_theme,
+                    'note': f'Error generating report: {str(e)}. Please check the configuration and try again.'
+                },
+                'environmental_metrics': {},
+                'social_metrics': {},
+                'governance_metrics': {},
+                'analytics': {},
+                'trends': {},
+                'benchmarks': {},
+                'risk_analysis': {},
+                'predictions': {},
+                'recommendations': [
+                    {'category': 'error', 'recommendation': f'Report generation failed: {str(e)}'},
+                    {'category': 'debug', 'recommendation': 'Check the server logs for more details'},
+                    {'category': 'retry', 'recommendation': 'Try adjusting the report parameters and regenerate'}
+                ],
+                'thresholds': {},
+                'custom_metrics': {},
+                'comparison_data': {}
+            }
 
         # Return report action based on output format
         if self.output_format == 'pdf':
@@ -353,7 +393,9 @@ class EnhancedESGWizard(models.TransientModel):
 
     def _serialize_report_data(self, data):
         """Recursively serialize data to ensure JSON compatibility"""
-        if isinstance(data, dict):
+        if data is None:
+            return {}
+        elif isinstance(data, dict):
             return {key: self._serialize_report_data(value) for key, value in data.items()}
         elif isinstance(data, list):
             return [self._serialize_report_data(item) for item in data]
