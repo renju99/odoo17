@@ -22,6 +22,8 @@ class FacilitiesSLA(models.Model):
     resolution_time_hours = fields.Float(string='Resolution Time (Hours)', required=True, default=24.0)
     warning_threshold_hours = fields.Float(string='Warning Threshold (Hours)', default=2.0, 
                                          help="Hours before deadline to trigger warning")
+    critical_threshold_hours = fields.Float(string='Critical Threshold (Hours)', default=1.0,
+                                          help="Hours before deadline to trigger critical alert")
     escalation_delay_hours = fields.Float(string='Escalation Delay (Hours)', default=2.0,
                                         help="Hours after breach to trigger escalation")
     
@@ -95,6 +97,12 @@ class FacilitiesSLA(models.Model):
         for sla in self:
             if sla.response_time_hours >= sla.resolution_time_hours:
                 raise ValidationError(_('Response time must be less than resolution time.'))
+            if sla.response_time_hours <= 0 or sla.resolution_time_hours <= 0:
+                raise ValidationError(_('Response and resolution times must be positive values.'))
+            if sla.warning_threshold_hours >= sla.critical_threshold_hours:
+                raise ValidationError(_('Warning threshold must be less than critical threshold.'))
+            if sla.warning_threshold_hours <= 0 or sla.critical_threshold_hours <= 0:
+                raise ValidationError(_('Warning and critical thresholds must be positive values.'))
 
     def action_view_workorders(self):
         """View work orders assigned to this SLA"""
@@ -116,6 +124,103 @@ class FacilitiesSLA(models.Model):
             'view_mode': 'form',
             'target': 'new',
             'context': {'default_sla_id': self.id}
+        }
+
+    def action_activate_sla(self):
+        """Activate the SLA"""
+        self.ensure_one()
+        self.write({'active': True})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('SLA Activated'),
+                'message': f'SLA "{self.name}" has been activated successfully.',
+                'type': 'success',
+            }
+        }
+
+    def action_deactivate_sla(self):
+        """Deactivate the SLA"""
+        self.ensure_one()
+        self.write({'active': False})
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('SLA Deactivated'),
+                'message': f'SLA "{self.name}" has been deactivated.',
+                'type': 'warning',
+            }
+        }
+
+    def action_duplicate_sla(self):
+        """Duplicate the SLA"""
+        self.ensure_one()
+        default_values = {
+            'name': f'{self.name} (Copy)',
+            'active': False,
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Duplicate SLA'),
+            'res_model': 'facilities.sla',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_name': default_values['name'],
+                'default_active': default_values['active'],
+                'default_description': self.description,
+                'default_response_time_hours': self.response_time_hours,
+                'default_resolution_time_hours': self.resolution_time_hours,
+                'default_warning_threshold_hours': self.warning_threshold_hours,
+                'default_critical_threshold_hours': self.critical_threshold_hours,
+                'default_escalation_delay_hours': self.escalation_delay_hours,
+                'default_asset_criticality': self.asset_criticality,
+                'default_maintenance_type': self.maintenance_type,
+                'default_priority_level': self.priority_level,
+                'default_facility_ids': [(6, 0, self.facility_ids.ids)],
+                'default_escalation_enabled': self.escalation_enabled,
+                'default_max_escalation_level': self.max_escalation_level,
+                'default_escalation_recipients': [(6, 0, self.escalation_recipients.ids)],
+                'default_email_notifications': self.email_notifications,
+                'default_sms_notifications': self.sms_notifications,
+                'default_notification_template_id': self.notification_template_id.id,
+                'default_target_mttr_hours': self.target_mttr_hours,
+                'default_target_first_time_fix_rate': self.target_first_time_fix_rate,
+                'default_target_sla_compliance_rate': self.target_sla_compliance_rate,
+                'default_business_hours_only': self.business_hours_only,
+                'default_business_hours_start': self.business_hours_start,
+                'default_business_hours_end': self.business_hours_end,
+                'default_business_days': self.business_days,
+            }
+        }
+
+    def action_test_sla_assignment(self):
+        """Test SLA assignment with current work orders"""
+        self.ensure_one()
+        workorders = self.env['maintenance.workorder'].search([
+            ('sla_id', '=', False),
+            ('state', 'in', ['draft', 'assigned'])
+        ], limit=10)
+        
+        assigned_count = 0
+        for workorder in workorders:
+            try:
+                workorder._apply_sla()
+                if workorder.sla_id == self:
+                    assigned_count += 1
+            except Exception as e:
+                _logger.warning(f"Error testing SLA assignment for work order {workorder.name}: {str(e)}")
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('SLA Assignment Test'),
+                'message': f'Tested SLA assignment on {len(workorders)} work orders. {assigned_count} were assigned to this SLA.',
+                'type': 'success' if assigned_count > 0 else 'warning',
+            }
         }
 
     def _calculate_business_hours(self, start_time, end_time):
@@ -157,6 +262,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 4.0,
             'resolution_time_hours': 24.0,
             'warning_threshold_hours': 2.0,
+            'critical_threshold_hours': 1.0,
             'escalation_delay_hours': 2.0,
             'active': True,
             'priority': 10,
@@ -169,6 +275,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 1.0,
             'resolution_time_hours': 8.0,
             'warning_threshold_hours': 0.5,
+            'critical_threshold_hours': 0.25,
             'escalation_delay_hours': 1.0,
             'active': True,
             'priority': 40,
@@ -182,6 +289,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 2.0,
             'resolution_time_hours': 12.0,
             'warning_threshold_hours': 1.0,
+            'critical_threshold_hours': 0.5,
             'escalation_delay_hours': 2.0,
             'active': True,
             'priority': 30,
@@ -195,6 +303,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 4.0,
             'resolution_time_hours': 24.0,
             'warning_threshold_hours': 2.0,
+            'critical_threshold_hours': 1.0,
             'escalation_delay_hours': 4.0,
             'active': True,
             'priority': 20,
@@ -208,6 +317,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 8.0,
             'resolution_time_hours': 48.0,
             'warning_threshold_hours': 4.0,
+            'critical_threshold_hours': 2.0,
             'escalation_delay_hours': 8.0,
             'active': True,
             'priority': 10,
