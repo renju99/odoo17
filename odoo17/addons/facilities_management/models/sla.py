@@ -223,6 +223,42 @@ class FacilitiesSLA(models.Model):
             }
         }
 
+    def action_bulk_activate(self):
+        """Activate selected SLAs"""
+        activated_count = 0
+        for sla in self:
+            if not sla.active:
+                sla.write({'active': True})
+                activated_count += 1
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('SLAs Activated'),
+                'message': f'{activated_count} SLA(s) have been activated successfully.',
+                'type': 'success',
+            }
+        }
+
+    def action_bulk_deactivate(self):
+        """Deactivate selected SLAs"""
+        deactivated_count = 0
+        for sla in self:
+            if sla.active:
+                sla.write({'active': False})
+                deactivated_count += 1
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('SLAs Deactivated'),
+                'message': f'{deactivated_count} SLA(s) have been deactivated successfully.',
+                'type': 'warning',
+            }
+        }
+
     def _calculate_business_hours(self, start_time, end_time):
         """Calculate business hours between two timestamps"""
         if not self.business_hours_only:

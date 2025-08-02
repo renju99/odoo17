@@ -110,7 +110,7 @@
             <field name="name">facilities.sla.tree</field>
             <field name="model">facilities.sla</field>
             <field name="arch" type="xml">
-                <tree string="SLAs">
+                <tree string="SLAs" multi_edit="1">
                     <field name="name"/>
                     <field name="active"/>
                     <field name="priority"/>
@@ -120,6 +120,12 @@
                     <field name="maintenance_type"/>
                     <field name="compliance_rate" widget="percentage"/>
                     <field name="total_workorders"/>
+                    <button name="action_activate_sla" type="object" string="Activate" 
+                            icon="fa-play" 
+                            invisible="active"/>
+                    <button name="action_deactivate_sla" type="object" string="Deactivate" 
+                            icon="fa-pause" 
+                            invisible="not active"/>
                 </tree>
             </field>
         </record>
@@ -236,6 +242,30 @@
                 <p>
                     Define service level agreements for different asset types, criticality levels, and maintenance types.
                 </p>
+            </field>
+        </record>
+
+        <!-- Bulk Activate Action -->
+        <record id="action_sla_bulk_activate" model="ir.actions.server">
+            <field name="name">Activate Selected SLAs</field>
+            <field name="model_id" ref="model_facilities_sla"/>
+            <field name="binding_model_id" ref="model_facilities_sla"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_bulk_activate()
+            </field>
+        </record>
+
+        <!-- Bulk Deactivate Action -->
+        <record id="action_sla_bulk_deactivate" model="ir.actions.server">
+            <field name="name">Deactivate Selected SLAs</field>
+            <field name="model_id" ref="model_facilities_sla"/>
+            <field name="binding_model_id" ref="model_facilities_sla"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_bulk_deactivate()
             </field>
         </record>
 
