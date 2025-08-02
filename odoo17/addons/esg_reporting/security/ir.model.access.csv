@@ -26,18 +26,14 @@ access_esg_initiative_tag_administrator,esg.initiative.tag.administrator,model_e
 access_esg_analytics_user,esg.analytics.user,model_esg_analytics,group_esg_user,1,1,1,0
 access_esg_analytics_manager,esg.analytics.manager,model_esg_analytics,group_esg_manager,1,1,1,1
 access_esg_analytics_administrator,esg.analytics.administrator,model_esg_analytics,group_esg_administrator,1,1,1,1
-access_esg_carbon_footprint_user,esg.carbon.footprint.user,model_esg_carbon_footprint,group_esg_user,1,1,1,0
-access_esg_carbon_footprint_manager,esg.carbon.footprint.manager,model_esg_carbon_footprint,group_esg_manager,1,1,1,1
-access_esg_carbon_footprint_administrator,esg.carbon.footprint.administrator,model_esg_carbon_footprint,group_esg_administrator,1,1,1,1
+
 access_esg_gender_parity_user,esg.gender.parity.user,model_esg_gender_parity,group_esg_user,1,1,1,0
 access_esg_gender_parity_manager,esg.gender.parity.manager,model_esg_gender_parity,group_esg_manager,1,1,1,1
 access_esg_gender_parity_administrator,esg.gender.parity.administrator,model_esg_gender_parity,group_esg_administrator,1,1,1,1
 access_esg_pay_gap_user,esg.pay.gap.user,model_esg_pay_gap,group_esg_user,1,1,1,0
 access_esg_pay_gap_manager,esg.pay.gap.manager,model_esg_pay_gap,group_esg_manager,1,1,1,1
 access_esg_pay_gap_administrator,esg.pay.gap.administrator,model_esg_pay_gap,group_esg_administrator,1,1,1,1
-access_esg_report_wizard_user,esg.report.wizard.user,model_esg_report_wizard,group_esg_user,1,1,1,0
-access_esg_report_wizard_manager,esg.report.wizard.manager,model_esg_report_wizard,group_esg_manager,1,1,1,1
-access_esg_report_wizard_administrator,esg.report.wizard.administrator,model_esg_report_wizard,group_esg_administrator,1,1,1,1
+
 access_esg_framework_user,esg.framework.user,model_esg_framework,group_esg_user,1,1,1,0
 access_esg_framework_manager,esg.framework.manager,model_esg_framework,group_esg_manager,1,1,1,1
 access_esg_framework_administrator,esg.framework.administrator,model_esg_framework,group_esg_administrator,1,1,1,1
@@ -58,4 +54,3 @@ access_esg_target_milestone_manager,esg.target.milestone.manager,model_esg_targe
 access_esg_target_milestone_administrator,esg.target.milestone.administrator,model_esg_target_milestone,group_esg_administrator,1,1,1,1
 access_enhanced_esg_wizard_user,enhanced.esg.wizard.user,model_enhanced_esg_wizard,base.group_user,1,1,1,0
 access_enhanced_esg_dashboard_user,enhanced.esg.dashboard.user,model_enhanced_esg_dashboard,base.group_user,1,1,1,0
-access_esg_analytics_user,esg.analytics.user,model_esg_analytics,base.group_user,1,1,1,0
