@@ -33,7 +33,6 @@
     'data': [
         'security/esg_security.xml',
         'security/ir.model.access.csv',
-        'views/esg_menu_views.xml',
         'views/enhanced_esg_wizard_views.xml',
         'views/esg_dashboard_views.xml',
         'views/esg_analytics_views.xml',
@@ -45,6 +44,7 @@
         'views/esg_offset_views.xml',
         'views/esg_pay_gap_views.xml',
         'views/esg_target_views.xml',
+        'views/esg_menu_views.xml',
         'views/esg_report_menus.xml',
         'report/esg_reports.xml',
         'report/esg_report_templates.xml',
