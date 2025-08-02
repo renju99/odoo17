@@ -10,10 +10,10 @@
                     <header>
                         <button name="action_activate_sla" type="object" string="Activate SLA" 
                                 class="btn-primary" 
-                                attrs="{'invisible': [('active', '=', True)]}"/>
+                                invisible="active"/>
                         <button name="action_deactivate_sla" type="object" string="Deactivate SLA" 
                                 class="btn-warning" 
-                                attrs="{'invisible': [('active', '=', False)]}"/>
+                                invisible="not active"/>
                         <button name="action_duplicate_sla" type="object" string="Duplicate SLA" class="btn-secondary"/>
                         <button name="action_test_sla_assignment" type="object" string="Test Assignment" class="btn-secondary"/>
                         <button name="action_view_workorders" type="object" string="View Work Orders" class="btn-secondary"/>
@@ -56,8 +56,8 @@
                                 <group>
                                     <group string="Escalation Configuration">
                                         <field name="escalation_enabled"/>
-                                        <field name="max_escalation_level" attrs="{'invisible': [('escalation_enabled', '=', False)]}"/>
-                                        <field name="escalation_recipients" widget="many2many_tags" attrs="{'invisible': [('escalation_enabled', '=', False)]}"/>
+                                        <field name="max_escalation_level" invisible="not escalation_enabled"/>
+                                        <field name="escalation_recipients" widget="many2many_tags" invisible="not escalation_enabled"/>
                                     </group>
                                     <group string="Notifications">
                                         <field name="email_notifications"/>
