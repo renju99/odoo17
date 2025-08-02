@@ -86,5 +86,17 @@
             <field name="binding_type">report</field>
         </record>
 
+        <!-- Enhanced ESG Report for Wizard -->
+        <record id="action_enhanced_esg_report_pdf" model="ir.actions.report">
+            <field name="name">Enhanced ESG Report</field>
+            <field name="model">enhanced.esg.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">esg_reporting.report_enhanced_esg_wizard</field>
+            <field name="report_file">esg_reporting.report_enhanced_esg_wizard</field>
+            <field name="print_report_name">'Enhanced ESG Report - %s' % (object.report_name)</field>
+            <field name="binding_model_id" ref="model_enhanced_esg_wizard"/>
+            <field name="binding_type">report</field>
+        </record>
+
     </data>
 </odoo>
