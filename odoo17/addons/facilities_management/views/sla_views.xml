@@ -268,8 +268,8 @@
         <!-- Bulk Activate Action -->
         <record id="action_sla_bulk_activate" model="ir.actions.server">
             <field name="name">Activate Selected SLAs</field>
-            <field name="model_id" ref="model_facilities_sla"/>
-            <field name="binding_model_id" ref="model_facilities_sla"/>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
+            <field name="binding_model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
@@ -280,8 +280,8 @@
         <!-- Bulk Deactivate Action -->
         <record id="action_sla_bulk_deactivate" model="ir.actions.server">
             <field name="name">Deactivate Selected SLAs</field>
-            <field name="model_id" ref="model_facilities_sla"/>
-            <field name="binding_model_id" ref="model_facilities_sla"/>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
+            <field name="binding_model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
