@@ -4,7 +4,7 @@
         <!-- Enhanced ESG Reports Menu -->
         <menuitem id="menu_enhanced_esg_reports"
                   name="Enhanced ESG Reports"
-                  parent="facilities_management_module.menu_facilities_management"
+                  parent="facilities_management.menu_facilities_root"
                   sequence="20"/>
 
         <!-- Enhanced ESG Report Wizard Menu -->
