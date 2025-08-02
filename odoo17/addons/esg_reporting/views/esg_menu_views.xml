@@ -51,10 +51,10 @@
                   action="action_esg_offset"
                   sequence="20"/>
 
-        <menuitem id="menu_esg_carbon_footprint"
-                  name="Carbon Footprint"
+        <menuitem id="menu_esg_emission"
+                  name="Emissions"
                   parent="menu_esg_environmental"
-                  action="action_esg_carbon_footprint"
+                  action="action_esg_emission"
                   sequence="30"/>
 
         <!-- Social Submenus -->
