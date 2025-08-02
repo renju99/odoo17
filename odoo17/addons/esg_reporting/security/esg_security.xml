@@ -123,16 +123,16 @@
             <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
         </record>
 
-        <record id="esg_carbon_footprint_rule_user" model="ir.rule">
-            <field name="name">ESG Carbon Footprint: User Access</field>
-            <field name="model_id" ref="model_esg_carbon_footprint"/>
+        <record id="esg_emission_rule_user" model="ir.rule">
+            <field name="name">ESG Emissions: User Access</field>
+            <field name="model_id" ref="model_esg_emission"/>
             <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
             <field name="groups" eval="[(4, ref('group_esg_user'))]"/>
         </record>
 
-        <record id="esg_carbon_footprint_rule_manager" model="ir.rule">
-            <field name="name">ESG Carbon Footprint: Manager Access</field>
-            <field name="model_id" ref="model_esg_carbon_footprint"/>
+        <record id="esg_emission_rule_manager" model="ir.rule">
+            <field name="name">ESG Emissions: Manager Access</field>
+            <field name="model_id" ref="model_esg_emission"/>
             <field name="domain_force">[(1, '=', 1)]</field>
             <field name="groups" eval="[(4, ref('group_esg_manager'))]"/>
         </record>

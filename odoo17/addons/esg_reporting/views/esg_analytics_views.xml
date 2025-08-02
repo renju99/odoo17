@@ -158,54 +158,51 @@
             </field>
         </record>
 
-        <!-- ESG Carbon Footprint Search View -->
-        <record id="view_esg_carbon_footprint_search" model="ir.ui.view">
-            <field name="name">esg.carbon.footprint.search</field>
-            <field name="model">esg.carbon.footprint</field>
+        <!-- ESG Emissions Search View -->
+        <record id="view_esg_emission_search" model="ir.ui.view">
+            <field name="name">esg.emission.search</field>
+            <field name="model">esg.emission</field>
             <field name="arch" type="xml">
-                <search string="ESG Carbon Footprint">
+                <search string="ESG Emissions">
                     <field name="name"/>
-                    <field name="scope"/>
-                    <field name="emission_source"/>
+                    <field name="emission_factor_id"/>
                     <field name="date"/>
                     <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
                     <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
                     <filter string="Validated" name="validated" domain="[('state', '=', 'validated')]"/>
                     <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Scope" name="scope" context="{'group_by': 'scope'}"/>
-                        <filter string="Emission Source" name="emission_source" context="{'group_by': 'emission_source'}"/>
+                        <filter string="Emission Factor" name="emission_factor_id" context="{'group_by': 'emission_factor_id'}"/>
                         <filter string="State" name="state" context="{'group_by': 'state'}"/>
-                        <filter string="Verification Status" name="verification_status" context="{'group_by': 'verification_status'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
-        <!-- ESG Carbon Footprint List View -->
-        <record id="view_esg_carbon_footprint_list" model="ir.ui.view">
-            <field name="name">esg.carbon.footprint.list</field>
-            <field name="model">esg.carbon.footprint</field>
+        <!-- ESG Emissions List View -->
+        <record id="view_esg_emission_list" model="ir.ui.view">
+            <field name="name">esg.emission.list</field>
+            <field name="model">esg.emission</field>
             <field name="arch" type="xml">
-                <tree string="ESG Carbon Footprint">
+                <tree string="ESG Emissions">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="scope"/>
-                    <field name="emission_source"/>
+                    <field name="emission_factor_id"/>
+                    <field name="quantity"/>
+                    <field name="unit"/>
                     <field name="emission_amount"/>
-                    <field name="uncertainty"/>
-                    <field name="verification_status"/>
                     <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'validated'" decoration-danger="state == 'cancelled'"/>
                 </tree>
             </field>
         </record>
 
-        <!-- ESG Carbon Footprint Form View -->
-        <record id="view_esg_carbon_footprint_form" model="ir.ui.view">
-            <field name="name">esg.carbon.footprint.form</field>
-            <field name="model">esg.carbon.footprint</field>
+        <!-- ESG Emissions Form View -->
+        <record id="view_esg_emission_form" model="ir.ui.view">
+            <field name="name">esg.emission.form</field>
+            <field name="model">esg.emission</field>
             <field name="arch" type="xml">
-                <form string="ESG Carbon Footprint">
+                <form string="ESG Emissions">
                     <header>
                         <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                         <button name="action_validate" string="Validate" type="object" class="oe_highlight" invisible="state != 'confirmed'"/>
@@ -216,27 +213,26 @@
                     <sheet>
                         <div class="oe_title">
                             <h1>
-                                <field name="name" placeholder="Footprint Name"/>
+                                <field name="name" placeholder="Emission Name"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="date"/>
-                                <field name="scope"/>
-                                <field name="emission_source"/>
-                                <field name="emission_amount"/>
+                                <field name="emission_factor_id"/>
+                                <field name="quantity"/>
+                                <field name="unit"/>
                             </group>
                             <group>
-                                <field name="uncertainty"/>
-                                <field name="verification_status"/>
-                                <field name="verified_by"/>
-                                <field name="verification_date"/>
+                                <field name="emission_amount"/>
+                                <field name="amount"/>
+                                <field name="currency_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Methodology">
-                                <field name="methodology"/>
+                            <page string="Notes">
+                                <field name="notes"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -249,10 +245,10 @@
             </field>
         </record>
 
-        <!-- ESG Carbon Footprint Action -->
-        <record id="action_esg_carbon_footprint" model="ir.actions.act_window">
-            <field name="name">ESG Carbon Footprint</field>
-            <field name="res_model">esg.carbon.footprint</field>
+        <!-- ESG Emissions Action -->
+        <record id="action_esg_emission" model="ir.actions.act_window">
+            <field name="name">ESG Emissions</field>
+            <field name="res_model">esg.emission</field>
             <field name="view_mode">list,form</field>
             <field name="context">{'search_default_validated': 1}</field>
             <field name="help" type="html">
