@@ -30,10 +30,10 @@
             <field name="arch" type="xml">
                 <form string="ESG Employee Community">
                     <header>
-                        <button name="action_submit" string="Submit" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                        <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'submitted'"/>
-                        <button name="action_reject" string="Reject" type="object" invisible="state != 'submitted'"/>
-                        <button name="action_draft" string="Reset to Draft" type="object" invisible="state != 'rejected'"/>
+                        <button name="action_submit" string="Submit" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_approve" string="Approve" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                        <button name="action_reject" string="Reject" type="object" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" attrs="{'invisible': [('state', '!=', 'rejected')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
                     </header>
                     <sheet>
@@ -47,8 +47,8 @@
                                 <field name="date"/>
                                 <field name="employee_id"/>
                                 <field name="activity_type"/>
-                                <field name="commute_type" invisible="activity_type != 'commute'"/>
-                                <field name="distance" invisible="activity_type != 'commute'"/>
+                                <field name="commute_type" attrs="{'invisible': [('activity_type', '!=', 'commute')]}"/>
+                                <field name="distance" attrs="{'invisible': [('activity_type', '!=', 'commute')]}"/>
                             </group>
                             <group>
                                 <field name="duration"/>
@@ -214,10 +214,10 @@
             <field name="arch" type="xml">
                 <form string="ESG Community Initiative">
                     <header>
-                        <button name="action_activate" string="Activate" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" invisible="state != 'active'"/>
-                        <button name="action_cancel" string="Cancel" type="object" invisible="state not in ('draft', 'active')"/>
-                        <button name="action_draft" string="Reset to Draft" type="object" invisible="state != 'cancelled'"/>
+                        <button name="action_activate" string="Activate" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                        <button name="action_complete" string="Complete" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', ['draft', 'active'])]}"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" attrs="{'invisible': [('state', '!=', 'cancelled')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,active,completed"/>
                     </header>
                     <sheet>
