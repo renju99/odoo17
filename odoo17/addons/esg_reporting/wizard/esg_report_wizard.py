@@ -270,7 +270,8 @@ class EnhancedESGWizard(models.TransientModel):
         _logger.info(f"ESG Report Generation - Report data keys: {list(report_data.keys())}")
 
         # Store report data in the wizard object for template access
-        self.report_data = report_data
+        # Ensure all date objects are converted to strings for JSON serialization
+        self.report_data = self._serialize_report_data(report_data)
 
         # Return report action based on output format
         if self.output_format == 'pdf':
@@ -292,10 +293,10 @@ class EnhancedESGWizard(models.TransientModel):
                 'report_info': {
                     'name': self.report_name,
                     'type': self.report_type,
-                    'date_from': self.date_from,
-                    'date_to': self.date_to,
+                    'date_from': self.date_from.isoformat() if self.date_from else None,
+                    'date_to': self.date_to.isoformat() if self.date_to else None,
                     'company': self.company_name,
-                    'generated_at': fields.Datetime.now(),
+                    'generated_at': fields.Datetime.now().isoformat(),
                     'total_assets': 0,
                     'granularity': self.granularity,
                     'theme': self.report_theme,
@@ -323,10 +324,10 @@ class EnhancedESGWizard(models.TransientModel):
             'report_info': {
                 'name': self.report_name,
                 'type': self.report_type,
-                'date_from': self.date_from,
-                'date_to': self.date_to,
+                'date_from': self.date_from.isoformat() if self.date_from else None,
+                'date_to': self.date_to.isoformat() if self.date_to else None,
                 'company': self.company_name,
-                'generated_at': fields.Datetime.now(),
+                'generated_at': fields.Datetime.now().isoformat(),
                 'total_assets': len(assets),
                 'granularity': self.granularity,
                 'theme': self.report_theme
@@ -349,6 +350,26 @@ class EnhancedESGWizard(models.TransientModel):
         }
 
         return report_data
+
+    def _serialize_report_data(self, data):
+        """Recursively serialize data to ensure JSON compatibility"""
+        if isinstance(data, dict):
+            return {key: self._serialize_report_data(value) for key, value in data.items()}
+        elif isinstance(data, list):
+            return [self._serialize_report_data(item) for item in data]
+        elif isinstance(data, (fields.Date, fields.Datetime)):
+            return data.isoformat() if data else None
+        elif hasattr(data, 'date') and callable(getattr(data, 'date', None)):
+            # Handle date-like objects
+            return data.isoformat() if data else None
+        elif hasattr(data, 'isoformat') and callable(getattr(data, 'isoformat', None)):
+            # Handle datetime-like objects
+            return data.isoformat() if data else None
+        elif hasattr(data, 'strftime') and callable(getattr(data, 'strftime', None)):
+            # Handle date-like objects with strftime method
+            return data.strftime('%Y-%m-%d') if data else None
+        else:
+            return data
 
     # Implementation of all calculation methods...
     # (Include all the calculation methods from the previous implementation)
