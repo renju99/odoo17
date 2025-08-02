@@ -27,6 +27,7 @@
                                 <field name="response_time_hours"/>
                                 <field name="resolution_time_hours"/>
                                 <field name="warning_threshold_hours"/>
+                                <field name="critical_threshold_hours"/>
                                 <field name="escalation_delay_hours"/>
                             </group>
                         </group>
