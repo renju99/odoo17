@@ -29,12 +29,12 @@
             <field name="arch" type="xml">
                 <form string="ESG Target">
                     <header>
-                        <button name="action_activate" string="Activate" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
-                        <button name="action_achieve" string="Mark Achieved" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'active')]}"/>
-                        <button name="action_at_risk" string="Mark At Risk" type="object" class="btn-warning" attrs="{'invisible': [('state', '!=', 'active')]}"/>
-                        <button name="action_missed" string="Mark Missed" type="object" class="btn-danger" attrs="{'invisible': [('state', 'not in', ['active','at_risk'])]}"/>
-                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', 'not in', ['draft','active'])]}"/>
-                        <button name="action_draft" string="Reset to Draft" type="object" attrs="{'invisible': [('state', 'not in', ['cancelled','missed'])]}"/>
+                        <button name="action_activate" string="Activate" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="action_achieve" string="Mark Achieved" type="object" class="btn-success" invisible="state != 'active'"/>
+                        <button name="action_at_risk" string="Mark At Risk" type="object" class="btn-warning" invisible="state != 'active'"/>
+                        <button name="action_missed" string="Mark Missed" type="object" class="btn-danger" invisible="state not in ('active', 'at_risk')"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state not in ('draft', 'active')"/>
+                        <button name="action_draft" string="Reset to Draft" type="object" invisible="state not in ('cancelled', 'missed')"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -183,10 +183,10 @@
             <field name="arch" type="xml">
                 <form string="ESG Target Milestone">
                     <header>
-                        <button name="action_achieve" string="Mark Achieved" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
-                        <button name="action_miss" string="Mark Missed" type="object" class="btn-danger" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
-                        <button name="action_cancel" string="Cancel" type="object" attrs="{'invisible': [('state', '!=', 'pending')]}"/>
-                        <button name="action_pending" string="Reset to Pending" type="object" attrs="{'invisible': [('state', 'not in', ['achieved','missed','cancelled'])]}"/>
+                        <button name="action_achieve" string="Mark Achieved" type="object" class="btn-success" invisible="state != 'pending'"/>
+                        <button name="action_miss" string="Mark Missed" type="object" class="btn-danger" invisible="state != 'pending'"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state != 'pending'"/>
+                        <button name="action_pending" string="Reset to Pending" type="object" invisible="state not in ('achieved', 'missed', 'cancelled')"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
