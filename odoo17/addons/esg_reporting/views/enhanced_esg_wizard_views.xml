@@ -32,8 +32,8 @@
                             </group>
                             <group>
                                 <field name="comparison_period"/>
-                                <field name="custom_comparison_from" attrs="{'invisible': [('comparison_period', '!=', 'custom')]}"/>
-                                <field name="custom_comparison_to" attrs="{'invisible': [('comparison_period', '!=', 'custom')]}"/>
+                                <field name="custom_comparison_from" invisible="comparison_period != 'custom'"/>
+                                <field name="custom_comparison_to" invisible="comparison_period != 'custom'"/>
                             </group>
                         </group>
 
