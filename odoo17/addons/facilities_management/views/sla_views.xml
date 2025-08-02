@@ -18,8 +18,15 @@
                         <button name="action_test_sla_assignment" type="object" string="Test Assignment" class="btn-secondary"/>
                         <button name="action_view_workorders" type="object" string="View Work Orders" class="btn-secondary"/>
                         <button name="action_view_performance_dashboard" type="object" string="Performance Dashboard" class="btn-secondary"/>
-                        <widget name="web_ribbon" title="Active" bg_color="bg-success" invisible="not active"/>
-                        <widget name="web_ribbon" title="Inactive" bg_color="bg-danger" invisible="active"/>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" 
+                                text="Active" 
+                                bg_color="bg-success" 
+                                invisible="not active"/>
+                        <widget name="web_ribbon" 
+                                text="Archived" 
+                                bg_color="bg-warning" 
+                                invisible="active"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -114,7 +121,9 @@
             <field name="arch" type="xml">
                 <tree string="SLAs" multi_edit="1" 
                       decoration-muted="not active" 
-                      decoration-bf="active">
+                      decoration-bf="active"
+                      default_order="active desc, priority desc, name">
+                    <field name="active" column_invisible="1"/>
                     <field name="name"/>
                     <field name="active" widget="boolean_toggle"/>
                     <field name="priority"/>
@@ -126,9 +135,11 @@
                     <field name="total_workorders"/>
                     <button name="action_activate_sla" type="object" string="Activate" 
                             icon="fa-play" 
+                            title="Activate SLA"
                             invisible="active"/>
                     <button name="action_deactivate_sla" type="object" string="Deactivate" 
                             icon="fa-pause" 
+                            title="Deactivate SLA"
                             invisible="not active"/>
                 </tree>
             </field>
@@ -147,7 +158,7 @@
                     <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
                     <filter string="High Priority" name="high_priority" domain="[('priority', '&gt;=', 8)]"/>
                     <separator/>
-                    <filter string="All SLAs" name="all_slas" domain="[]"/>
+                    <filter string="All SLAs" name="all_slas" domain="[]" default="1"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_active" context="{'group_by': 'active'}"/>
                         <filter string="Asset Criticality" name="group_criticality" context="{'group_by': 'asset_criticality'}"/>
@@ -243,7 +254,7 @@
             <field name="name">Service Level Agreements</field>
             <field name="res_model">facilities.sla</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_all_slas': 1}</field>
+            <field name="context">{'search_default_all_slas': 1, 'active_test': False}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create your first SLA!
