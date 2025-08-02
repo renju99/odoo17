@@ -88,25 +88,27 @@
                         <div class="col-12">
                             <h2>ESG Analytics Report</h2>
                             <h3><t t-esc="o.name"/></h3>
-                            <p><strong>Date:</strong> <t t-esc="o.date"/></p>
                             <p><strong>Analytics Type:</strong> <t t-esc="o.analytics_type"/></p>
-                            <p><strong>Period Type:</strong> <t t-esc="o.period_type"/></p>
                             <p><strong>Date From:</strong> <t t-esc="o.date_from"/></p>
                             <p><strong>Date To:</strong> <t t-esc="o.date_to"/></p>
                             
-                            <h4>Carbon Analytics:</h4>
+                            <h4>Analytics Configuration:</h4>
+                            <p><strong>Include Environmental:</strong> <t t-esc="o.include_environmental"/></p>
+                            <p><strong>Include Social:</strong> <t t-esc="o.include_social"/></p>
+                            <p><strong>Include Governance:</strong> <t t-esc="o.include_governance"/></p>
+                            
+                            <h4>Advanced Analytics Options:</h4>
+                            <p><strong>Correlation Analysis:</strong> <t t-esc="o.include_correlation_analysis"/></p>
+                            <p><strong>Anomaly Detection:</strong> <t t-esc="o.include_anomaly_detection"/></p>
+                            <p><strong>Predictive Modeling:</strong> <t t-esc="o.include_predictive_modeling"/></p>
+                            <p><strong>Risk Scoring:</strong> <t t-esc="o.include_risk_scoring"/></p>
+                            
+                            <h4>Results:</h4>
                             <p><strong>Total Emissions:</strong> <t t-esc="o.total_emissions"/> t CO2</p>
                             <p><strong>Total Offset:</strong> <t t-esc="o.total_offset"/> t CO2</p>
                             <p><strong>Net Emissions:</strong> <t t-esc="o.net_emissions"/> t CO2</p>
-                            <p><strong>Emission Intensity:</strong> <t t-esc="o.emission_intensity"/> t CO2/employee</p>
-                            
-                            <h4>ESG Performance Scores:</h4>
-                            <p><strong>Environmental Score:</strong> <t t-esc="o.environmental_score"/></p>
-                            <p><strong>Social Score:</strong> <t t-esc="o.social_score"/></p>
-                            <p><strong>Governance Score:</strong> <t t-esc="o.governance_score"/></p>
                             <p><strong>Overall Score:</strong> <t t-esc="o.overall_score"/></p>
                             
-                            <p><strong>Compliance Status:</strong> <t t-esc="o.compliance_status"/></p>
                             <p><strong>Status:</strong> <t t-esc="o.state"/></p>
                         </div>
                     </div>
