@@ -33,6 +33,7 @@
     'data': [
         'security/esg_security.xml',
         'security/ir.model.access.csv',
+        'views/assets.xml',
         'views/esg_offset_views.xml',
         'views/esg_emission_views.xml',
         'views/esg_employee_community_views.xml',
