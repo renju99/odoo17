@@ -187,6 +187,21 @@ class EnhancedESGWizard(models.TransientModel):
     
     # Report data storage for template access
     report_data = fields.Json(string='Report Data', readonly=True, default={})
+    
+    @api.model
+    def create(self, vals):
+        """Ensure report_data is always initialized as a dictionary"""
+        if 'report_data' not in vals or vals['report_data'] is None:
+            vals['report_data'] = {}
+        return super().create(vals)
+    
+    def _get_report_data(self):
+        """Ensure report_data is always a dictionary"""
+        if not hasattr(self, 'report_data') or self.report_data is None:
+            return {}
+        if not isinstance(self.report_data, dict):
+            return {}
+        return self.report_data
 
     @api.onchange('report_type')
     def _onchange_report_type(self):
@@ -276,7 +291,8 @@ class EnhancedESGWizard(models.TransientModel):
             # Store report data in the wizard object for template access
             # Ensure all date objects are converted to strings for JSON serialization
             serialized_data = self._serialize_report_data(report_data)
-            if serialized_data is None:
+            # Ensure report_data is always a dictionary
+            if serialized_data is None or not isinstance(serialized_data, dict):
                 serialized_data = {}
             self.report_data = serialized_data
         except Exception as e:
