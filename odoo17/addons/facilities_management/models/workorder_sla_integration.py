@@ -82,9 +82,9 @@ class MaintenanceWorkOrder(models.Model):
 
                 if time_remaining <= 0:
                     record.sla_response_status = 'breached'
-                elif percentage_used >= (record.sla_id.critical_threshold if record.sla_id else 95):
+                elif percentage_used >= (record.sla_id.critical_threshold_hours if record.sla_id else 95):
                     record.sla_response_status = 'critical'
-                elif percentage_used >= (record.sla_id.warning_threshold if record.sla_id else 80):
+                elif percentage_used >= (record.sla_id.warning_threshold_hours if record.sla_id else 80):
                     record.sla_response_status = 'warning'
                 else:
                     record.sla_response_status = 'on_time'
@@ -99,9 +99,9 @@ class MaintenanceWorkOrder(models.Model):
 
                 if time_remaining <= 0:
                     record.sla_resolution_status = 'breached'
-                elif percentage_used >= (record.sla_id.critical_threshold if record.sla_id else 95):
+                elif percentage_used >= (record.sla_id.critical_threshold_hours if record.sla_id else 95):
                     record.sla_resolution_status = 'critical'
-                elif percentage_used >= (record.sla_id.warning_threshold if record.sla_id else 80):
+                elif percentage_used >= (record.sla_id.warning_threshold_hours if record.sla_id else 80):
                     record.sla_resolution_status = 'warning'
                 else:
                     record.sla_resolution_status = 'on_time'

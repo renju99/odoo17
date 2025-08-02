@@ -22,6 +22,8 @@ class FacilitiesSLA(models.Model):
     resolution_time_hours = fields.Float(string='Resolution Time (Hours)', required=True, default=24.0)
     warning_threshold_hours = fields.Float(string='Warning Threshold (Hours)', default=2.0, 
                                          help="Hours before deadline to trigger warning")
+    critical_threshold_hours = fields.Float(string='Critical Threshold (Hours)', default=1.0,
+                                          help="Hours before deadline to trigger critical alert")
     escalation_delay_hours = fields.Float(string='Escalation Delay (Hours)', default=2.0,
                                         help="Hours after breach to trigger escalation")
     
@@ -157,6 +159,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 4.0,
             'resolution_time_hours': 24.0,
             'warning_threshold_hours': 2.0,
+            'critical_threshold_hours': 1.0,
             'escalation_delay_hours': 2.0,
             'active': True,
             'priority': 10,
@@ -169,6 +172,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 1.0,
             'resolution_time_hours': 8.0,
             'warning_threshold_hours': 0.5,
+            'critical_threshold_hours': 0.25,
             'escalation_delay_hours': 1.0,
             'active': True,
             'priority': 40,
@@ -182,6 +186,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 2.0,
             'resolution_time_hours': 12.0,
             'warning_threshold_hours': 1.0,
+            'critical_threshold_hours': 0.5,
             'escalation_delay_hours': 2.0,
             'active': True,
             'priority': 30,
@@ -195,6 +200,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 4.0,
             'resolution_time_hours': 24.0,
             'warning_threshold_hours': 2.0,
+            'critical_threshold_hours': 1.0,
             'escalation_delay_hours': 4.0,
             'active': True,
             'priority': 20,
@@ -208,6 +214,7 @@ class FacilitiesSLA(models.Model):
             'response_time_hours': 8.0,
             'resolution_time_hours': 48.0,
             'warning_threshold_hours': 4.0,
+            'critical_threshold_hours': 2.0,
             'escalation_delay_hours': 8.0,
             'active': True,
             'priority': 10,
