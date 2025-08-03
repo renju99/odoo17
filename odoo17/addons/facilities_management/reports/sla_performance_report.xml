@@ -152,7 +152,7 @@
 
                         <!-- Report Footer -->
                         <div style="margin-top:32px; padding-top:16px; border-top:1px solid #eee; text-align:center; color:#666; font-size:12px;">
-                            <p>Report generated on <span t-field="context_timestamp()"/></p>
+                            <p>Report generated on <span t-esc="context_timestamp()"/></p>
                             <p>This report provides insights into SLA performance and compliance metrics for the specified period.</p>
                         </div>
                     </div>
