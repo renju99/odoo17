@@ -445,11 +445,8 @@
                                 
                                 <!-- Report Data Display -->
                                 <t t-set="report_data" t-value="{}"/>
-                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual')">
-                                    <t t-set="safe_method" t-value="getattr(o, '_compute_safe_report_data_manual', None)"/>
-                                    <t t-if="safe_method and callable(safe_method)">
-                                        <t t-set="report_data" t-value="safe_method()"/>
-                                    </t>
+                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual') and o._compute_safe_report_data_manual">
+                                    <t t-set="report_data" t-value="o._compute_safe_report_data_manual()"/>
                                 </t>
                                 <t t-else="">
                                     <t t-set="report_data" t-value="{}"/>
@@ -588,7 +585,7 @@
                             <!-- Footer -->
                             <div class="report-footer mt-4">
                                 <hr/>
-                                <p class="text-muted"><strong>Generated at:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></p>
+                                <p class="text-muted"><strong>Generated at:</strong> <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/></p>
                                 <p class="text-muted small">This report was generated using Odoo ESG Reporting Module v1.0</p>
                             </div>
                         </div>
