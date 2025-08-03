@@ -188,6 +188,20 @@ class EnhancedESGWizard(models.TransientModel):
     # Report data storage for template access
     report_data = fields.Json(string='Report Data', readonly=True, default={})
     
+    @api.depends('report_data')
+    def _compute_safe_report_data(self):
+        """Computed field to ensure safe access to report data"""
+        for record in self:
+            try:
+                if record.report_data and isinstance(record.report_data, dict):
+                    record.safe_report_data = record.report_data
+                else:
+                    record.safe_report_data = {}
+            except Exception:
+                record.safe_report_data = {}
+    
+    safe_report_data = fields.Json(string='Safe Report Data', compute='_compute_safe_report_data', store=False)
+    
     @api.model
     def create(self, vals):
         """Ensure report_data is always initialized as a dictionary"""
