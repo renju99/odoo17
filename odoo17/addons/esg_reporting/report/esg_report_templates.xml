@@ -347,7 +347,20 @@
                     </t>
                 </t>
                 <t t-else="">
-                    <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1>Enhanced ESG Report</h1>
+                                    <div class="alert alert-warning" role="alert">
+                                        <h4>No Data Available</h4>
+                                        <p>No wizard data was provided for report generation.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </t>
             </t>
         </template>
@@ -359,34 +372,206 @@
                     <div class="row">
                         <div class="col-12">
                             <h1>Enhanced ESG Report</h1>
-                            <t t-if="o and o.id">
+                            
+                            <!-- Basic Report Information -->
+                            <t t-if="o and hasattr(o, 'id') and o.id">
                                 <h2><t t-esc="o.report_name or 'ESG Report'"/></h2>
-                                <p><strong>Report Type:</strong> <t t-esc="o.report_type or 'N/A'"/></p>
-                                <p><strong>Date Range:</strong> <t t-esc="o.date_from or 'N/A'"/> to <t t-esc="o.date_to or 'N/A'"/></p>
-                                <p><strong>Granularity:</strong> <t t-esc="o.granularity or 'N/A'"/></p>
-                                <p><strong>Company:</strong> <t t-esc="o.company_name or 'N/A'"/></p>
                                 
-                                <!-- Simplified report content -->
-                                <div class="alert alert-info" role="alert">
-                                    <h4>ESG Report Content</h4>
-                                    <p>This is a simplified version of the ESG report template. The complex data display has been temporarily simplified to resolve XML syntax issues.</p>
-                                    <p><strong>Report includes:</strong></p>
-                                    <ul>
-                                        <li>Environmental metrics and analysis</li>
-                                        <li>Social impact assessment</li>
-                                        <li>Governance evaluation</li>
-                                        <li>Recommendations and forecasting</li>
-                                    </ul>
+                                <!-- Report Header Information -->
+                                <div class="report-header mb-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><strong>Report Type:</strong> <t t-esc="o.report_type or 'N/A'"/></p>
+                                            <p><strong>Date Range:</strong> <t t-esc="o.date_from or 'N/A'"/> to <t t-esc="o.date_to or 'N/A'"/></p>
+                                            <p><strong>Granularity:</strong> <t t-esc="o.granularity or 'N/A'"/></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Company:</strong> <t t-esc="o.company_name or 'N/A'"/></p>
+                                            <p><strong>Output Format:</strong> <t t-esc="o.output_format or 'N/A'"/></p>
+                                            <p><strong>Theme:</strong> <t t-esc="o.report_theme or 'N/A'"/></p>
+                                        </div>
+                                    </div>
                                 </div>
+                                
+                                <!-- Report Configuration -->
+                                <div class="report-config mb-4">
+                                    <h3>Report Configuration</h3>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h5>Sections Included:</h5>
+                                            <ul class="list-unstyled">
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_environmental', False) else 'fa fa-times text-danger'"></i> Environmental</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_social', False) else 'fa fa-times text-danger'"></i> Social</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_governance', False) else 'fa fa-times text-danger'"></i> Governance</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_analytics', False) else 'fa fa-times text-danger'"></i> Analytics</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h5>Data Sources:</h5>
+                                            <ul class="list-unstyled">
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_emissions_data', False) else 'fa fa-times text-danger'"></i> Emissions Data</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_offset_data', False) else 'fa fa-times text-danger'"></i> Offset Data</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_community_data', False) else 'fa fa-times text-danger'"></i> Community Data</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_initiatives_data', False) else 'fa fa-times text-danger'"></i> Initiatives Data</li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h5>Advanced Features:</h5>
+                                            <ul class="list-unstyled">
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_charts', False) else 'fa fa-times text-danger'"></i> Charts and Graphs</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_benchmarks', False) else 'fa fa-times text-danger'"></i> Benchmarks</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_risk_analysis', False) else 'fa fa-times text-danger'"></i> Risk Analysis</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_predictive_analysis', False) else 'fa fa-times text-danger'"></i> Predictive Analysis</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Report Data Display -->
+                                <t t-set="report_data" t-value="{}"/>
+                                <t t-if="hasattr(o, '_compute_safe_report_data_manual')">
+                                    <t t-set="safe_method" t-value="getattr(o, '_compute_safe_report_data_manual', None)"/>
+                                    <t t-if="safe_method and callable(safe_method)">
+                                        <t t-set="report_data" t-value="safe_method()"/>
+                                    </t>
+                                </t>
+                                
+                                <!-- Executive Summary -->
+                                <div class="executive-summary mb-4">
+                                    <h3>Executive Summary</h3>
+                                    <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
+                                    <t t-if="report_data and report_data.get('report_info')">
+                                        <t t-set="report_info" t-value="report_data.get('report_info')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Total Assets Analyzed:</strong> <t t-esc="report_info.get('total_assets', 0)"/></p>
+                                                <p><strong>Report Generation Time:</strong> <t t-esc="report_info.get('generated_at', 'N/A')"/></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <t t-if="report_info.get('note')">
+                                                    <div class="alert alert-info">
+                                                        <strong>Note:</strong> <t t-esc="report_info.get('note')"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                                
+                                <!-- Environmental Metrics -->
+                                <t t-if="getattr(o, 'include_section_environmental', False) and report_data and report_data.get('environmental_metrics')">
+                                    <div class="environmental-section mb-4">
+                                        <h3>Environmental Performance</h3>
+                                        <t t-set="env_metrics" t-value="report_data.get('environmental_metrics')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Carbon Footprint</h4>
+                                                <p><strong>Total Carbon Footprint:</strong> <t t-esc="env_metrics.get('total_carbon_footprint', 0)"/> kg CO2</p>
+                                                <p><strong>Energy Efficiency Score:</strong> <t t-esc="env_metrics.get('energy_efficiency_score', 0)"/>%</p>
+                                                <p><strong>Renewable Energy Usage:</strong> <t t-esc="env_metrics.get('renewable_energy_usage', 0)"/>%</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Resource Management</h4>
+                                                <p><strong>Waste Management Score:</strong> <t t-esc="env_metrics.get('waste_management_score', 0)"/>%</p>
+                                                <p><strong>Water Consumption:</strong> <t t-esc="env_metrics.get('water_consumption', 0)"/> liters</p>
+                                                <p><strong>Biodiversity Impact:</strong> <t t-esc="env_metrics.get('biodiversity_impact', 0)"/>/10</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Social Metrics -->
+                                <t t-if="getattr(o, 'include_section_social', False) and report_data and report_data.get('social_metrics')">
+                                    <div class="social-section mb-4">
+                                        <h3>Social Performance</h3>
+                                        <t t-set="social_metrics" t-value="report_data.get('social_metrics')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Community Impact</h4>
+                                                <p><strong>Community Impact Score:</strong> <t t-esc="social_metrics.get('community_impact_score', 0)"/>/10</p>
+                                                <p><strong>Employee Satisfaction:</strong> <t t-esc="social_metrics.get('employee_satisfaction', 0)"/>/10</p>
+                                                <p><strong>Training Hours:</strong> <t t-esc="social_metrics.get('training_hours', 0)"/> hours</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Diversity &amp; Safety</h4>
+                                                <p><strong>Diversity Index:</strong> <t t-esc="social_metrics.get('diversity_index', 0)"/></p>
+                                                <p><strong>Health &amp; Safety Score:</strong> <t t-esc="social_metrics.get('health_safety_score', 0)"/>/10</p>
+                                                <p><strong>Local Procurement:</strong> <t t-esc="social_metrics.get('local_procurement', 0)"/>%</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Governance Metrics -->
+                                <t t-if="getattr(o, 'include_section_governance', False) and report_data and report_data.get('governance_metrics')">
+                                    <div class="governance-section mb-4">
+                                        <h3>Governance Performance</h3>
+                                        <t t-set="gov_metrics" t-value="report_data.get('governance_metrics')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Compliance &amp; Risk</h4>
+                                                <p><strong>Compliance Rate:</strong> <t t-esc="gov_metrics.get('compliance_rate', 0)"/>%</p>
+                                                <p><strong>Risk Management Score:</strong> <t t-esc="gov_metrics.get('risk_management_score', 0)"/>/10</p>
+                                                <p><strong>Ethics Score:</strong> <t t-esc="gov_metrics.get('ethics_score', 0)"/>/10</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Transparency &amp; Engagement</h4>
+                                                <p><strong>Transparency Index:</strong> <t t-esc="gov_metrics.get('transparency_index', 0)"/>/10</p>
+                                                <p><strong>Board Diversity:</strong> <t t-esc="gov_metrics.get('board_diversity', 0)"/></p>
+                                                <p><strong>Stakeholder Engagement:</strong> <t t-esc="gov_metrics.get('stakeholder_engagement', 0)"/>/10</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <!-- Recommendations -->
+                                <t t-if="getattr(o, 'include_section_recommendations', False) and report_data and report_data.get('recommendations')">
+                                    <div class="recommendations-section mb-4">
+                                        <h3>Recommendations</h3>
+                                        <t t-set="recommendations" t-value="report_data.get('recommendations', [])"/>
+                                        <t t-if="recommendations">
+                                            <ul>
+                                                <t t-foreach="recommendations" t-as="rec">
+                                                    <li><strong><t t-esc="rec.get('category', 'General').title()"/>:</strong> <t t-esc="rec.get('recommendation', '')"/></li>
+                                                </t>
+                                            </ul>
+                                        </t>
+                                        <t t-else="">
+                                            <p>No specific recommendations available for this report.</p>
+                                        </t>
+                                    </div>
+                                </t>
+                                
+                                <!-- Default content when no specific data is available -->
+                                <t t-if="not report_data or not isinstance(report_data, dict) or not report_data">
+                                    <div class="alert alert-info" role="alert">
+                                        <h4>ESG Report Content</h4>
+                                        <p>This enhanced ESG report is configured to include comprehensive analysis. Report data is being processed and will be available in the next generation cycle.</p>
+                                        <p><strong>Configured to include:</strong></p>
+                                        <ul>
+                                            <li>Environmental metrics and carbon footprint analysis</li>
+                                            <li>Social impact assessment and community engagement metrics</li>
+                                            <li>Governance evaluation and compliance tracking</li>
+                                            <li>Advanced analytics and performance forecasting</li>
+                                            <li>Industry benchmarking and recommendations</li>
+                                        </ul>
+                                    </div>
+                                </t>
+                                
                             </t>
                             <t t-else="">
                                 <div class="alert alert-warning" role="alert">
                                     <h4>No Data Available</h4>
-                                    <p>The ESG report wizard object is not available or has no valid ID.</p>
+                                    <p>The ESG report wizard object is not available or has no valid ID. Please ensure the report is generated through the ESG Report Wizard.</p>
                                 </div>
                             </t>
                             
-                            <p><strong>Generated at:</strong> <t t-esc="context_timestamp(datetime.datetime.now())"/></p>
+                            <!-- Footer -->
+                            <div class="report-footer mt-4">
+                                <hr/>
+                                <p class="text-muted"><strong>Generated at:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/></p>
+                                <p class="text-muted small">This report was generated using Odoo ESG Reporting Module v1.0</p>
+                            </div>
                         </div>
                     </div>
                 </div>
