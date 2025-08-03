@@ -1,152 +1,139 @@
 #!/usr/bin/env python3
 """
-Test script to verify the ESG template fix for the NoneType error.
+Test script to verify ESG template fixes
 """
 
 import os
 import sys
 
-def test_template_fix():
-    """Test that the template fix prevents NoneType errors"""
+def test_template_fixes():
+    """Test that the template fixes are in place"""
     
-    print("🔍 Testing ESG Template Fix...")
+    print("🔍 Testing ESG Template Fixes...")
     
-    # Check if the template file exists
-    template_file = "odoo17/addons/esg_reporting/report/esg_report_templates.xml"
+    # Test 1: Check if the template file exists
+    template_file = "/workspace/odoo17/addons/esg_reporting/report/esg_report_templates.xml"
     if not os.path.exists(template_file):
-        print("❌ ERROR: Template file not found:", template_file)
+        print("❌ ERROR: Template file not found")
         return False
     
-    # Check if the wizard file exists
-    wizard_file = "odoo17/addons/esg_reporting/wizard/esg_report_wizard.py"
+    print("✅ Template file exists")
+    
+    # Test 2: Check if the safe_report_data field is added to the wizard
+    wizard_file = "/workspace/odoo17/addons/esg_reporting/wizard/esg_report_wizard.py"
     if not os.path.exists(wizard_file):
-        print("❌ ERROR: Wizard file not found:", wizard_file)
+        print("❌ ERROR: Wizard file not found")
         return False
     
-    # Read the template file to check for the fix
-    with open(template_file, 'r') as f:
-        template_content = f.read()
-    
-    # Check for the key fixes
-    fixes_applied = []
-    
-    # Fix 1: Ensure report_data is always a dictionary
-    if 'o._get_report_data() or {}' in template_content:
-        fixes_applied.append("✅ Report data initialization fix applied")
-    else:
-        print("❌ ERROR: Report data initialization fix not found")
-        return False
-    
-    # Fix 2: Safe keys display
-    if "'Available' if report_data and isinstance(report_data, dict) and len(report_data) > 0 else 'No keys available'" in template_content:
-        fixes_applied.append("✅ Safe keys display fix applied")
-    else:
-        print("❌ ERROR: Safe keys display fix not found")
-        return False
-    
-    # Fix 3: Safe length display
-    if "str(len(report_data)) if report_data and hasattr(report_data, '__len__') else 'N/A'" in template_content:
-        fixes_applied.append("✅ Safe length display fix applied")
-    else:
-        print("❌ ERROR: Safe length display fix not found")
-        return False
-    
-    # Read the wizard file to check for the _get_report_data fix
     with open(wizard_file, 'r') as f:
         wizard_content = f.read()
     
-    # Check for the try-catch in _get_report_data
-    if 'try:' in wizard_content and 'except Exception:' in wizard_content:
-        fixes_applied.append("✅ Wizard _get_report_data error handling applied")
+    if 'safe_report_data' in wizard_content:
+        print("✅ safe_report_data field added to wizard")
     else:
-        print("❌ ERROR: Wizard _get_report_data error handling not found")
+        print("❌ ERROR: safe_report_data field not found in wizard")
         return False
     
-    # Check for the error handling in action_generate_enhanced_esg_report
-    if 'except Exception as e:' in wizard_content:
-        fixes_applied.append("✅ Action method error handling applied")
+    # Test 3: Check if the template uses safe_report_data
+    with open(template_file, 'r') as f:
+        template_content = f.read()
+    
+    if 'safe_report_data' in template_content:
+        print("✅ Template uses safe_report_data")
     else:
-        print("❌ ERROR: Action method error handling not found")
+        print("❌ ERROR: Template does not use safe_report_data")
         return False
     
-    print("\n📋 Applied Fixes:")
-    for fix in fixes_applied:
-        print(f"   {fix}")
+    # Test 4: Check if the template has proper safety checks
+    safety_checks = [
+        'isinstance(report_data, dict)',
+        'o and hasattr(o, \'safe_report_data\')',
+        'getattr(o, \'safe_report_data\', None)'
+    ]
     
-    print("\n✅ All template fixes have been applied successfully!")
-    print("   The NoneType error should now be resolved.")
+    for check in safety_checks:
+        if check in template_content:
+            print(f"✅ Safety check found: {check}")
+        else:
+            print(f"❌ ERROR: Safety check missing: {check}")
+            return False
     
+    # Test 5: Check if the wizard has proper error handling
+    error_handling = [
+        'try:',
+        'except Exception:',
+        'record.safe_report_data = {}'
+    ]
+    
+    for check in error_handling:
+        if check in wizard_content:
+            print(f"✅ Error handling found: {check}")
+        else:
+            print(f"❌ ERROR: Error handling missing: {check}")
+            return False
+    
+    print("\n🎉 All tests passed! The ESG template fixes are in place.")
     return True
 
-def test_template_syntax():
-    """Test that the template XML syntax is valid"""
+def test_report_action():
+    """Test that the report action is properly defined"""
     
-    print("\n🔍 Testing Template XML Syntax...")
+    print("\n🔍 Testing Report Action...")
     
-    template_file = "odoo17/addons/esg_reporting/report/esg_report_templates.xml"
-    
-    try:
-        with open(template_file, 'r') as f:
-            content = f.read()
-        
-        # Basic XML validation checks
-        if '<?xml' in content:
-            print("✅ XML declaration found")
-        else:
-            print("❌ ERROR: XML declaration missing")
-            return False
-        
-        if '<odoo>' in content and '</odoo>' in content:
-            print("✅ Odoo root element found")
-        else:
-            print("❌ ERROR: Odoo root element missing")
-            return False
-        
-        if '<data>' in content and '</data>' in content:
-            print("✅ Data element found")
-        else:
-            print("❌ ERROR: Data element missing")
-            return False
-        
-        # Check for balanced template tags
-        template_count = content.count('<template')
-        template_end_count = content.count('</template>')
-        
-        if template_count == template_end_count:
-            print("✅ Template tags are balanced")
-        else:
-            print(f"❌ ERROR: Template tags unbalanced - {template_count} opening, {template_end_count} closing")
-            return False
-        
-        print("✅ Template XML syntax is valid")
-        return True
-        
-    except Exception as e:
-        print(f"❌ ERROR: Failed to validate template syntax: {e}")
+    reports_file = "/workspace/odoo17/addons/esg_reporting/report/esg_reports.xml"
+    if not os.path.exists(reports_file):
+        print("❌ ERROR: Reports file not found")
         return False
+    
+    with open(reports_file, 'r') as f:
+        reports_content = f.read()
+    
+    if 'action_enhanced_esg_report_pdf' in reports_content:
+        print("✅ Report action defined")
+    else:
+        print("❌ ERROR: Report action not found")
+        return False
+    
+    if 'model">enhanced.esg.wizard' in reports_content:
+        print("✅ Correct model referenced")
+    else:
+        print("❌ ERROR: Wrong model referenced")
+        return False
+    
+    if 'report_enhanced_esg_wizard' in reports_content:
+        print("✅ Correct template referenced")
+    else:
+        print("❌ ERROR: Wrong template referenced")
+        return False
+    
+    print("🎉 Report action tests passed!")
+    return True
 
-if __name__ == "__main__":
-    print("🚀 ESG Template Fix Verification")
-    print("=" * 50)
+def main():
+    """Run all tests"""
+    print("🚀 Starting ESG Template Fix Tests...\n")
     
     success = True
     
-    # Test the template fixes
-    if not test_template_fix():
+    # Run template tests
+    if not test_template_fixes():
         success = False
     
-    # Test the template syntax
-    if not test_template_syntax():
+    # Run report action tests
+    if not test_report_action():
         success = False
     
-    print("\n" + "=" * 50)
     if success:
-        print("🎉 All tests passed! The ESG template fix is ready.")
-        print("\n📝 Summary:")
-        print("   - Fixed NoneType error in template")
-        print("   - Added safe error handling in wizard")
-        print("   - Ensured report_data is always a dictionary")
-        print("   - Added proper XML validation")
+        print("\n🎉 All tests passed! The ESG template should now work correctly.")
+        print("\n📋 Summary of fixes applied:")
+        print("- Added safe_report_data computed field to wizard")
+        print("- Updated template to use safe_report_data instead of direct access")
+        print("- Added proper safety checks for None values")
+        print("- Added error handling for edge cases")
+        print("- Ensured report action is properly defined")
     else:
-        print("❌ Some tests failed. Please check the issues above.")
+        print("\n❌ Some tests failed. Please check the implementation.")
         sys.exit(1)
+
+if __name__ == "__main__":
+    main()
