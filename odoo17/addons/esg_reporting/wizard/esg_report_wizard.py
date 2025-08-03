@@ -203,11 +203,42 @@ class EnhancedESGWizard(models.TransientModel):
     def _compute_safe_report_data_manual(self):
         """Manual computation of safe_report_data for template access"""
         try:
-            if self.report_data and isinstance(self.report_data, dict):
+            if hasattr(self, 'report_data') and self.report_data and isinstance(self.report_data, dict):
                 return self.report_data
             else:
-                return {}
-        except Exception:
+                # Return a default structure if no data is available
+                return {
+                    'report_info': {
+                        'name': getattr(self, 'report_name', 'ESG Report'),
+                        'type': getattr(self, 'report_type', 'sustainability'),
+                        'date_from': getattr(self, 'date_from', None),
+                        'date_to': getattr(self, 'date_to', None),
+                        'company': getattr(self, 'company_name', 'YourCompany'),
+                        'generated_at': fields.Datetime.now().isoformat(),
+                        'total_assets': 0,
+                        'granularity': getattr(self, 'granularity', 'monthly'),
+                        'theme': getattr(self, 'report_theme', 'default'),
+                        'note': 'Report data not available. Please regenerate the report.'
+                    },
+                    'environmental_metrics': {},
+                    'social_metrics': {},
+                    'governance_metrics': {},
+                    'analytics': {},
+                    'trends': {},
+                    'benchmarks': {},
+                    'risk_analysis': {},
+                    'predictions': {},
+                    'recommendations': [
+                        {'category': 'data', 'recommendation': 'Report data not available. Please regenerate the report.'}
+                    ],
+                    'thresholds': {},
+                    'custom_metrics': {},
+                    'comparison_data': {}
+                }
+        except Exception as e:
+            # Log the error for debugging
+            _logger = logging.getLogger(__name__)
+            _logger.error(f"Error in _compute_safe_report_data_manual: {str(e)}")
             return {}
     
     safe_report_data = fields.Json(string='Safe Report Data', compute='_compute_safe_report_data', store=False)
@@ -336,6 +367,8 @@ class EnhancedESGWizard(models.TransientModel):
             if serialized_data is None or not isinstance(serialized_data, dict):
                 serialized_data = {}
             self.report_data = serialized_data
+            # Ensure the record is saved
+            self.invalidate_recordset(['report_data'])
         except Exception as e:
             # Log the error and set a default report data
             _logger = logging.getLogger(__name__)
