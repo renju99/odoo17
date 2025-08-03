@@ -5,7 +5,16 @@
             <t t-call="web.html_container">
                 <t t-if="docs and len(docs) > 0">
                     <t t-foreach="docs" t-as="o">
+<<<<<<< HEAD
                         <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
+=======
+                        <t t-if="o and hasattr(o, 'id') and o.id and o.id is not None">
+                            <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="esg_reporting.report_enhanced_esg_wizard_fallback"/>
+                        </t>
+>>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
                     </t>
                 </t>
                 <t t-else="">
@@ -34,12 +43,21 @@
                     <div class="row">
                         <div class="col-12">
                             <h1>Enhanced ESG Report</h1>
+<<<<<<< HEAD
 
                             <t t-if="o and hasattr(o, 'id') and o.id">
                                 <h2>
                                     <t t-esc="o.report_name if hasattr(o, 'report_name') and o.report_name else 'ESG Report'"/>
                                 </h2>
 
+=======
+                            
+                            <!-- Basic Report Information -->
+                            <t t-if="o and hasattr(o, 'id') and o.id and o.id is not None">
+                                <h2><t t-esc="getattr(o, 'report_name', None) or 'ESG Report'"/></h2>
+                                
+                                <!-- Report Header Information -->
+>>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
                                 <div class="report-header mb-4">
                                     <div class="row">
                                         <div class="col-md-6">

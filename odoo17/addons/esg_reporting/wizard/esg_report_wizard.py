@@ -386,6 +386,138 @@ class EnhancedESGWizard(models.TransientModel):
                 except (json.JSONDecodeError, TypeError):
                     raise ValidationError(_('Custom Charts must be valid JSON format.'))
 
+<<<<<<< HEAD
+=======
+    @api.model
+    def create(self, vals):
+        """Ensure report_data is always initialized as a dictionary and set default values"""
+        try:
+            # Ensure report_data is always a dictionary
+            if 'report_data' not in vals or vals['report_data'] is None:
+                vals['report_data'] = {}
+            
+            # Set default values if not provided
+            if 'report_name' not in vals or not vals['report_name']:
+                vals['report_name'] = 'Enhanced ESG Report'
+            if 'report_type' not in vals:
+                vals['report_type'] = 'sustainability'
+            if 'date_from' not in vals:
+                vals['date_from'] = fields.Date.today()
+            if 'date_to' not in vals:
+                vals['date_to'] = fields.Date.today()
+            if 'company_name' not in vals or not vals['company_name']:
+                vals['company_name'] = 'YourCompany'
+            if 'output_format' not in vals:
+                vals['output_format'] = 'pdf'
+            
+            return super().create(vals)
+        except Exception as e:
+            _logger.error(f"Error creating ESG wizard record: {str(e)}")
+            raise
+
+    def _get_report_data(self):
+        """Ensure report_data is always a dictionary"""
+        try:
+            if not hasattr(self, 'report_data'):
+                return {}
+            if self.report_data is None:
+                return {}
+            if not isinstance(self.report_data, dict):
+                return {}
+            return self.report_data
+        except Exception as e:
+            _logger = logging.getLogger(__name__)
+            _logger.error(f"Error in _get_report_data: {str(e)}")
+            return {}
+
+    def _get_report_values(self, docids, data=None):
+        """Get report values for template rendering with enhanced error handling"""
+        try:
+            # Filter out None values from docids
+            valid_docids = [docid for docid in docids if docid is not None]
+            
+            if not valid_docids:
+                _logger.warning("No valid docids provided, creating fallback doc")
+                fallback_doc = self.create({
+                    'report_name': 'ESG Report',
+                    'report_type': 'sustainability',
+                    'date_from': fields.Date.today(),
+                    'date_to': fields.Date.today(),
+                    'company_name': 'YourCompany',
+                    'output_format': 'pdf',
+                    'report_data': {}
+                })
+                return {
+                    'doc_ids': [fallback_doc.id],
+                    'doc_model': self._name,
+                    'docs': fallback_doc,
+                    'data': data,
+                }
+            
+            docs = self.browse(valid_docids)
+            
+            # Filter out None or invalid docs
+            valid_docs = []
+            for doc in docs:
+                if doc and hasattr(doc, 'id') and doc.id and doc.id is not None:
+                    # Ensure each doc has safe access to its data
+                    if hasattr(doc, '_compute_safe_report_data_manual'):
+                        try:
+                            doc.safe_report_data = doc._compute_safe_report_data_manual()
+                        except Exception as e:
+                            _logger.error(f"Error computing safe report data for doc {doc.id}: {str(e)}")
+                            doc.safe_report_data = {}
+                    valid_docs.append(doc)
+            
+            # If no valid docs, create a fallback doc
+            if not valid_docs:
+                _logger.warning("No valid docs found, creating fallback doc")
+                fallback_doc = self.create({
+                    'report_name': 'ESG Report',
+                    'report_type': 'sustainability',
+                    'date_from': fields.Date.today(),
+                    'date_to': fields.Date.today(),
+                    'company_name': 'YourCompany',
+                    'output_format': 'pdf',
+                    'report_data': {}
+                })
+                valid_docs = [fallback_doc]
+            
+            return {
+                'doc_ids': [doc.id for doc in valid_docs],
+                'doc_model': self._name,
+                'docs': valid_docs,
+                'data': data,
+            }
+        except Exception as e:
+            _logger.error(f"Error in _get_report_values: {str(e)}")
+            # Return safe fallback values
+            try:
+                fallback_doc = self.create({
+                    'report_name': 'ESG Report',
+                    'report_type': 'sustainability',
+                    'date_from': fields.Date.today(),
+                    'date_to': fields.Date.today(),
+                    'company_name': 'YourCompany',
+                    'output_format': 'pdf',
+                    'report_data': {}
+                })
+                return {
+                    'doc_ids': [fallback_doc.id],
+                    'doc_model': self._name,
+                    'docs': [fallback_doc],
+                    'data': data,
+                }
+            except Exception as fallback_error:
+                _logger.error(f"Error creating fallback doc: {str(fallback_error)}")
+                return {
+                    'doc_ids': docids,
+                    'doc_model': self._name,
+                    'docs': [],
+                    'data': data,
+                }
+
+>>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
     @api.onchange('report_type')
     def _onchange_report_type(self):
         """Update default options based on report type"""
@@ -423,6 +555,17 @@ class EnhancedESGWizard(models.TransientModel):
     def action_generate_enhanced_esg_report(self):
         """Generate enhanced ESG report based on selected criteria with improved error handling"""
         try:
+<<<<<<< HEAD
+=======
+            # Ensure the record is properly saved and accessible
+            if not self.id:
+                self = self.create(self.read()[0])
+            
+            # Ensure we have a valid record
+            if not self or not hasattr(self, 'id') or not self.id:
+                raise UserError(_('Failed to create a valid ESG report wizard record.'))
+            
+>>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
             # Input validation
             self._validate_inputs()
 
@@ -527,6 +670,17 @@ class EnhancedESGWizard(models.TransientModel):
     def _get_report_action(self):
         """Get appropriate report action based on output format"""
         try:
+<<<<<<< HEAD
+=======
+            # Ensure the record is properly saved
+            if not self.id:
+                self = self.create(self.read()[0])
+            
+            # Ensure we have a valid record
+            if not self or not hasattr(self, 'id') or not self.id:
+                raise UserError(_('Failed to create a valid ESG report wizard record.'))
+            
+>>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
             # Ensure report data is available
             if not self.report_data or not isinstance(self.report_data, dict):
                 # Generate report data if not available
