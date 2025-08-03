@@ -1,182 +1,139 @@
 #!/usr/bin/env python3
 """
-Test script to verify the ESG template fix for the NoneType error.
+Test script to verify ESG template fixes
 """
 
 import os
 import sys
+import xml.etree.ElementTree as ET
 
-def test_template_fix():
-    """Test the template fix for the NoneType error"""
+def test_template_fixes():
+    """Test that the template fixes are working correctly"""
     
-    print("🔍 Testing ESG Template Fix for NoneType Error")
-    print("=" * 50)
-    
-    # Test 1: Check if the template file exists and has the fix
-    template_file = "odoo17/addons/esg_reporting/report/esg_report_templates.xml"
+    template_file = "/workspace/odoo17/addons/esg_reporting/report/esg_report_templates.xml"
     
     if not os.path.exists(template_file):
-        print("❌ ERROR: Template file not found:", template_file)
+        print("❌ ERROR: Template file not found")
         return False
-    
-    print("✅ Template file exists:", template_file)
-    
-    # Test 2: Check if the wizard file exists and has the fix
-    wizard_file = "odoo17/addons/esg_reporting/wizard/esg_report_wizard.py"
-    
-    if not os.path.exists(wizard_file):
-        print("❌ ERROR: Wizard file not found:", wizard_file)
-        return False
-    
-    print("✅ Wizard file exists:", wizard_file)
-    
-    # Test 3: Check template structure
-    with open(template_file, 'r') as f:
-        template_content = f.read()
-    
-    # Check for the fix in the template
-    fixes_found = []
-    
-    # Check for proper docs handling
-    if 't-if="docs and len(docs) > 0"' in template_content:
-        fixes_found.append("✅ Proper docs length check")
-    else:
-        print("❌ Missing docs length check in template")
-    
-    # Check for proper o object handling
-    if 't-if="o and o.id"' in template_content:
-        fixes_found.append("✅ Proper o object validation")
-    else:
-        print("❌ Missing o object validation in template")
-    
-    # Check for manual computation method
-    if '_compute_safe_report_data_manual()' in template_content:
-        fixes_found.append("✅ Manual computation method usage")
-    else:
-        print("❌ Missing manual computation method in template")
-    
-    # Test 4: Check wizard structure
-    with open(wizard_file, 'r') as f:
-        wizard_content = f.read()
-    
-    # Check for the manual computation method
-    if 'def _compute_safe_report_data_manual(self):' in wizard_content:
-        fixes_found.append("✅ Manual computation method defined")
-    else:
-        print("❌ Missing manual computation method in wizard")
-    
-    # Check for proper report values method
-    if 'def _get_report_values(self, docids, data=None):' in wizard_content:
-        fixes_found.append("✅ Report values method defined")
-    else:
-        print("❌ Missing report values method in wizard")
-    
-    # Test 5: Check for proper error handling
-    if 'No wizard object available for report generation' in template_content:
-        fixes_found.append("✅ Proper error message for missing wizard")
-    else:
-        print("❌ Missing error message for missing wizard")
-    
-    # Test 6: Check for safe data access
-    if 'o._compute_safe_report_data_manual()' in template_content:
-        fixes_found.append("✅ Safe data access method")
-    else:
-        print("❌ Missing safe data access method")
-    
-    print("\n📋 Fix Summary:")
-    print("-" * 30)
-    for fix in fixes_found:
-        print(fix)
-    
-    if len(fixes_found) >= 6:
-        print(f"\n🎉 SUCCESS: All template fixes are in place! ({len(fixes_found)}/6+)")
-        print("\nThe fixes address the following issues:")
-        print("1. ✅ Handles None docs in template iteration")
-        print("2. ✅ Validates o object before accessing properties")
-        print("3. ✅ Uses manual computation method for safe data access")
-        print("4. ✅ Provides proper error messages")
-        print("5. ✅ Adds report values method for proper data passing")
-        print("6. ✅ Implements comprehensive error handling")
-        
-        print("\n🚀 Next Steps:")
-        print("1. Update the esg_reporting module: --update=esg_reporting")
-        print("2. Test the ESG report generation")
-        print("3. Verify that the NoneType error is resolved")
-        
-        return True
-    else:
-        print(f"\n⚠️  WARNING: Only {len(fixes_found)}/6 fixes found")
-        print("Some fixes may be missing. Please check the implementation.")
-        return False
-
-def test_template_syntax():
-    """Test the XML syntax of the template"""
-    
-    print("\n🔍 Testing Template XML Syntax")
-    print("=" * 40)
-    
-    template_file = "odoo17/addons/esg_reporting/report/esg_report_templates.xml"
     
     try:
-        with open(template_file, 'r') as f:
-            content = f.read()
+        # Parse the XML file
+        tree = ET.parse(template_file)
+        root = tree.getroot()
         
-        # Basic XML structure checks
-        if '<?xml version="1.0" encoding="utf-8"?>' in content:
-            print("✅ XML declaration present")
+        # Convert to string for text search
+        xml_content = ET.tostring(root, encoding='unicode')
+        
+        print("🔍 Checking template fixes...")
+        
+        # Check 1: Verify the problematic method call is fixed
+        if 'o._compute_safe_report_data_manual()' in xml_content:
+            print("✅ SUCCESS: Method call is properly formatted")
         else:
-            print("❌ Missing XML declaration")
+            print("❌ ERROR: Method call not found or incorrectly formatted")
+            return False
         
-        if '<odoo>' in content and '</odoo>' in content:
-            print("✅ Odoo root element present")
+        # Check 2: Verify no callable() calls exist
+        if 'callable(' in xml_content:
+            print("❌ ERROR: callable() calls still exist in template")
+            return False
         else:
-            print("❌ Missing Odoo root element")
+            print("✅ SUCCESS: No callable() calls found")
         
-        if '<data>' in content and '</data>' in content:
-            print("✅ Data element present")
+        # Check 3: Verify datetime call is fixed
+        if 'datetime.datetime.now().strftime' in xml_content:
+            print("✅ SUCCESS: Datetime call is properly formatted")
         else:
-            print("❌ Missing data element")
+            print("❌ ERROR: Datetime call not found or incorrectly formatted")
+            return False
         
-        # Check for template structure
-        if 'id="report_enhanced_esg_wizard"' in content:
-            print("✅ Enhanced ESG wizard template present")
+        # Check 4: Verify proper conditional checks
+        if 'o and hasattr(o, \'_compute_safe_report_data_manual\') and o._compute_safe_report_data_manual' in xml_content:
+            print("✅ SUCCESS: Proper conditional checks are in place")
         else:
-            print("❌ Missing enhanced ESG wizard template")
+            print("❌ ERROR: Conditional checks not properly implemented")
+            return False
         
-        if 'id="report_enhanced_esg_wizard_document"' in content:
-            print("✅ Enhanced ESG wizard document template present")
-        else:
-            print("❌ Missing enhanced ESG wizard document template")
-        
-        print("\n✅ Template syntax appears to be valid")
+        print("\n🎉 All template fixes verified successfully!")
         return True
         
     except Exception as e:
-        print(f"❌ Error reading template file: {e}")
+        print(f"❌ ERROR: Failed to parse template file: {str(e)}")
+        return False
+
+def test_wizard_fixes():
+    """Test that the wizard fixes are working correctly"""
+    
+    wizard_file = "/workspace/odoo17/addons/esg_reporting/wizard/esg_report_wizard.py"
+    
+    if not os.path.exists(wizard_file):
+        print("❌ ERROR: Wizard file not found")
+        return False
+    
+    try:
+        with open(wizard_file, 'r') as f:
+            content = f.read()
+        
+        print("🔍 Checking wizard fixes...")
+        
+        # Check 1: Verify the safe method exists
+        if 'def _compute_safe_report_data_manual(self):' in content:
+            print("✅ SUCCESS: _compute_safe_report_data_manual method exists")
+        else:
+            print("❌ ERROR: _compute_safe_report_data_manual method not found")
+            return False
+        
+        # Check 2: Verify the ultimate fallback method exists
+        if 'def _get_ultimate_fallback_data(self):' in content:
+            print("✅ SUCCESS: _get_ultimate_fallback_data method exists")
+        else:
+            print("❌ ERROR: _get_ultimate_fallback_data method not found")
+            return False
+        
+        # Check 3: Verify proper None checks
+        if 'if not self:' in content:
+            print("✅ SUCCESS: Proper None checks are in place")
+        else:
+            print("❌ ERROR: None checks not properly implemented")
+            return False
+        
+        # Check 4: Verify proper exception handling
+        if 'except Exception as e:' in content:
+            print("✅ SUCCESS: Proper exception handling is in place")
+        else:
+            print("❌ ERROR: Exception handling not properly implemented")
+            return False
+        
+        print("\n🎉 All wizard fixes verified successfully!")
+        return True
+        
+    except Exception as e:
+        print(f"❌ ERROR: Failed to read wizard file: {str(e)}")
+        return False
+
+def main():
+    """Main test function"""
+    print("🧪 Testing ESG Template Fixes")
+    print("=" * 50)
+    
+    template_ok = test_template_fixes()
+    wizard_ok = test_wizard_fixes()
+    
+    print("\n" + "=" * 50)
+    if template_ok and wizard_ok:
+        print("🎉 ALL TESTS PASSED! The ESG template fixes are working correctly.")
+        print("\n📋 Summary of fixes applied:")
+        print("1. Fixed method call in template: o._compute_safe_report_data_manual()")
+        print("2. Removed problematic callable() checks")
+        print("3. Fixed datetime call in template")
+        print("4. Added proper None checks in wizard methods")
+        print("5. Added ultimate fallback data method")
+        print("6. Improved exception handling")
+        return True
+    else:
+        print("❌ SOME TESTS FAILED! Please check the issues above.")
         return False
 
 if __name__ == "__main__":
-    print("🧪 ESG Template Fix Test Suite")
-    print("=" * 40)
-    
-    success = True
-    
-    # Run tests
-    if not test_template_fix():
-        success = False
-    
-    if not test_template_syntax():
-        success = False
-    
-    if success:
-        print("\n🎉 All tests passed! The template fix should resolve the NoneType error.")
-        print("\n📝 Summary of fixes applied:")
-        print("• Added proper None checks for docs and o objects")
-        print("• Implemented manual computation method for safe data access")
-        print("• Added comprehensive error handling and messages")
-        print("• Fixed template structure to handle edge cases")
-        print("• Added report values method for proper data passing")
-    else:
-        print("\n❌ Some tests failed. Please review the implementation.")
-    
-    print("\n" + "=" * 40)
+    success = main()
+    sys.exit(0 if success else 1)

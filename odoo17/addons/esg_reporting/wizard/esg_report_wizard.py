@@ -253,7 +253,7 @@ class EnhancedESGWizard(models.TransientModel):
         try:
             # Ensure self is a valid record
             if not self or not hasattr(self, 'id') or not self.id:
-                return self._get_default_report_data()
+                return self._get_default_report_data() if self else {}
 
             # Check if report_data exists and is valid
             if hasattr(self, 'report_data') and self.report_data and isinstance(self.report_data, dict):
@@ -287,6 +287,9 @@ class EnhancedESGWizard(models.TransientModel):
     def _get_default_report_data(self):
         """Get default report data structure"""
         try:
+            if not self:
+                return self._get_ultimate_fallback_data()
+            
             return {
                 'report_info': {
                     'name': getattr(self, 'report_name', 'ESG Report') if hasattr(self, 'report_name') else 'ESG Report',
@@ -317,34 +320,38 @@ class EnhancedESGWizard(models.TransientModel):
             }
         except Exception:
             # Ultimate fallback
-            return {
-                'report_info': {
-                    'name': 'ESG Report',
-                    'type': 'sustainability',
-                    'date_from': None,
-                    'date_to': None,
-                    'company': 'YourCompany',
-                    'generated_at': fields.Datetime.now().isoformat(),
-                    'total_assets': 0,
-                    'granularity': 'monthly',
-                    'theme': 'default',
-                    'note': 'Report data not available. Please regenerate the report.'
-                },
-                'environmental_metrics': {},
-                'social_metrics': {},
-                'governance_metrics': {},
-                'analytics': {},
-                'trends': {},
-                'benchmarks': {},
-                'risk_analysis': {},
-                'predictions': {},
-                'recommendations': [
-                    {'category': 'data', 'recommendation': 'Report data not available. Please regenerate the report.'}
-                ],
-                'thresholds': {},
-                'custom_metrics': {},
-                'comparison_data': {}
-            }
+            return self._get_ultimate_fallback_data()
+
+    def _get_ultimate_fallback_data(self):
+        """Get ultimate fallback data when all else fails"""
+        return {
+            'report_info': {
+                'name': 'ESG Report',
+                'type': 'sustainability',
+                'date_from': None,
+                'date_to': None,
+                'company': 'YourCompany',
+                'generated_at': fields.Datetime.now().isoformat(),
+                'total_assets': 0,
+                'granularity': 'monthly',
+                'theme': 'default',
+                'note': 'Report data not available. Please regenerate the report.'
+            },
+            'environmental_metrics': {},
+            'social_metrics': {},
+            'governance_metrics': {},
+            'analytics': {},
+            'trends': {},
+            'benchmarks': {},
+            'risk_analysis': {},
+            'predictions': {},
+            'recommendations': [
+                {'category': 'data', 'recommendation': 'Report data not available. Please regenerate the report.'}
+            ],
+            'thresholds': {},
+            'custom_metrics': {},
+            'comparison_data': {}
+        }
 
     safe_report_data = fields.Json(string='Safe Report Data', compute='_compute_safe_report_data', store=False)
 
