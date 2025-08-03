@@ -161,9 +161,9 @@ class EnhancedESGWizard(models.TransientModel):
     include_advanced_analytics = fields.Boolean(string='Include Advanced Analytics', default=False)
 
     # Report Content Options
-    include_charts = fields.Boolean(string='Include Charts and Graphs', default=True)
-    include_executive_summary = fields.Boolean(string='Include Executive Summary', default=True)
-    include_recommendations = fields.Boolean(string='Include Recommendations', default=True)
+    include_charts = fields.Boolean(string='Include Charts and Graphs', default=True, help='Include charts and graphs in the ESG report')
+    include_executive_summary = fields.Boolean(string='Include Executive Summary', default=True, help='Include executive summary section in the ESG report')
+    include_recommendations = fields.Boolean(string='Include Recommendations', default=True, help='Include recommendations section in the ESG report')
     include_benchmarks = fields.Boolean(string='Include Industry Benchmarks', default=False)
     include_risk_analysis = fields.Boolean(string='Include Risk Analysis', default=False)
     include_trends = fields.Boolean(string='Include Trend Analysis', default=True)
