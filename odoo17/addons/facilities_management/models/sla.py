@@ -502,14 +502,21 @@ class SLADashboard(models.Model):
 
     def action_export_report(self):
         """Export SLA performance report"""
+        # Create or get the SLA dashboard record
+        dashboard = self.env['facilities.sla.dashboard'].create({
+            'sla_id': self.sla_id.id,
+            'date_from': self.date_from,
+            'date_to': self.date_to
+        })
+        
+        # Return the report action
         return {
             'type': 'ir.actions.report',
             'report_name': 'facilities_management.sla_performance_report',
             'report_type': 'qweb-pdf',
             'data': {
-                'sla_id': self.sla_id.id,
-                'date_from': self.date_from,
-                'date_to': self.date_to
+                'doc_ids': [dashboard.id],
+                'doc_model': 'facilities.sla.dashboard',
             }
         }
 
