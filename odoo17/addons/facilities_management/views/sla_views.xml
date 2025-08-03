@@ -177,6 +177,9 @@
                 <form string="SLA Performance Dashboard">
                     <header>
                         <button name="action_export_report" type="object" string="Export Report" class="btn-primary"/>
+                        <button name="action_debug_data" type="object" string="Debug Data" class="btn-secondary"/>
+                        <button name="action_create_test_data" type="object" string="Create Test Data" class="btn-secondary"/>
+                        <button name="action_create_default_slas" type="object" string="Create Default SLAs" class="btn-secondary"/>
                     </header>
                     <sheet>
                         <group>
@@ -202,10 +205,33 @@
                         </group>
                         <notebook>
                             <page string="Daily Compliance Trend" name="daily_trend">
-                                <field name="daily_compliance" readonly="1"/>
+                                <group string="Daily Compliance Data">
+                                    <field name="daily_compliance" readonly="1" widget="json"/>
+                                </group>
+                                <group string="Daily Compliance Summary" invisible="not daily_compliance">
+                                    <field name="daily_compliance" readonly="1" widget="json" options="{'display': 'table'}"/>
+                                </group>
                             </page>
                             <page string="Weekly Trend Analysis" name="weekly_trend">
-                                <field name="weekly_trend" readonly="1"/>
+                                <group string="Weekly Trend Data">
+                                    <field name="weekly_trend" readonly="1" widget="json"/>
+                                </group>
+                                <group string="Weekly Trend Summary" invisible="not weekly_trend">
+                                    <field name="weekly_trend" readonly="1" widget="json" options="{'display': 'table'}"/>
+                                </group>
+                            </page>
+                            <page string="Debug Information" name="debug">
+                                <group string="Data Debug">
+                                    <field name="sla_id" readonly="1"/>
+                                    <field name="date_from" readonly="1"/>
+                                    <field name="date_to" readonly="1"/>
+                                    <field name="total_workorders" readonly="1"/>
+                                    <field name="compliant_workorders" readonly="1"/>
+                                    <field name="breached_workorders" readonly="1"/>
+                                    <field name="compliance_rate" readonly="1"/>
+                                    <field name="avg_mttr" readonly="1"/>
+                                    <field name="avg_first_time_fix_rate" readonly="1"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
