@@ -577,6 +577,8 @@
                             </t>
                             
                             <p><strong>Generated at:</strong> <t t-esc="context_timestamp(datetime.datetime.now())"/></p>
+                                </t>
+                            </t>
                         </div>
                     </div>
                 </div>
