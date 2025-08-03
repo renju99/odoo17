@@ -449,19 +449,44 @@ class EnhancedESGWizard(models.TransientModel):
     def _get_report_values(self, docids, data=None):
         """Get report values for template rendering with enhanced error handling"""
         try:
-            docs = self.browse(docids)
+            # Filter out None values from docids
+            valid_docids = [docid for docid in docids if docid is not None]
             
-            # Ensure each doc has safe access to its data
+            if not valid_docids:
+                _logger.warning("No valid docids provided, creating fallback doc")
+                fallback_doc = self.create({
+                    'report_name': 'ESG Report',
+                    'report_type': 'sustainability',
+                    'date_from': fields.Date.today(),
+                    'date_to': fields.Date.today(),
+                    'company_name': 'YourCompany',
+                    'output_format': 'pdf',
+                    'report_data': {}
+                })
+                return {
+                    'doc_ids': [fallback_doc.id],
+                    'doc_model': self._name,
+                    'docs': fallback_doc,
+                    'data': data,
+                }
+            
+            docs = self.browse(valid_docids)
+            
+            # Filter out None or invalid docs
+            valid_docs = []
             for doc in docs:
-                if hasattr(doc, '_compute_safe_report_data_manual'):
-                    try:
-                        doc.safe_report_data = doc._compute_safe_report_data_manual()
-                    except Exception as e:
-                        _logger.error(f"Error computing safe report data for doc {doc.id}: {str(e)}")
-                        doc.safe_report_data = {}
+                if doc and hasattr(doc, 'id') and doc.id and doc.id is not None:
+                    # Ensure each doc has safe access to its data
+                    if hasattr(doc, '_compute_safe_report_data_manual'):
+                        try:
+                            doc.safe_report_data = doc._compute_safe_report_data_manual()
+                        except Exception as e:
+                            _logger.error(f"Error computing safe report data for doc {doc.id}: {str(e)}")
+                            doc.safe_report_data = {}
+                    valid_docs.append(doc)
             
-            # If no docs or all docs are invalid, create a fallback doc
-            if not docs or all(not doc.id for doc in docs):
+            # If no valid docs, create a fallback doc
+            if not valid_docs:
                 _logger.warning("No valid docs found, creating fallback doc")
                 fallback_doc = self.create({
                     'report_name': 'ESG Report',
@@ -472,12 +497,12 @@ class EnhancedESGWizard(models.TransientModel):
                     'output_format': 'pdf',
                     'report_data': {}
                 })
-                docs = fallback_doc
+                valid_docs = [fallback_doc]
             
             return {
-                'doc_ids': docids,
+                'doc_ids': [doc.id for doc in valid_docs],
                 'doc_model': self._name,
-                'docs': docs,
+                'docs': valid_docs,
                 'data': data,
             }
         except Exception as e:
@@ -496,7 +521,7 @@ class EnhancedESGWizard(models.TransientModel):
                 return {
                     'doc_ids': [fallback_doc.id],
                     'doc_model': self._name,
-                    'docs': fallback_doc,
+                    'docs': [fallback_doc],
                     'data': data,
                 }
             except Exception as fallback_error:
@@ -548,6 +573,10 @@ class EnhancedESGWizard(models.TransientModel):
             # Ensure the record is properly saved and accessible
             if not self.id:
                 self = self.create(self.read()[0])
+            
+            # Ensure we have a valid record
+            if not self or not hasattr(self, 'id') or not self.id:
+                raise UserError(_('Failed to create a valid ESG report wizard record.'))
             
             # Input validation
             if not self.report_name or not self.report_name.strip():
@@ -655,6 +684,10 @@ class EnhancedESGWizard(models.TransientModel):
             # Ensure the record is properly saved
             if not self.id:
                 self = self.create(self.read()[0])
+            
+            # Ensure we have a valid record
+            if not self or not hasattr(self, 'id') or not self.id:
+                raise UserError(_('Failed to create a valid ESG report wizard record.'))
             
             # Ensure report data is available
             if not self.report_data or not isinstance(self.report_data, dict):
