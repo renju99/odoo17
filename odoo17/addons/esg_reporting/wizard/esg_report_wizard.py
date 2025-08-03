@@ -235,6 +235,20 @@ class EnhancedESGWizard(models.TransientModel):
 
     # Report data storage for template access
     report_data = fields.Json(string='Report Data', readonly=True, default=lambda self: {})
+    safe_report_data = fields.Json(string='Safe Report Data', compute='_compute_safe_report_data')
+
+    @api.depends('report_data')
+    def _compute_safe_report_data(self):
+        """Compute the safe report data for the QWeb template."""
+        for record in self:
+            try:
+                if record.report_data and isinstance(record.report_data, dict):
+                    record.safe_report_data = record.report_data
+                else:
+                    record.safe_report_data = record._get_default_report_data()
+            except Exception as e:
+                _logger.error(f"Error computing safe report data: {str(e)}")
+                record.safe_report_data = record._get_default_report_data()
 
     @api.model
     def create(self, vals):
@@ -264,39 +278,6 @@ class EnhancedESGWizard(models.TransientModel):
         except Exception as e:
             _logger.error(f"Error creating ESG wizard record: {str(e)}")
             raise
-
-    def _compute_safe_report_data_manual(self):
-        """Manual computation of safe_report_data for template access"""
-        try:
-            # Ensure self is a valid record
-            if not self or not hasattr(self, 'id') or not self.id:
-                return self._get_default_report_data()
-
-            # Check if report_data exists and is valid
-            if hasattr(self, 'report_data') and self.report_data and isinstance(self.report_data, dict):
-                return self.report_data
-            else:
-                # Try to generate report data if not available
-                try:
-                    domain = self._build_asset_domain()
-                    assets = self.env['facilities.asset'].search(domain)
-
-                    if not assets:
-                        assets = self._get_fallback_assets(domain)
-
-                    report_data = self._prepare_enhanced_report_data(assets)
-                    serialized_data = self._serialize_report_data(report_data)
-
-                    if serialized_data and isinstance(serialized_data, dict):
-                        return serialized_data
-                    else:
-                        return self._get_default_report_data()
-                except Exception as e:
-                    _logger.error(f"Error generating report data: {str(e)}")
-                    return self._get_default_report_data()
-        except Exception as e:
-            _logger.error(f"Error in _compute_safe_report_data_manual: {str(e)}")
-            return self._get_default_report_data()
 
     def _get_default_report_data(self):
         """Get default report data structure"""

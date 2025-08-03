@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Enhanced ESG Wizard Report Template -->
         <template id="report_enhanced_esg_wizard">
             <t t-call="web.html_container">
                 <t t-if="docs and len(docs) > 0">
@@ -36,14 +35,11 @@
                         <div class="col-12">
                             <h1>Enhanced ESG Report</h1>
 
-                            <!-- Safely check if object exists and has valid ID -->
                             <t t-if="o and hasattr(o, 'id') and o.id">
-                                <!-- Safe field access with proper fallbacks -->
                                 <h2>
                                     <t t-esc="o.report_name if hasattr(o, 'report_name') and o.report_name else 'ESG Report'"/>
                                 </h2>
 
-                                <!-- Report Header Information with safe field access -->
                                 <div class="report-header mb-4">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -78,7 +74,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Report Configuration with safe boolean checks -->
                                 <div class="report-config mb-4">
                                     <h3>Report Configuration</h3>
                                     <div class="row">
@@ -160,18 +155,8 @@
                                     </div>
                                 </div>
 
-                                <!-- Safe report data computation -->
-                                <t t-set="report_data" t-value="{}"/>
-                                <t t-if="hasattr(o, '_compute_safe_report_data_manual') and callable(o._compute_safe_report_data_manual)">
-                                    <t t-try="">
-                                        <t t-set="report_data" t-value="o._compute_safe_report_data_manual()"/>
-                                    </t>
-                                    <t t-except="">
-                                        <t t-set="report_data" t-value="{}"/>
-                                    </t>
-                                </t>
+                                <t t-set="report_data" t-value="o.safe_report_data if hasattr(o, 'safe_report_data') and o.safe_report_data else o._get_default_report_data()"/>
 
-                                <!-- Executive Summary -->
                                 <div class="executive-summary mb-4">
                                     <h3>Executive Summary</h3>
                                     <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
@@ -193,7 +178,6 @@
                                     </t>
                                 </div>
 
-                                <!-- Environmental Metrics -->
                                 <t t-set="show_env" t-value="hasattr(o, 'include_section_environmental') and o.include_section_environmental"/>
                                 <t t-set="has_env_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('environmental_metrics')"/>
                                 <t t-if="show_env and has_env_data">
@@ -217,7 +201,6 @@
                                     </div>
                                 </t>
 
-                                <!-- Social Metrics -->
                                 <t t-set="show_social" t-value="hasattr(o, 'include_section_social') and o.include_section_social"/>
                                 <t t-set="has_social_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('social_metrics')"/>
                                 <t t-if="show_social and has_social_data">
@@ -241,7 +224,6 @@
                                     </div>
                                 </t>
 
-                                <!-- Governance Metrics -->
                                 <t t-set="show_gov" t-value="hasattr(o, 'include_section_governance') and o.include_section_governance"/>
                                 <t t-set="has_gov_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('governance_metrics')"/>
                                 <t t-if="show_gov and has_gov_data">
@@ -265,7 +247,6 @@
                                     </div>
                                 </t>
 
-                                <!-- Recommendations -->
                                 <t t-set="show_rec" t-value="hasattr(o, 'include_section_recommendations') and o.include_section_recommendations"/>
                                 <t t-set="has_rec_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('recommendations')"/>
                                 <t t-if="show_rec and has_rec_data">
@@ -298,7 +279,6 @@
                                     </div>
                                 </t>
 
-                                <!-- Default content when no specific data is available -->
                                 <t t-if="not report_data or not isinstance(report_data, dict) or len(report_data) == 0">
                                     <div class="alert alert-info" role="alert">
                                         <h4>ESG Report Content</h4>
@@ -322,7 +302,6 @@
                                 </div>
                             </t>
 
-                            <!-- Footer -->
                             <div class="report-footer mt-4">
                                 <hr/>
                                 <p class="text-muted"><strong>Generated at:</strong>
