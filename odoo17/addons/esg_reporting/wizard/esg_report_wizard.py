@@ -255,11 +255,29 @@ class EnhancedESGWizard(models.TransientModel):
             if not self or not hasattr(self, 'id') or not self.id:
                 return self._get_default_report_data()
 
+            # Check if report_data exists and is valid
             if hasattr(self, 'report_data') and self.report_data and isinstance(self.report_data, dict):
                 return self.report_data
             else:
-                # Return a default structure if no data is available
-                return self._get_default_report_data()
+                # Try to generate report data if not available
+                try:
+                    # Get assets and generate report data
+                    domain = self._build_asset_domain()
+                    assets = self.env['facilities.asset'].search(domain)
+                    
+                    if not assets:
+                        assets = self._get_fallback_assets(domain)
+                    
+                    report_data = self._prepare_enhanced_report_data(assets)
+                    serialized_data = self._serialize_report_data(report_data)
+                    
+                    if serialized_data and isinstance(serialized_data, dict):
+                        return serialized_data
+                    else:
+                        return self._get_default_report_data()
+                except Exception as e:
+                    _logger.error(f"Error generating report data in _compute_safe_report_data_manual: {str(e)}")
+                    return self._get_default_report_data()
         except Exception as e:
             # Log the error for debugging
             _logger = logging.getLogger(__name__)
@@ -374,10 +392,30 @@ class EnhancedESGWizard(models.TransientModel):
 
     @api.model
     def create(self, vals):
-        """Ensure report_data is always initialized as a dictionary"""
-        if 'report_data' not in vals or vals['report_data'] is None:
-            vals['report_data'] = {}
-        return super().create(vals)
+        """Ensure report_data is always initialized as a dictionary and set default values"""
+        try:
+            # Ensure report_data is always a dictionary
+            if 'report_data' not in vals or vals['report_data'] is None:
+                vals['report_data'] = {}
+            
+            # Set default values if not provided
+            if 'report_name' not in vals or not vals['report_name']:
+                vals['report_name'] = 'Enhanced ESG Report'
+            if 'report_type' not in vals:
+                vals['report_type'] = 'sustainability'
+            if 'date_from' not in vals:
+                vals['date_from'] = fields.Date.today()
+            if 'date_to' not in vals:
+                vals['date_to'] = fields.Date.today()
+            if 'company_name' not in vals or not vals['company_name']:
+                vals['company_name'] = 'YourCompany'
+            if 'output_format' not in vals:
+                vals['output_format'] = 'pdf'
+            
+            return super().create(vals)
+        except Exception as e:
+            _logger.error(f"Error creating ESG wizard record: {str(e)}")
+            raise
 
     def _get_report_data(self):
         """Ensure report_data is always a dictionary"""
@@ -395,14 +433,66 @@ class EnhancedESGWizard(models.TransientModel):
             return {}
 
     def _get_report_values(self, docids, data=None):
-        """Get report values for template rendering"""
-        docs = self.browse(docids)
-        return {
-            'doc_ids': docids,
-            'doc_model': self._name,
-            'docs': docs,
-            'data': data,
-        }
+        """Get report values for template rendering with enhanced error handling"""
+        try:
+            docs = self.browse(docids)
+            
+            # Ensure each doc has safe access to its data
+            for doc in docs:
+                if hasattr(doc, '_compute_safe_report_data_manual'):
+                    try:
+                        doc.safe_report_data = doc._compute_safe_report_data_manual()
+                    except Exception as e:
+                        _logger.error(f"Error computing safe report data for doc {doc.id}: {str(e)}")
+                        doc.safe_report_data = {}
+            
+            # If no docs or all docs are invalid, create a fallback doc
+            if not docs or all(not doc.id for doc in docs):
+                _logger.warning("No valid docs found, creating fallback doc")
+                fallback_doc = self.create({
+                    'report_name': 'ESG Report',
+                    'report_type': 'sustainability',
+                    'date_from': fields.Date.today(),
+                    'date_to': fields.Date.today(),
+                    'company_name': 'YourCompany',
+                    'output_format': 'pdf',
+                    'report_data': {}
+                })
+                docs = fallback_doc
+            
+            return {
+                'doc_ids': docids,
+                'doc_model': self._name,
+                'docs': docs,
+                'data': data,
+            }
+        except Exception as e:
+            _logger.error(f"Error in _get_report_values: {str(e)}")
+            # Return safe fallback values
+            try:
+                fallback_doc = self.create({
+                    'report_name': 'ESG Report',
+                    'report_type': 'sustainability',
+                    'date_from': fields.Date.today(),
+                    'date_to': fields.Date.today(),
+                    'company_name': 'YourCompany',
+                    'output_format': 'pdf',
+                    'report_data': {}
+                })
+                return {
+                    'doc_ids': [fallback_doc.id],
+                    'doc_model': self._name,
+                    'docs': fallback_doc,
+                    'data': data,
+                }
+            except Exception as fallback_error:
+                _logger.error(f"Error creating fallback doc: {str(fallback_error)}")
+                return {
+                    'doc_ids': docids,
+                    'doc_model': self._name,
+                    'docs': [],
+                    'data': data,
+                }
 
     @api.onchange('report_type')
     def _onchange_report_type(self):
@@ -441,6 +531,10 @@ class EnhancedESGWizard(models.TransientModel):
     def action_generate_enhanced_esg_report(self):
         """Generate enhanced ESG report based on selected criteria with improved error handling"""
         try:
+            # Ensure the record is properly saved and accessible
+            if not self.id:
+                self = self.create(self.read()[0])
+            
             # Input validation
             if not self.report_name or not self.report_name.strip():
                 raise UserError(_('Report name is required.'))
@@ -543,18 +637,42 @@ class EnhancedESGWizard(models.TransientModel):
 
     def _get_report_action(self):
         """Get appropriate report action based on output format"""
-        if self.output_format == 'pdf':
-            return self.env.ref('esg_reporting.action_enhanced_esg_report_pdf').report_action(self)
-        elif self.output_format == 'excel':
-            return self._generate_excel_report(self.report_data)
-        elif self.output_format == 'html':
-            return self._generate_html_report(self.report_data)
-        elif self.output_format == 'json':
-            return self._generate_json_report(self.report_data)
-        elif self.output_format == 'csv':
-            return self._generate_csv_report(self.report_data)
-        else:
-            raise UserError(_('Unsupported output format: %s') % self.output_format)
+        try:
+            # Ensure the record is properly saved
+            if not self.id:
+                self = self.create(self.read()[0])
+            
+            # Ensure report data is available
+            if not self.report_data or not isinstance(self.report_data, dict):
+                # Generate report data if not available
+                domain = self._build_asset_domain()
+                assets = self.env['facilities.asset'].search(domain)
+                
+                if not assets:
+                    assets = self._get_fallback_assets(domain)
+                
+                report_data = self._prepare_enhanced_report_data(assets)
+                serialized_data = self._serialize_report_data(report_data)
+                
+                if serialized_data and isinstance(serialized_data, dict):
+                    self.report_data = serialized_data
+                    self.invalidate_recordset(['report_data'])
+            
+            if self.output_format == 'pdf':
+                return self.env.ref('esg_reporting.action_enhanced_esg_report_pdf').report_action(self)
+            elif self.output_format == 'excel':
+                return self._generate_excel_report(self.report_data)
+            elif self.output_format == 'html':
+                return self._generate_html_report(self.report_data)
+            elif self.output_format == 'json':
+                return self._generate_json_report(self.report_data)
+            elif self.output_format == 'csv':
+                return self._generate_csv_report(self.report_data)
+            else:
+                raise UserError(_('Unsupported output format: %s') % self.output_format)
+        except Exception as e:
+            _logger.error(f"Error in _get_report_action: {str(e)}")
+            raise UserError(_('Failed to generate report action. Please try again.'))
 
     def _prepare_enhanced_report_data(self, assets):
         """Prepare comprehensive report data with advanced analytics"""
