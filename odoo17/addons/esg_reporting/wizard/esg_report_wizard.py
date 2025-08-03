@@ -1,9 +1,18 @@
 from odoo import models, fields, api
-from datetime import datetime, timedelta
+from datetime import timedelta
 import json
 import logging
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.tools.translate import _
+
+# Constants for ESG Reporting
+DEFAULT_CARBON_THRESHOLD = 1000.0
+DEFAULT_COMPLIANCE_THRESHOLD = 90.0
+DEFAULT_SOCIAL_IMPACT_THRESHOLD = 7.0
+MAX_DATE_RANGE_DAYS = 365 * 5  # 5 years maximum
+MIN_DATE_RANGE_DAYS = 1  # 1 day minimum
+
+_logger = logging.getLogger(__name__)
 
 
 class ESGReportWizard(models.TransientModel):
@@ -23,12 +32,12 @@ class ESGReportWizard(models.TransientModel):
         ('excel', 'Excel'),
         ('html', 'HTML')
     ], string='Format', default='pdf', required=True)
-    
+
     # Report content options
     include_charts = fields.Boolean(string='Include Charts', default=True)
     include_summary = fields.Boolean(string='Include Summary', default=True)
     include_recommendations = fields.Boolean(string='Include Recommendations', default=True)
-    
+
     # Data inclusion options
     include_emissions = fields.Boolean(string='Include Emissions', default=True)
     include_offsets = fields.Boolean(string='Include Offsets', default=True)
@@ -37,34 +46,70 @@ class ESGReportWizard(models.TransientModel):
     include_gender_parity = fields.Boolean(string='Include Gender Parity', default=True)
     include_pay_gap = fields.Boolean(string='Include Pay Gap', default=True)
     include_analytics = fields.Boolean(string='Include Analytics', default=True)
-    
+
     # Company field for multi-company support
-    company_id = fields.Many2one('res.company', string='Company', 
-                                default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Company',
+                                 default=lambda self: self.env.company)
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_range(self):
+        """Validate date range"""
+        for record in self:
+            if record.date_from and record.date_to:
+                if record.date_from > record.date_to:
+                    raise ValidationError(_('Date From cannot be later than Date To.'))
+
+                date_diff = (record.date_to - record.date_from).days
+                if date_diff > MAX_DATE_RANGE_DAYS:
+                    raise ValidationError(
+                        _('Date range cannot exceed %d days. Current range: %d days.')
+                        % (MAX_DATE_RANGE_DAYS, date_diff)
+                    )
+                elif date_diff < 0:
+                    raise ValidationError(_('Invalid date range.'))
+
+    @api.constrains('name')
+    def _check_report_name(self):
+        """Validate report name"""
+        for record in self:
+            if record.name and len(record.name.strip()) < 3:
+                raise ValidationError(_('Report name must be at least 3 characters long.'))
 
     def action_generate_report(self):
-        """Generate ESG report"""
-        # Create enhanced wizard with same parameters
-        enhanced_wizard = self.env['enhanced.esg.wizard'].create({
-            'report_name': self.name,
-            'report_type': self.report_type,
-            'date_from': self.date_from,
-            'date_to': self.date_to,
-            'output_format': self.format,
-            'include_charts': self.include_charts,
-            'include_executive_summary': self.include_summary,
-            'include_recommendations': self.include_recommendations,
-            'include_emissions_data': self.include_emissions,
-            'include_offset_data': self.include_offsets,
-            'include_community_data': self.include_community,
-            'include_initiatives_data': self.include_initiatives,
-            'include_gender_parity_data': self.include_gender_parity,
-            'include_pay_gap_data': self.include_pay_gap,
-            'include_analytics_data': self.include_analytics,
-        })
-        
-        # Call the enhanced wizard's action
-        return enhanced_wizard.action_generate_enhanced_esg_report()
+        """Generate ESG report with enhanced error handling"""
+        try:
+            # Validate inputs before processing
+            if not self.name or not self.name.strip():
+                raise UserError(_('Report name is required.'))
+
+            if not self.date_from or not self.date_to:
+                raise UserError(_('Both date from and date to are required.'))
+
+            # Create enhanced wizard with same parameters
+            enhanced_wizard = self.env['enhanced.esg.wizard'].create({
+                'report_name': self.name,
+                'report_type': self.report_type,
+                'date_from': self.date_from,
+                'date_to': self.date_to,
+                'output_format': self.format,
+                'include_charts': self.include_charts,
+                'include_executive_summary': self.include_summary,
+                'include_recommendations': self.include_recommendations,
+                'include_emissions_data': self.include_emissions,
+                'include_offset_data': self.include_offsets,
+                'include_community_data': self.include_community,
+                'include_initiatives_data': self.include_initiatives,
+                'include_gender_parity_data': self.include_gender_parity,
+                'include_pay_gap_data': self.include_pay_gap,
+                'include_analytics_data': self.include_analytics,
+            })
+
+            # Call the enhanced wizard's action
+            return enhanced_wizard.action_generate_enhanced_esg_report()
+
+        except Exception as e:
+            _logger.error(f"Error in ESG report generation: {str(e)}")
+            raise UserError(_('Failed to generate ESG report: %s') % str(e))
 
 
 class EnhancedESGWizard(models.TransientModel):
@@ -153,9 +198,12 @@ class EnhancedESGWizard(models.TransientModel):
 
     # Thresholds and Alerts
     include_thresholds = fields.Boolean(string='Include Performance Thresholds', default=False)
-    carbon_threshold = fields.Float(string='Carbon Footprint Threshold (kg CO2)', default=1000.0)
-    compliance_threshold = fields.Float(string='Compliance Rate Threshold (%)', default=90.0)
-    social_impact_threshold = fields.Float(string='Social Impact Score Threshold', default=7.0)
+    carbon_threshold = fields.Float(string='Carbon Footprint Threshold (kg CO2)',
+                                    default=DEFAULT_CARBON_THRESHOLD)
+    compliance_threshold = fields.Float(string='Compliance Rate Threshold (%)',
+                                        default=DEFAULT_COMPLIANCE_THRESHOLD)
+    social_impact_threshold = fields.Float(string='Social Impact Score Threshold',
+                                           default=DEFAULT_SOCIAL_IMPACT_THRESHOLD)
 
     # Report Styling
     report_theme = fields.Selection([
@@ -184,10 +232,10 @@ class EnhancedESGWizard(models.TransientModel):
 
     # Company Information
     company_name = fields.Char(string='Company', default='YourCompany')
-    
+
     # Report data storage for template access
     report_data = fields.Json(string='Report Data', readonly=True, default={})
-    
+
     @api.depends('report_data')
     def _compute_safe_report_data(self):
         """Computed field to ensure safe access to report data"""
@@ -199,14 +247,14 @@ class EnhancedESGWizard(models.TransientModel):
                     record.safe_report_data = {}
             except Exception:
                 record.safe_report_data = {}
-    
+
     def _compute_safe_report_data_manual(self):
         """Manual computation of safe_report_data for template access"""
         try:
             # Ensure self is a valid record
             if not self or not hasattr(self, 'id') or not self.id:
                 return self._get_default_report_data()
-            
+
             if hasattr(self, 'report_data') and self.report_data and isinstance(self.report_data, dict):
                 return self.report_data
             else:
@@ -217,7 +265,7 @@ class EnhancedESGWizard(models.TransientModel):
             _logger = logging.getLogger(__name__)
             _logger.error(f"Error in _compute_safe_report_data_manual: {str(e)}")
             return self._get_default_report_data()
-    
+
     def _get_default_report_data(self):
         """Get default report data structure"""
         try:
@@ -279,16 +327,58 @@ class EnhancedESGWizard(models.TransientModel):
                 'custom_metrics': {},
                 'comparison_data': {}
             }
-    
+
     safe_report_data = fields.Json(string='Safe Report Data', compute='_compute_safe_report_data', store=False)
-    
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_range(self):
+        """Validate date range for enhanced wizard"""
+        for record in self:
+            if record.date_from and record.date_to:
+                if record.date_from > record.date_to:
+                    raise ValidationError(_('Date From cannot be later than Date To.'))
+
+                date_diff = (record.date_to - record.date_from).days
+                if date_diff > MAX_DATE_RANGE_DAYS:
+                    raise ValidationError(
+                        _('Date range cannot exceed %d days. Current range: %d days.')
+                        % (MAX_DATE_RANGE_DAYS, date_diff)
+                    )
+
+    @api.constrains('carbon_threshold', 'compliance_threshold', 'social_impact_threshold')
+    def _check_thresholds(self):
+        """Validate threshold values"""
+        for record in self:
+            if record.carbon_threshold < 0:
+                raise ValidationError(_('Carbon threshold must be non-negative.'))
+            if not (0 <= record.compliance_threshold <= 100):
+                raise ValidationError(_('Compliance threshold must be between 0 and 100.'))
+            if not (0 <= record.social_impact_threshold <= 10):
+                raise ValidationError(_('Social impact threshold must be between 0 and 10.'))
+
+    @api.constrains('custom_metrics', 'custom_charts')
+    def _check_json_fields(self):
+        """Validate JSON field formats"""
+        for record in self:
+            if record.custom_metrics:
+                try:
+                    json.loads(record.custom_metrics)
+                except (json.JSONDecodeError, TypeError):
+                    raise ValidationError(_('Custom Metrics must be valid JSON format.'))
+
+            if record.custom_charts:
+                try:
+                    json.loads(record.custom_charts)
+                except (json.JSONDecodeError, TypeError):
+                    raise ValidationError(_('Custom Charts must be valid JSON format.'))
+
     @api.model
     def create(self, vals):
         """Ensure report_data is always initialized as a dictionary"""
         if 'report_data' not in vals or vals['report_data'] is None:
             vals['report_data'] = {}
         return super().create(vals)
-    
+
     def _get_report_data(self):
         """Ensure report_data is always a dictionary"""
         try:
@@ -349,103 +439,110 @@ class EnhancedESGWizard(models.TransientModel):
                 self.custom_comparison_to = self.date_from - timedelta(days=1)
 
     def action_generate_enhanced_esg_report(self):
-        """Generate enhanced ESG report based on selected criteria"""
-        # Validate custom metrics JSON if provided
-        if self.custom_metrics:
-            try:
-                json.loads(self.custom_metrics)
-            except json.JSONDecodeError:
-                raise ValidationError(_('Invalid JSON format in Custom Metrics field.'))
+        """Generate enhanced ESG report based on selected criteria with improved error handling"""
+        try:
+            # Input validation
+            if not self.report_name or not self.report_name.strip():
+                raise UserError(_('Report name is required.'))
 
-        # Get assets based on filters - start with less restrictive domain
+            if not self.date_from or not self.date_to:
+                raise UserError(_('Both date from and date to are required.'))
+
+            if self.date_from > self.date_to:
+                raise UserError(_('Date From cannot be later than Date To.'))
+
+            # Validate custom metrics JSON if provided
+            if self.custom_metrics:
+                try:
+                    json.loads(self.custom_metrics)
+                except json.JSONDecodeError:
+                    raise ValidationError(_('Invalid JSON format in Custom Metrics field.'))
+
+            _logger.info(f"Starting ESG report generation: {self.report_name} ({self.report_type})")
+
+            # Get assets based on filters - start with less restrictive domain
+            domain = self._build_asset_domain()
+            assets = self.env['facilities.asset'].search(domain)
+
+            # Try fallback strategies if no assets found
+            if not assets:
+                assets = self._get_fallback_assets(domain)
+
+            _logger.info(f"Found {len(assets)} assets for ESG report")
+
+            # Generate comprehensive report data
+            report_data = self._prepare_enhanced_report_data(assets)
+
+            # Serialize and store report data
+            serialized_data = self._serialize_report_data(report_data)
+            if serialized_data is None or not isinstance(serialized_data, dict):
+                serialized_data = self._get_default_report_data()
+
+            self.report_data = serialized_data
+            self.invalidate_recordset(['report_data'])
+
+            _logger.info(f"ESG report data generated successfully with {len(report_data.keys())} sections")
+
+            # Return report action based on output format
+            return self._get_report_action()
+
+        except ValidationError:
+            # Re-raise validation errors as-is
+            raise
+        except UserError:
+            # Re-raise user errors as-is
+            raise
+        except Exception as e:
+            # Log unexpected errors and convert to user-friendly message
+            _logger.error(f"Unexpected error generating ESG report: {str(e)}", exc_info=True)
+            raise UserError(_('Failed to generate ESG report. Please check the configuration and try again. Error: %s') % str(e))
+
+    def _build_asset_domain(self):
+        """Build domain for asset filtering"""
         domain = []
-        
+
         # Only add date filters if dates are provided and reasonable
         if self.date_from and self.date_to and self.date_from <= self.date_to:
             domain.extend([
                 ('purchase_date', '>=', self.date_from),
                 ('purchase_date', '<=', self.date_to)
             ])
-        
+
         if self.asset_type != 'all':
             domain.append(('category_id.category_type', '=', self.asset_type))
 
         if self.include_compliance_only:
             domain.append(('esg_compliance', '=', True))
 
-        assets = self.env['facilities.asset'].search(domain)
-        
-        # If no assets found with filters, try without date filters
-        if not assets and domain:
+        return domain
+
+    def _get_fallback_assets(self, original_domain):
+        """Get assets using fallback strategies when primary search fails"""
+        # Try without date filters
+        if original_domain:
             fallback_domain = []
             if self.asset_type != 'all':
                 fallback_domain.append(('category_id.category_type', '=', self.asset_type))
             if self.include_compliance_only:
                 fallback_domain.append(('esg_compliance', '=', True))
-            
+
             if fallback_domain:
                 assets = self.env['facilities.asset'].search(fallback_domain)
-            
-            # If still no assets, get all assets
-            if not assets:
-                assets = self.env['facilities.asset'].search([])
+                if assets:
+                    _logger.warning("Using fallback domain (without date filters) for asset search")
+                    return assets
 
-        # Generate comprehensive report data
-        try:
-            report_data = self._prepare_enhanced_report_data(assets)
-            
-            # Debug logging
-            _logger = logging.getLogger(__name__)
-            _logger.info(f"ESG Report Generation - Assets found: {len(assets)}")
-            _logger.info(f"ESG Report Generation - Report data keys: {list(report_data.keys()) if report_data else 'None'}")
+            # If still no assets, get all assets as last resort
+            assets = self.env['facilities.asset'].search([])
+            if assets:
+                _logger.warning("Using all assets as fallback for ESG report generation")
 
-            # Store report data in the wizard object for template access
-            # Ensure all date objects are converted to strings for JSON serialization
-            serialized_data = self._serialize_report_data(report_data)
-            # Ensure report_data is always a dictionary
-            if serialized_data is None or not isinstance(serialized_data, dict):
-                serialized_data = {}
-            self.report_data = serialized_data
-            # Ensure the record is saved
-            self.invalidate_recordset(['report_data'])
-        except Exception as e:
-            # Log the error and set a default report data
-            _logger = logging.getLogger(__name__)
-            _logger.error(f"Error generating ESG report: {str(e)}")
-            
-            # Set a default report data with error information
-            self.report_data = {
-                'report_info': {
-                    'name': self.report_name,
-                    'type': self.report_type,
-                    'date_from': self.date_from.isoformat() if self.date_from else None,
-                    'date_to': self.date_to.isoformat() if self.date_to else None,
-                    'company': self.company_name,
-                    'generated_at': fields.Datetime.now().isoformat(),
-                    'total_assets': 0,
-                    'granularity': self.granularity,
-                    'theme': self.report_theme,
-                    'note': f'Error generating report: {str(e)}. Please check the configuration and try again.'
-                },
-                'environmental_metrics': {},
-                'social_metrics': {},
-                'governance_metrics': {},
-                'analytics': {},
-                'trends': {},
-                'benchmarks': {},
-                'risk_analysis': {},
-                'predictions': {},
-                'recommendations': [
-                    {'category': 'error', 'recommendation': f'Report generation failed: {str(e)}'},
-                    {'category': 'debug', 'recommendation': 'Check the server logs for more details'},
-                    {'category': 'retry', 'recommendation': 'Try adjusting the report parameters and regenerate'}
-                ],
-                'thresholds': {},
-                'custom_metrics': {},
-                'comparison_data': {}
-            }
+            return assets
 
-        # Return report action based on output format
+        return self.env['facilities.asset']
+
+    def _get_report_action(self):
+        """Get appropriate report action based on output format"""
         if self.output_format == 'pdf':
             return self.env.ref('esg_reporting.action_enhanced_esg_report_pdf').report_action(self)
         elif self.output_format == 'excel':
@@ -456,6 +553,8 @@ class EnhancedESGWizard(models.TransientModel):
             return self._generate_json_report(self.report_data)
         elif self.output_format == 'csv':
             return self._generate_csv_report(self.report_data)
+        else:
+            raise UserError(_('Unsupported output format: %s') % self.output_format)
 
     def _prepare_enhanced_report_data(self, assets):
         """Prepare comprehensive report data with advanced analytics"""
@@ -491,7 +590,7 @@ class EnhancedESGWizard(models.TransientModel):
                 'custom_metrics': {},
                 'comparison_data': {}
             }
-        
+
         report_data = {
             'report_info': {
                 'name': self.report_name,
@@ -549,26 +648,60 @@ class EnhancedESGWizard(models.TransientModel):
     # (Include all the calculation methods from the previous implementation)
 
     def _calculate_enhanced_environmental_metrics(self, assets):
-        """Calculate enhanced environmental metrics"""
-        return {
-            'total_carbon_footprint': sum(asset.carbon_footprint or 0 for asset in assets),
-            'energy_efficiency_score': self._calculate_energy_efficiency(assets),
-            'renewable_energy_usage': self._calculate_renewable_energy(assets),
-            'waste_management_score': self._calculate_waste_management(assets),
-            'water_consumption': self._calculate_water_consumption(assets),
-            'biodiversity_impact': self._calculate_biodiversity_impact(assets)
-        }
+        """Calculate enhanced environmental metrics with error handling"""
+        try:
+            metrics = {
+                'total_carbon_footprint': sum(
+                    getattr(asset, 'carbon_footprint', 0) or 0 for asset in assets
+                ) if assets else 0,
+                'energy_efficiency_score': self._calculate_energy_efficiency(assets),
+                'renewable_energy_usage': self._calculate_renewable_energy(assets),
+                'waste_management_score': self._calculate_waste_management(assets),
+                'water_consumption': self._calculate_water_consumption(assets),
+                'biodiversity_impact': self._calculate_biodiversity_impact(assets)
+            }
+
+            # Validate metric values
+            for key, value in metrics.items():
+                if value is None or (isinstance(value, str) and not value.strip()):
+                    metrics[key] = 0
+                elif not isinstance(value, (int, float)):
+                    _logger.warning(f"Invalid value for {key}: {value}, setting to 0")
+                    metrics[key] = 0
+
+            return metrics
+        except Exception as e:
+            _logger.error(f"Error calculating environmental metrics: {str(e)}")
+            return {
+                'total_carbon_footprint': 0,
+                'energy_efficiency_score': 0,
+                'renewable_energy_usage': 0,
+                'waste_management_score': 0,
+                'water_consumption': 0,
+                'biodiversity_impact': 0
+            }
 
     def _calculate_enhanced_social_metrics(self, assets):
-        """Calculate enhanced social metrics"""
-        return {
-            'community_impact_score': self._calculate_community_impact(assets),
-            'employee_satisfaction': self._calculate_employee_satisfaction(assets),
-            'diversity_index': self._calculate_diversity_index(assets),
-            'health_safety_score': self._calculate_health_safety(assets),
-            'training_hours': self._calculate_training_hours(assets),
-            'local_procurement': self._calculate_local_procurement(assets)
-        }
+        """Calculate enhanced social metrics with error handling"""
+        try:
+            return {
+                'community_impact_score': self._calculate_community_impact(assets),
+                'employee_satisfaction': self._calculate_employee_satisfaction(assets),
+                'diversity_index': self._calculate_diversity_index(assets),
+                'health_safety_score': self._calculate_health_safety(assets),
+                'training_hours': self._calculate_training_hours(assets),
+                'local_procurement': self._calculate_local_procurement(assets)
+            }
+        except Exception as e:
+            _logger.error(f"Error calculating social metrics: {str(e)}")
+            return {
+                'community_impact_score': 0,
+                'employee_satisfaction': 0,
+                'diversity_index': 0,
+                'health_safety_score': 0,
+                'training_hours': 0,
+                'local_procurement': 0
+            }
 
     def _calculate_enhanced_governance_metrics(self, assets):
         """Calculate enhanced governance metrics"""
@@ -631,19 +764,19 @@ class EnhancedESGWizard(models.TransientModel):
     def _generate_enhanced_recommendations(self, assets):
         """Generate enhanced recommendations"""
         recommendations = []
-        
+
         # Environmental recommendations
         if self.include_section_environmental:
             recommendations.extend(self._generate_environmental_recommendations(assets))
-        
+
         # Social recommendations
         if self.include_section_social:
             recommendations.extend(self._generate_social_recommendations(assets))
-        
+
         # Governance recommendations
         if self.include_section_governance:
             recommendations.extend(self._generate_governance_recommendations(assets))
-        
+
         return recommendations
 
     def _check_enhanced_thresholds(self, assets):
