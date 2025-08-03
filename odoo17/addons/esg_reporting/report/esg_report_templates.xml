@@ -361,12 +361,12 @@
                             <p><strong>Company:</strong> <t t-esc="o.company_name"/></p>
                             
                             <!-- Access report data from the wizard object -->
-                            <t t-set="report_data" t-value="o._get_report_data() if o and hasattr(o, '_get_report_data') else {}"/>
+                            <t t-set="report_data" t-value="o.safe_report_data if o and hasattr(o, 'safe_report_data') else {}"/>
                             
                             <!-- Debug information -->
                             <div class="alert alert-info" role="alert">
                                 <h4>Debug Information</h4>
-                                <p><strong>Wizard report_data exists:</strong> <t t-esc="'Yes' if hasattr(o, 'report_data') and o.report_data is not None else 'No'"/></p>
+                                <p><strong>Wizard safe_report_data exists:</strong> <t t-esc="'Yes' if o and hasattr(o, 'safe_report_data') and getattr(o, 'safe_report_data', None) is not None else 'No'"/></p>
                                 <p><strong>Report data exists:</strong> <t t-esc="'Yes' if report_data else 'No'"/></p>
                                 <p><strong>Report data type:</strong> <t t-esc="'dict' if report_data and isinstance(report_data, dict) else 'list' if report_data and isinstance(report_data, list) else 'str' if report_data and isinstance(report_data, str) else 'int' if report_data and isinstance(report_data, int) else 'float' if report_data and isinstance(report_data, float) else 'bool' if report_data and isinstance(report_data, bool) else 'None' if report_data is None else 'other'"/></p>
                                 <p><strong>Report data keys:</strong> <t t-esc="'Available' if report_data and isinstance(report_data, dict) and len(report_data) > 0 else 'No keys available'"/></p>
@@ -374,7 +374,7 @@
                                 <p><strong>Report data length:</strong> <t t-esc="str(len(report_data)) if report_data and hasattr(report_data, '__len__') else 'N/A'"/></p>
                             </div>
                             
-                            <t t-if="report_data and report_data.get('report_info')">
+                            <t t-if="report_data and isinstance(report_data, dict) and report_data.get('report_info')">
                                 <t t-set="report_info" t-value="report_data.get('report_info')"/>
                                 
                                 <t t-if="report_info.get('note')">
@@ -389,7 +389,7 @@
                                 <p><strong>Report Theme:</strong> <t t-esc="report_info.get('theme', 'Default')"/></p>
                                 
                                 <!-- Environmental Metrics -->
-                                <t t-if="o.include_section_environmental and report_data.get('environmental_metrics')">
+                                <t t-if="o.include_section_environmental and report_data and isinstance(report_data, dict) and report_data.get('environmental_metrics')">
                                     <h3>Environmental Performance</h3>
                                     <t t-set="env_metrics" t-value="report_data.get('environmental_metrics')"/>
                                     <div class="row">
@@ -412,7 +412,7 @@
                                 </t>
                                 
                                 <!-- Social Metrics -->
-                                <t t-if="o.include_section_social and report_data.get('social_metrics')">
+                                <t t-if="o.include_section_social and report_data and isinstance(report_data, dict) and report_data.get('social_metrics')">
                                     <h3>Social Performance</h3>
                                     <t t-set="social_metrics" t-value="report_data.get('social_metrics')"/>
                                     <div class="row">
@@ -435,7 +435,7 @@
                                 </t>
                                 
                                 <!-- Governance Metrics -->
-                                <t t-if="o.include_section_governance and report_data.get('governance_metrics')">
+                                <t t-if="o.include_section_governance and report_data and isinstance(report_data, dict) and report_data.get('governance_metrics')">
                                     <h3>Governance Performance</h3>
                                     <t t-set="gov_metrics" t-value="report_data.get('governance_metrics')"/>
                                     <div class="row">
@@ -458,7 +458,7 @@
                                 </t>
                                 
                                 <!-- Analytics -->
-                                <t t-if="o.include_section_analytics and report_data.get('analytics')">
+                                <t t-if="o.include_section_analytics and report_data and isinstance(report_data, dict) and report_data.get('analytics')">
                                     <h3>Advanced Analytics</h3>
                                     <t t-set="analytics_data" t-value="report_data.get('analytics')"/>
                                     <div class="row">
@@ -480,7 +480,7 @@
                                 </t>
                                 
                                 <!-- Recommendations -->
-                                <t t-if="o.include_section_recommendations and report_data.get('recommendations')">
+                                <t t-if="o.include_section_recommendations and report_data and isinstance(report_data, dict) and report_data.get('recommendations')">
                                     <h3>Recommendations</h3>
                                     <t t-set="recommendations" t-value="report_data.get('recommendations')"/>
                                     <p>Strategic recommendations based on ESG performance analysis:</p>
@@ -492,7 +492,7 @@
                                 </t>
                                 
                                 <!-- Thresholds -->
-                                <t t-if="o.include_thresholds and report_data.get('thresholds')">
+                                <t t-if="o.include_thresholds and report_data and isinstance(report_data, dict) and report_data.get('thresholds')">
                                     <h3>Performance Thresholds</h3>
                                     <t t-set="thresholds" t-value="report_data.get('thresholds')"/>
                                     <div class="alert alert-info" role="alert">
