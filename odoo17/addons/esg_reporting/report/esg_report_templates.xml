@@ -368,18 +368,40 @@
                                 
                                 <!-- Access report data from the wizard object with robust error handling -->
                                 <t t-set="report_data" t-value="{}"/>
-                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual')">
-                                    <t t-set="method" t-value="getattr(o, '_compute_safe_report_data_manual', None)"/>
-                                    <t t-if="method and callable(method)">
-                                        <t t-set="report_data" t-value="method()"/>
+                                <t t-if="o and o.id">
+                                    <t t-if="hasattr(o, '_compute_safe_report_data_manual')">
+                                        <t t-set="method" t-value="getattr(o, '_compute_safe_report_data_manual', None)"/>
+                                        <t t-if="method is not None and callable(method)">
+                                            <t t-try="">
+                                                <t t-set="report_data" t-value="method()"/>
+                                            </t>
+                                            <t t-catch="">
+                                                <t t-set="report_data" t-value="{}"/>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-set="report_data" t-value="{}"/>
+                                        </t>
                                     </t>
+                                    <t t-else="">
+                                        <t t-set="report_data" t-value="{}"/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="report_data" t-value="{}"/>
+                                </t>
+                                
+                                <!-- Fallback: If report_data is still empty, create a basic structure -->
+                                <t t-if="not report_data or not isinstance(report_data, dict)">
+                                    <t t-set="report_data" t-value="{}"/>
                                 </t>
                                 
                                 <!-- Debug information -->
                                 <div class="alert alert-info" role="alert">
                                     <h4>Debug Information</h4>
-                                    <p><strong>Wizard object exists:</strong> Yes</p>
+                                    <p><strong>Wizard object exists:</strong> <t t-esc="'Yes' if o and o.id else 'No'"/></p>
                                     <p><strong>Wizard safe_report_data method exists:</strong> <t t-esc="'Yes' if o and hasattr(o, '_compute_safe_report_data_manual') else 'No'"/></p>
+                                    <p><strong>Method is callable:</strong> <t t-esc="'Yes' if o and hasattr(o, '_compute_safe_report_data_manual') and callable(getattr(o, '_compute_safe_report_data_manual', None)) else 'No'"/></p>
                                     <p><strong>Report data exists:</strong> <t t-esc="'Yes' if report_data else 'No'"/></p>
                                     <p><strong>Report data type:</strong> <t t-esc="'dict' if report_data and isinstance(report_data, dict) else 'list' if report_data and isinstance(report_data, list) else 'str' if report_data and isinstance(report_data, str) else 'int' if report_data and isinstance(report_data, int) else 'float' if report_data and isinstance(report_data, float) else 'bool' if report_data and isinstance(report_data, bool) else 'None' if report_data is None else 'other'"/></p>
                                     <p><strong>Report data keys:</strong> <t t-esc="'Available' if report_data and isinstance(report_data, dict) and len(report_data) > 0 else 'No keys available'"/></p>
@@ -389,8 +411,12 @@
                                 
                                 <t t-if="report_data and isinstance(report_data, dict) and report_data.get('report_info')">
                                     <t t-set="report_info" t-value="report_data.get('report_info')"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="report_info" t-value="{}"/>
+                                </t>
                                     
-                                    <t t-if="report_info.get('note')">
+                                    <t t-if="report_info and report_info.get('note')">
                                         <div class="alert alert-warning" role="alert">
                                             <strong>Note:</strong> <t t-esc="report_info.get('note')"/>
                                         </div>
@@ -398,11 +424,11 @@
                                     
                                     <h3>Executive Summary</h3>
                                     <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
-                                    <p><strong>Total Assets Analyzed:</strong> <t t-esc="report_info.get('total_assets', 0)"/></p>
-                                    <p><strong>Report Theme:</strong> <t t-esc="report_info.get('theme', 'Default')"/></p>
+                                    <p><strong>Total Assets Analyzed:</strong> <t t-esc="report_info.get('total_assets', 0) if report_info else 0"/></p>
+                                    <p><strong>Report Theme:</strong> <t t-esc="report_info.get('theme', 'Default') if report_info else 'Default'"/></p>
                                     
                                     <!-- Environmental Metrics -->
-                                    <t t-if="o.include_section_environmental and report_data and isinstance(report_data, dict) and report_data.get('environmental_metrics')">
+                                    <t t-if="o and o.include_section_environmental and report_data and isinstance(report_data, dict) and report_data.get('environmental_metrics')">
                                         <h3>Environmental Performance</h3>
                                         <t t-set="env_metrics" t-value="report_data.get('environmental_metrics')"/>
                                         <div class="row">
