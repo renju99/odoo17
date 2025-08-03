@@ -89,8 +89,8 @@
                             <h2>ESG Analytics Report</h2>
                             <h3><t t-esc="o.name"/></h3>
                             <p><strong>Analytics Type:</strong> <t t-esc="o.analytics_type"/></p>
-                            <p><strong>Date From:</strong> <t t-esc="o.date_from"/></p>
-                            <p><strong>Date To:</strong> <t t-esc="o.date_to"/></p>
+                            <p><strong>Date From:</strong> <t t-esc="getattr(o, 'date_from', None) or ''"/></p>
+                            <p><strong>Date To:</strong> <t t-esc="getattr(o, 'date_to', None) or ''"/></p>
                             
                             <h4>Analytics Configuration:</h4>
                             <p><strong>Include Environmental:</strong> <t t-esc="o.include_environmental"/></p>
@@ -300,7 +300,7 @@
                             <h2><t t-esc="o.name"/></h2>
                             <p><strong>Generated Date:</strong> <t t-esc="o.date"/></p>
                             <p><strong>Analytics Type:</strong> <t t-esc="o.analytics_type"/></p>
-                            <p><strong>Period:</strong> <t t-esc="o.date_from or ''"/> to <t t-esc="o.date_to or ''"/></p>
+                            <p><strong>Period:</strong> <t t-esc="getattr(o, 'date_from', None) or ''"/> to <t t-esc="getattr(o, 'date_to', None) or ''"/></p>
                             
                             <h3>Executive Summary</h3>
                             <p>This comprehensive ESG report provides a complete overview of environmental, social, and governance performance metrics.</p>
@@ -343,26 +343,42 @@
             <t t-call="web.html_container">
                 <t t-if="docs and len(docs) > 0">
                     <t t-foreach="docs" t-as="o">
-                        <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
+                        <t t-if="o and hasattr(o, 'id') and o.id">
+                            <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
+                        </t>
+                        <t t-else="">
+                            <t t-call="esg_reporting.report_enhanced_esg_wizard_fallback"/>
+                        </t>
                     </t>
                 </t>
                 <t t-else="">
-                    <div class="page">
-                        <div class="oe_structure"/>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h1>Enhanced ESG Report</h1>
-                                    <div class="alert alert-warning" role="alert">
-                                        <h4>No Data Available</h4>
-                                        <p>No wizard data was provided for report generation.</p>
-                                    </div>
-                                </div>
+                    <t t-call="esg_reporting.report_enhanced_esg_wizard_fallback"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_enhanced_esg_wizard_fallback">
+            <div class="page">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1>Enhanced ESG Report</h1>
+                            <div class="alert alert-warning" role="alert">
+                                <h4>No Data Available</h4>
+                                <p>No wizard data was provided for report generation. Please ensure the ESG report wizard is properly configured and try again.</p>
+                                <p><strong>Possible solutions:</strong></p>
+                                <ul>
+                                    <li>Check that the ESG report wizard is properly saved</li>
+                                    <li>Verify that the report configuration is complete</li>
+                                    <li>Ensure that assets are available in the system</li>
+                                    <li>Try regenerating the report from the wizard</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </t>
-            </t>
+                </div>
+            </div>
         </template>
 
         <template id="report_enhanced_esg_wizard_document">
@@ -375,20 +391,20 @@
                             
                             <!-- Basic Report Information -->
                             <t t-if="o and hasattr(o, 'id') and o.id">
-                                <h2><t t-esc="o.report_name or 'ESG Report'"/></h2>
+                                <h2><t t-esc="getattr(o, 'report_name', None) or 'ESG Report'"/></h2>
                                 
                                 <!-- Report Header Information -->
                                 <div class="report-header mb-4">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <p><strong>Report Type:</strong> <t t-esc="o.report_type or 'N/A'"/></p>
-                                            <p><strong>Date Range:</strong> <t t-esc="o.date_from or 'N/A'"/> to <t t-esc="o.date_to or 'N/A'"/></p>
-                                            <p><strong>Granularity:</strong> <t t-esc="o.granularity or 'N/A'"/></p>
+                                            <p><strong>Report Type:</strong> <t t-esc="getattr(o, 'report_type', None) or 'N/A'"/></p>
+                                            <p><strong>Date Range:</strong> <t t-esc="getattr(o, 'date_from', None) or 'N/A'"/> to <t t-esc="getattr(o, 'date_to', None) or 'N/A'"/></p>
+                                            <p><strong>Granularity:</strong> <t t-esc="getattr(o, 'granularity', None) or 'N/A'"/></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <p><strong>Company:</strong> <t t-esc="o.company_name or 'N/A'"/></p>
-                                            <p><strong>Output Format:</strong> <t t-esc="o.output_format or 'N/A'"/></p>
-                                            <p><strong>Theme:</strong> <t t-esc="o.report_theme or 'N/A'"/></p>
+                                            <p><strong>Company:</strong> <t t-esc="getattr(o, 'company_name', None) or 'N/A'"/></p>
+                                            <p><strong>Output Format:</strong> <t t-esc="getattr(o, 'output_format', None) or 'N/A'"/></p>
+                                            <p><strong>Theme:</strong> <t t-esc="getattr(o, 'report_theme', None) or 'N/A'"/></p>
                                         </div>
                                     </div>
                                 </div>
@@ -400,28 +416,28 @@
                                         <div class="col-md-4">
                                             <h5>Sections Included:</h5>
                                             <ul class="list-unstyled">
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_environmental', False) else 'fa fa-times text-danger'"></i> Environmental</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_social', False) else 'fa fa-times text-danger'"></i> Social</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_governance', False) else 'fa fa-times text-danger'"></i> Governance</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_section_analytics', False) else 'fa fa-times text-danger'"></i> Analytics</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_environmental', False) else 'fa fa-times text-danger'"></i> Environmental</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_social', False) else 'fa fa-times text-danger'"></i> Social</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_governance', False) else 'fa fa-times text-danger'"></i> Governance</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_analytics', False) else 'fa fa-times text-danger'"></i> Analytics</li>
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
                                             <h5>Data Sources:</h5>
                                             <ul class="list-unstyled">
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_emissions_data', False) else 'fa fa-times text-danger'"></i> Emissions Data</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_offset_data', False) else 'fa fa-times text-danger'"></i> Offset Data</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_community_data', False) else 'fa fa-times text-danger'"></i> Community Data</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_initiatives_data', False) else 'fa fa-times text-danger'"></i> Initiatives Data</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_emissions_data', False) else 'fa fa-times text-danger'"></i> Emissions Data</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_offset_data', False) else 'fa fa-times text-danger'"></i> Offset Data</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_community_data', False) else 'fa fa-times text-danger'"></i> Community Data</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_initiatives_data', False) else 'fa fa-times text-danger'"></i> Initiatives Data</li>
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
                                             <h5>Advanced Features:</h5>
                                             <ul class="list-unstyled">
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_charts', False) else 'fa fa-times text-danger'"></i> Charts and Graphs</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_benchmarks', False) else 'fa fa-times text-danger'"></i> Benchmarks</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_risk_analysis', False) else 'fa fa-times text-danger'"></i> Risk Analysis</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if getattr(o, 'include_predictive_analysis', False) else 'fa fa-times text-danger'"></i> Predictive Analysis</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_charts', False) else 'fa fa-times text-danger'"></i> Charts and Graphs</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_benchmarks', False) else 'fa fa-times text-danger'"></i> Benchmarks</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_risk_analysis', False) else 'fa fa-times text-danger'"></i> Risk Analysis</li>
+                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_predictive_analysis', False) else 'fa fa-times text-danger'"></i> Predictive Analysis</li>
                                             </ul>
                                         </div>
                                     </div>
@@ -429,11 +445,14 @@
                                 
                                 <!-- Report Data Display -->
                                 <t t-set="report_data" t-value="{}"/>
-                                <t t-if="hasattr(o, '_compute_safe_report_data_manual')">
+                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual')">
                                     <t t-set="safe_method" t-value="getattr(o, '_compute_safe_report_data_manual', None)"/>
                                     <t t-if="safe_method and callable(safe_method)">
                                         <t t-set="report_data" t-value="safe_method()"/>
                                     </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="report_data" t-value="{}"/>
                                 </t>
                                 
                                 <!-- Executive Summary -->
@@ -459,7 +478,7 @@
                                 </div>
                                 
                                 <!-- Environmental Metrics -->
-                                <t t-if="getattr(o, 'include_section_environmental', False) and report_data and report_data.get('environmental_metrics')">
+                                <t t-if="o and getattr(o, 'include_section_environmental', False) and report_data and report_data.get('environmental_metrics')">
                                     <div class="environmental-section mb-4">
                                         <h3>Environmental Performance</h3>
                                         <t t-set="env_metrics" t-value="report_data.get('environmental_metrics')"/>
@@ -481,7 +500,7 @@
                                 </t>
                                 
                                 <!-- Social Metrics -->
-                                <t t-if="getattr(o, 'include_section_social', False) and report_data and report_data.get('social_metrics')">
+                                <t t-if="o and getattr(o, 'include_section_social', False) and report_data and report_data.get('social_metrics')">
                                     <div class="social-section mb-4">
                                         <h3>Social Performance</h3>
                                         <t t-set="social_metrics" t-value="report_data.get('social_metrics')"/>
@@ -503,7 +522,7 @@
                                 </t>
                                 
                                 <!-- Governance Metrics -->
-                                <t t-if="getattr(o, 'include_section_governance', False) and report_data and report_data.get('governance_metrics')">
+                                <t t-if="o and getattr(o, 'include_section_governance', False) and report_data and report_data.get('governance_metrics')">
                                     <div class="governance-section mb-4">
                                         <h3>Governance Performance</h3>
                                         <t t-set="gov_metrics" t-value="report_data.get('governance_metrics')"/>
@@ -525,7 +544,7 @@
                                 </t>
                                 
                                 <!-- Recommendations -->
-                                <t t-if="getattr(o, 'include_section_recommendations', False) and report_data and report_data.get('recommendations')">
+                                <t t-if="o and getattr(o, 'include_section_recommendations', False) and report_data and report_data.get('recommendations')">
                                     <div class="recommendations-section mb-4">
                                         <h3>Recommendations</h3>
                                         <t t-set="recommendations" t-value="report_data.get('recommendations', [])"/>
