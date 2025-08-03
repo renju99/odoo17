@@ -366,27 +366,211 @@
                                 <p><strong>Granularity:</strong> <t t-esc="o.granularity or 'N/A'"/></p>
                                 <p><strong>Company:</strong> <t t-esc="o.company_name or 'N/A'"/></p>
                                 
-                                <!-- Simplified report content -->
+                                <!-- Access report data from the wizard object with robust error handling -->
+                                <t t-set="report_data" t-value="{}"/>
+                                <t t-if="o and o.id">
+                                    <t t-if="hasattr(o, '_compute_safe_report_data_manual')">
+                                        <t t-set="method" t-value="getattr(o, '_compute_safe_report_data_manual', None)"/>
+                                        <t t-if="method is not None and callable(method)">
+                                            <t t-try="">
+                                                <t t-set="report_data" t-value="method()"/>
+                                            </t>
+                                            <t t-catch="">
+                                                <t t-set="report_data" t-value="{}"/>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-set="report_data" t-value="{}"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="report_data" t-value="{}"/>
+                                    </t>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="report_data" t-value="{}"/>
+                                </t>
+                                
+                                <!-- Fallback: If report_data is still empty, create a basic structure -->
+                                <t t-if="not report_data or not isinstance(report_data, dict)">
+                                    <t t-set="report_data" t-value="{}"/>
+                                </t>
+                                
+                                <!-- Debug information -->
                                 <div class="alert alert-info" role="alert">
-                                    <h4>ESG Report Content</h4>
-                                    <p>This is a simplified version of the ESG report template. The complex data display has been temporarily simplified to resolve XML syntax issues.</p>
-                                    <p><strong>Report includes:</strong></p>
-                                    <ul>
-                                        <li>Environmental metrics and analysis</li>
-                                        <li>Social impact assessment</li>
-                                        <li>Governance evaluation</li>
-                                        <li>Recommendations and forecasting</li>
-                                    </ul>
+                                    <h4>Debug Information</h4>
+                                    <p><strong>Wizard object exists:</strong> <t t-esc="'Yes' if o and o.id else 'No'"/></p>
+                                    <p><strong>Wizard safe_report_data method exists:</strong> <t t-esc="'Yes' if o and hasattr(o, '_compute_safe_report_data_manual') else 'No'"/></p>
+                                    <p><strong>Method is callable:</strong> <t t-esc="'Yes' if o and hasattr(o, '_compute_safe_report_data_manual') and callable(getattr(o, '_compute_safe_report_data_manual', None)) else 'No'"/></p>
+                                    <p><strong>Report data exists:</strong> <t t-esc="'Yes' if report_data else 'No'"/></p>
+                                    <p><strong>Report data type:</strong> <t t-esc="'dict' if report_data and isinstance(report_data, dict) else 'list' if report_data and isinstance(report_data, list) else 'str' if report_data and isinstance(report_data, str) else 'int' if report_data and isinstance(report_data, int) else 'float' if report_data and isinstance(report_data, float) else 'bool' if report_data and isinstance(report_data, bool) else 'None' if report_data is None else 'other'"/></p>
+                                    <p><strong>Report data keys:</strong> <t t-esc="'Available' if report_data and isinstance(report_data, dict) and len(report_data) > 0 else 'No keys available'"/></p>
+                                    <p><strong>Wizard object fields:</strong> <t t-esc="'Available' if o and hasattr(o, '_fields') and getattr(o, '_fields', None) else 'None'"/></p>
+                                    <p><strong>Report data length:</strong> <t t-esc="str(len(report_data)) if report_data and hasattr(report_data, '__len__') else 'N/A'"/></p>
                                 </div>
-                            </t>
-                            <t t-else="">
-                                <div class="alert alert-warning" role="alert">
-                                    <h4>No Data Available</h4>
-                                    <p>The ESG report wizard object is not available or has no valid ID.</p>
-                                </div>
+                                
+                                <t t-if="report_data and isinstance(report_data, dict) and report_data.get('report_info')">
+                                    <t t-set="report_info" t-value="report_data.get('report_info')"/>
+                                </t>
+                                <t t-else="">
+                                    <t t-set="report_info" t-value="{}"/>
+                                </t>
+                                    
+                                    <t t-if="report_info and report_info.get('note')">
+                                        <div class="alert alert-warning" role="alert">
+                                            <strong>Note:</strong> <t t-esc="report_info.get('note')"/>
+                                        </div>
+                                    </t>
+                                    
+                                    <h3>Executive Summary</h3>
+                                    <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
+                                    <p><strong>Total Assets Analyzed:</strong> <t t-esc="report_info.get('total_assets', 0) if report_info else 0"/></p>
+                                    <p><strong>Report Theme:</strong> <t t-esc="report_info.get('theme', 'Default') if report_info else 'Default'"/></p>
+                                    
+                                    <!-- Environmental Metrics -->
+                                    <t t-if="o and o.include_section_environmental and report_data and isinstance(report_data, dict) and report_data.get('environmental_metrics')">
+                                        <h3>Environmental Performance</h3>
+                                        <t t-set="env_metrics" t-value="report_data.get('environmental_metrics')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Key Metrics</h4>
+                                                <ul>
+                                                    <li><strong>Total Carbon Footprint:</strong> <t t-esc="env_metrics.get('total_carbon_footprint', 0)"/> kg CO2</li>
+                                                    <li><strong>Energy Efficiency Score:</strong> <t t-esc="env_metrics.get('energy_efficiency_score', 0)"/>%</li>
+                                                    <li><strong>Renewable Energy Usage:</strong> <t t-esc="env_metrics.get('renewable_energy_usage', 0)"/>%</li>
+                                                    <li><strong>Waste Management Score:</strong> <t t-esc="env_metrics.get('waste_management_score', 0)"/>%</li>
+                                                    <li><strong>Water Consumption:</strong> <t t-esc="env_metrics.get('water_consumption', 0)"/> liters</li>
+                                                    <li><strong>Biodiversity Impact:</strong> <t t-esc="env_metrics.get('biodiversity_impact', 0)"/>/10</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Analysis</h4>
+                                                <p>Environmental performance analysis based on carbon footprint, energy efficiency, and sustainability metrics.</p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    
+                                    <!-- Social Metrics -->
+                                    <t t-if="o.include_section_social and report_data and isinstance(report_data, dict) and report_data.get('social_metrics')">
+                                        <h3>Social Performance</h3>
+                                        <t t-set="social_metrics" t-value="report_data.get('social_metrics')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Key Metrics</h4>
+                                                <ul>
+                                                    <li><strong>Community Impact Score:</strong> <t t-esc="social_metrics.get('community_impact_score', 0)"/>/10</li>
+                                                    <li><strong>Employee Satisfaction:</strong> <t t-esc="social_metrics.get('employee_satisfaction', 0)"/>/10</li>
+                                                    <li><strong>Diversity Index:</strong> <t t-esc="social_metrics.get('diversity_index', 0)"/></li>
+                                                    <li><strong>Health &amp; Safety Score:</strong> <t t-esc="social_metrics.get('health_safety_score', 0)"/>/10</li>
+                                                    <li><strong>Training Hours:</strong> <t t-esc="social_metrics.get('training_hours', 0)"/> hours</li>
+                                                    <li><strong>Local Procurement:</strong> <t t-esc="social_metrics.get('local_procurement', 0)"/>%</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Analysis</h4>
+                                                <p>Social responsibility metrics and community impact analysis.</p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    
+                                    <!-- Governance Metrics -->
+                                    <t t-if="o.include_section_governance and report_data and isinstance(report_data, dict) and report_data.get('governance_metrics')">
+                                        <h3>Governance Performance</h3>
+                                        <t t-set="gov_metrics" t-value="report_data.get('governance_metrics')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Key Metrics</h4>
+                                                <ul>
+                                                    <li><strong>Compliance Rate:</strong> <t t-esc="gov_metrics.get('compliance_rate', 0)"/>%</li>
+                                                    <li><strong>Risk Management Score:</strong> <t t-esc="gov_metrics.get('risk_management_score', 0)"/>/10</li>
+                                                    <li><strong>Transparency Index:</strong> <t t-esc="gov_metrics.get('transparency_index', 0)"/>/10</li>
+                                                    <li><strong>Board Diversity:</strong> <t t-esc="gov_metrics.get('board_diversity', 0)"/></li>
+                                                    <li><strong>Ethics Score:</strong> <t t-esc="gov_metrics.get('ethics_score', 0)"/>/10</li>
+                                                    <li><strong>Stakeholder Engagement:</strong> <t t-esc="gov_metrics.get('stakeholder_engagement', 0)"/>/10</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Analysis</h4>
+                                                <p>Governance and compliance metrics with risk management analysis.</p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    
+                                    <!-- Analytics -->
+                                    <t t-if="o.include_section_analytics and report_data and isinstance(report_data, dict) and report_data.get('analytics')">
+                                        <h3>Advanced Analytics</h3>
+                                        <t t-set="analytics_data" t-value="report_data.get('analytics')"/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h4>Performance Trends</h4>
+                                                <ul>
+                                                    <li><strong>Trend Direction:</strong> <t t-esc="analytics_data.get('performance_trends', {}).get('trend', 'N/A')"/></li>
+                                                    <li><strong>Improvement Rate:</strong> <t t-esc="analytics_data.get('performance_trends', {}).get('rate', 0)"/>%</li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h4>Predictive Insights</h4>
+                                                <ul>
+                                                    <li><strong>Prediction:</strong> <t t-esc="analytics_data.get('predictive_insights', {}).get('prediction', 'N/A')"/></li>
+                                                    <li><strong>Confidence:</strong> <t t-esc="analytics_data.get('predictive_insights', {}).get('confidence', 0)"/></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    
+                                    <!-- Recommendations -->
+                                    <t t-if="o.include_section_recommendations and report_data and isinstance(report_data, dict) and report_data.get('recommendations')">
+                                        <h3>Recommendations</h3>
+                                        <t t-set="recommendations" t-value="report_data.get('recommendations')"/>
+                                        <p>Strategic recommendations based on ESG performance analysis:</p>
+                                        <ul>
+                                            <t t-foreach="recommendations" t-as="rec">
+                                                <li><strong><t t-esc="rec.get('category', 'General')"/>:</strong> <t t-esc="rec.get('recommendation', '')"/></li>
+                                            </t>
+                                        </ul>
+                                    </t>
+                                    
+                                    <!-- Thresholds -->
+                                    <t t-if="o.include_thresholds and report_data and isinstance(report_data, dict) and report_data.get('thresholds')">
+                                        <h3>Performance Thresholds</h3>
+                                        <t t-set="thresholds" t-value="report_data.get('thresholds')"/>
+                                        <div class="alert alert-info" role="alert">
+                                            <h4>Threshold Status</h4>
+                                            <ul>
+                                                <li><strong>Carbon Threshold:</strong> <t t-esc="'Exceeded' if thresholds.get('carbon_threshold_exceeded') else 'Within Limits'"/></li>
+                                                <li><strong>Compliance Threshold:</strong> <t t-esc="'Exceeded' if thresholds.get('compliance_threshold_exceeded') else 'Within Limits'"/></li>
+                                                <li><strong>Social Impact Threshold:</strong> <t t-esc="'Exceeded' if thresholds.get('social_impact_threshold_exceeded') else 'Within Limits'"/></li>
+                                            </ul>
+                                        </div>
+                                    </t>
+                                    
+                                    <h3>Report Configuration</h3>
+                                    <p><strong>Theme:</strong> <t t-esc="o.report_theme or 'Default'"/></p>
+                                    <p><strong>Include Charts:</strong> <t t-esc="'Yes' if o and o.include_charts else 'No'"/></p>
+                                    <p><strong>Include Executive Summary:</strong> <t t-esc="'Yes' if o and o.include_executive_summary else 'No'"/></p>
+                                    <p><strong>Include Recommendations:</strong> <t t-esc="'Yes' if o and o.include_recommendations else 'No'"/></p>
+                                    <p><strong>Include Benchmarks:</strong> <t t-esc="'Yes' if o and o.include_benchmarks else 'No'"/></p>
+                                    <p><strong>Include Risk Analysis:</strong> <t t-esc="'Yes' if o and o.include_risk_analysis else 'No'"/></p>
+                                    <p><strong>Include Trends:</strong> <t t-esc="'Yes' if o and o.include_trends else 'No'"/></p>
+                                    <p><strong>Include Forecasting:</strong> <t t-esc="'Yes' if o and o.include_forecasting else 'No'"/></p>
+                                </t>
+                                <t t-else="">
+                                    <div class="alert alert-warning" role="alert">
+                                        <h4>No Report Data Available</h4>
+                                        <p>The report data could not be generated. This might be due to:</p>
+                                        <ul>
+                                            <li>No wizard object available for report generation</li>
+                                            <li>No assets found matching the specified criteria</li>
+                                            <li>Data processing error</li>
+                                            <li>Configuration issues</li>
+                                        </ul>
+                                        <p>Please check your report settings and try again.</p>
+                                    </div>
+                                </t>
                             </t>
                             
                             <p><strong>Generated at:</strong> <t t-esc="context_timestamp(datetime.datetime.now())"/></p>
+                            </t>
                         </div>
                     </div>
                 </div>
