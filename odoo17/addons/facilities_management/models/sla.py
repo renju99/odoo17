@@ -423,29 +423,54 @@ class SLADashboard(models.Model):
     @api.depends('sla_id', 'date_from', 'date_to')
     def _compute_metrics(self):
         for dashboard in self:
+            # Initialize default values
+            dashboard.total_workorders = 0
+            dashboard.compliant_workorders = 0
+            dashboard.breached_workorders = 0
+            dashboard.compliance_rate = 0.0
+            dashboard.avg_mttr = 0.0
+            dashboard.avg_first_time_fix_rate = 0.0
+            dashboard.daily_compliance = []
+            dashboard.weekly_trend = []
+            
             if not dashboard.sla_id:
                 continue
             
-            workorders = self.env['maintenance.workorder'].search([
+            # Search for work orders with the specified SLA and date range
+            domain = [
                 ('sla_id', '=', dashboard.sla_id.id),
                 ('create_date', '>=', dashboard.date_from),
                 ('create_date', '<=', dashboard.date_to)
-            ])
+            ]
+            
+            workorders = self.env['maintenance.workorder'].search(domain)
+            
+            if not workorders:
+                continue
             
             dashboard.total_workorders = len(workorders)
-            dashboard.compliant_workorders = len(workorders.filtered(lambda w: w.sla_status == 'completed'))
-            dashboard.breached_workorders = len(workorders.filtered(lambda w: w.sla_status == 'breached'))
             
+            # Count compliant work orders (completed SLA status)
+            compliant_workorders = workorders.filtered(lambda w: w.sla_status == 'completed')
+            dashboard.compliant_workorders = len(compliant_workorders)
+            
+            # Count breached work orders
+            breached_workorders = workorders.filtered(lambda w: w.sla_status == 'breached')
+            dashboard.breached_workorders = len(breached_workorders)
+            
+            # Calculate compliance rate
             if dashboard.total_workorders > 0:
                 dashboard.compliance_rate = (dashboard.compliant_workorders / dashboard.total_workorders) * 100
-                dashboard.avg_mttr = sum(workorders.mapped('mttr')) / dashboard.total_workorders
                 
-                first_time_fixes = len(workorders.filtered(lambda w: w.first_time_fix))
-                dashboard.avg_first_time_fix_rate = (first_time_fixes / dashboard.total_workorders) * 100
-            else:
-                dashboard.compliance_rate = 0.0
-                dashboard.avg_mttr = 0.0
-                dashboard.avg_first_time_fix_rate = 0.0
+                # Calculate average MTTR (Mean Time To Repair)
+                mttr_values = workorders.mapped('mttr')
+                valid_mttr_values = [mttr for mttr in mttr_values if mttr and mttr > 0]
+                if valid_mttr_values:
+                    dashboard.avg_mttr = sum(valid_mttr_values) / len(valid_mttr_values)
+                
+                # Calculate first time fix rate
+                first_time_fixes = workorders.filtered(lambda w: w.first_time_fix and w.state == 'completed')
+                dashboard.avg_first_time_fix_rate = (len(first_time_fixes) / dashboard.total_workorders) * 100
             
             # Calculate daily compliance trend
             dashboard.daily_compliance = self._calculate_daily_compliance(workorders)
@@ -453,8 +478,14 @@ class SLADashboard(models.Model):
 
     def _calculate_daily_compliance(self, workorders):
         """Calculate daily compliance rates"""
+        if not workorders:
+            return []
+            
         daily_data = {}
         for workorder in workorders:
+            if not workorder.create_date:
+                continue
+                
             date = workorder.create_date.date()
             if date not in daily_data:
                 daily_data[date] = {'total': 0, 'compliant': 0}
@@ -466,19 +497,27 @@ class SLADashboard(models.Model):
         return [
             {
                 'date': date.strftime('%Y-%m-%d'),
-                'compliance_rate': (data['compliant'] / data['total']) * 100 if data['total'] > 0 else 0
+                'compliance_rate': (data['compliant'] / data['total']) * 100 if data['total'] > 0 else 0,
+                'total_workorders': data['total'],
+                'compliant_workorders': data['compliant']
             }
             for date, data in sorted(daily_data.items())
         ]
 
     def _calculate_weekly_trend(self, workorders):
         """Calculate weekly trend analysis"""
+        if not workorders:
+            return []
+            
         weekly_data = {}
         for workorder in workorders:
+            if not workorder.create_date:
+                continue
+                
             week_start = workorder.create_date.date() - timedelta(days=workorder.create_date.weekday())
             if week_start not in weekly_data:
                 weekly_data[week_start] = {
-                    'total': 0, 'compliant': 0, 'breached': 0, 'avg_mttr': 0
+                    'total': 0, 'compliant': 0, 'breached': 0, 'avg_mttr': 0, 'mttr_count': 0
                 }
             
             weekly_data[week_start]['total'] += 1
@@ -487,7 +526,10 @@ class SLADashboard(models.Model):
             elif workorder.sla_status == 'breached':
                 weekly_data[week_start]['breached'] += 1
             
-            weekly_data[week_start]['avg_mttr'] += workorder.mttr or 0
+            # Add MTTR if available
+            if workorder.mttr and workorder.mttr > 0:
+                weekly_data[week_start]['avg_mttr'] += workorder.mttr
+                weekly_data[week_start]['mttr_count'] += 1
         
         return [
             {
@@ -495,7 +537,9 @@ class SLADashboard(models.Model):
                 'total': data['total'],
                 'compliance_rate': (data['compliant'] / data['total']) * 100 if data['total'] > 0 else 0,
                 'breach_rate': (data['breached'] / data['total']) * 100 if data['total'] > 0 else 0,
-                'avg_mttr': data['avg_mttr'] / data['total'] if data['total'] > 0 else 0
+                'avg_mttr': data['avg_mttr'] / data['mttr_count'] if data['mttr_count'] > 0 else 0,
+                'compliant_workorders': data['compliant'],
+                'breached_workorders': data['breached']
             }
             for week_start, data in sorted(weekly_data.items())
         ]
@@ -517,6 +561,164 @@ class SLADashboard(models.Model):
             'data': {
                 'doc_ids': [dashboard.id],
                 'doc_model': 'facilities.sla.dashboard',
+            }
+        }
+
+    def action_debug_data(self):
+        """Debug method to check data availability"""
+        self.ensure_one()
+        
+        # Check if SLA exists
+        if not self.sla_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Debug Info',
+                    'message': 'No SLA selected',
+                    'type': 'warning',
+                }
+            }
+        
+        # Search for work orders
+        workorders = self.env['maintenance.workorder'].search([
+            ('sla_id', '=', self.sla_id.id),
+            ('create_date', '>=', self.date_from),
+            ('create_date', '<=', self.date_to)
+        ])
+        
+        # Get SLA status distribution
+        status_distribution = {}
+        for workorder in workorders:
+            status = workorder.sla_status or 'no_status'
+            status_distribution[status] = status_distribution.get(status, 0) + 1
+        
+        # Check if there are any SLAs in the system
+        all_slas = self.env['facilities.sla'].search([])
+        all_workorders = self.env['maintenance.workorder'].search([])
+        workorders_with_sla = self.env['maintenance.workorder'].search([('sla_id', '!=', False)])
+        
+        message = f"""
+        Debug Information:
+        - SLA: {self.sla_id.name}
+        - Date Range: {self.date_from} to {self.date_to}
+        - Total Work Orders Found: {len(workorders)}
+        - Status Distribution: {status_distribution}
+        - Total Work Orders in Dashboard: {self.total_workorders}
+        - Compliant Work Orders: {self.compliant_workorders}
+        - Breached Work Orders: {self.breached_workorders}
+        - Compliance Rate: {self.compliance_rate}%
+        
+        System Overview:
+        - Total SLAs in system: {len(all_slas)}
+        - Total Work Orders in system: {len(all_workorders)}
+        - Work Orders with SLA assigned: {len(workorders_with_sla)}
+        """
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Debug Information',
+                'message': message,
+                'type': 'info',
+            }
+        }
+
+    def action_create_default_slas(self):
+        """Create default SLA records if none exist"""
+        existing_slas = self.env['facilities.sla'].search([])
+        
+        if existing_slas:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Default SLAs',
+                    'message': f'SLAs already exist ({len(existing_slas)} found). No need to create defaults.',
+                    'type': 'info',
+                }
+            }
+        
+        # Create default SLAs
+        default_slas = self.env['facilities.sla'].create_default_sla_records()
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Default SLAs Created',
+                'message': f'Created {len(default_slas)} default SLA records. You can now select an SLA for the dashboard.',
+                'type': 'success',
+            }
+        }
+
+    def action_create_test_data(self):
+        """Create test data for debugging"""
+        self.ensure_one()
+        
+        if not self.sla_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Error',
+                    'message': 'Please select an SLA first',
+                    'type': 'error',
+                }
+            }
+        
+        # Find or create a test asset
+        test_asset = self.env['facilities.asset'].search([], limit=1)
+        if not test_asset:
+            # Create a test asset if none exists
+            test_facility = self.env['facilities.facility'].search([], limit=1)
+            if not test_facility:
+                # Create a test facility if none exists
+                test_facility = self.env['facilities.facility'].create({
+                    'name': 'Test Facility',
+                    'code': 'TEST001',
+                })
+            
+            test_asset = self.env['facilities.asset'].create({
+                'name': 'Test Asset',
+                'code': 'TEST_ASSET_001',
+                'facility_id': test_facility.id,
+                'criticality': 'medium',
+                'asset_type': 'equipment',
+            })
+        
+        # Create some test work orders
+        test_workorders = []
+        for i in range(5):
+            workorder = self.env['maintenance.workorder'].create({
+                'name': f'Test Work Order {i+1}',
+                'description': f'Test work order for debugging SLA dashboard {i+1}',
+                'asset_id': test_asset.id,
+                'sla_id': self.sla_id.id,
+                'maintenance_type': 'corrective',
+                'priority': '2',
+                'state': 'completed',
+                'sla_status': 'completed' if i < 3 else 'breached',  # 3 compliant, 2 breached
+                'first_time_fix': True if i < 4 else False,  # 4 first time fixes
+                'mttr': 2.5 + i,  # Different MTTR values
+                'actual_duration': 2.5 + i,  # Set actual duration for MTTR calculation
+                'create_date': self.date_from,
+                'actual_start_date': self.date_from,
+                'actual_end_date': self.date_from,
+            })
+            test_workorders.append(workorder)
+        
+        # Refresh the dashboard
+        self._compute_metrics()
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Test Data Created',
+                'message': f'Created {len(test_workorders)} test work orders with asset {test_asset.name}. Dashboard should now show data.',
+                'type': 'success',
             }
         }
 
