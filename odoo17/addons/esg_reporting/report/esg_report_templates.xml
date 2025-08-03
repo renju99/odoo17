@@ -1,384 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        
-        <!-- ESG Emissions Report Template -->
-        <template id="report_esg_emissions">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="esg_reporting.report_esg_emissions_document"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_esg_emissions_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>ESG Emissions Report</h2>
-                            <h3><t t-esc="o.name"/></h3>
-                            <p><strong>Date:</strong> <t t-esc="o.date"/></p>
-                            <p><strong>Partner:</strong> <t t-esc="o.partner_id.name or ''"/></p>
-                            <p><strong>Emission Factor:</strong> <t t-esc="o.emission_factor_id.name"/></p>
-                            <p><strong>Quantity:</strong> <t t-esc="o.quantity"/> <t t-esc="o.unit"/></p>
-                            <p><strong>Emission Amount:</strong> <t t-esc="o.emission_amount"/> t CO2</p>
-                            <p><strong>Cost:</strong> <t t-esc="o.amount"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Status:</strong> <t t-esc="o.state"/></p>
-                            <t t-if="o.notes">
-                                <h4>Notes:</h4>
-                                <p><t t-esc="o.notes"/></p>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- ESG Offsets Report Template -->
-        <template id="report_esg_offsets">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="esg_reporting.report_esg_offsets_document"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_esg_offsets_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>ESG Offsets Report</h2>
-                            <h3><t t-esc="o.name"/></h3>
-                            <p><strong>Date:</strong> <t t-esc="o.date"/></p>
-                            <p><strong>Partner:</strong> <t t-esc="o.partner_id.name or ''"/></p>
-                            <p><strong>Offset Type:</strong> <t t-esc="o.offset_type_id.name"/></p>
-                            <p><strong>Quantity:</strong> <t t-esc="o.quantity"/> <t t-esc="o.unit"/></p>
-                            <p><strong>Offset Amount:</strong> <t t-esc="o.offset_amount"/> t CO2</p>
-                            <p><strong>Cost:</strong> <t t-esc="o.amount"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Certificate Number:</strong> <t t-esc="o.certificate_number or ''"/></p>
-                            <p><strong>Status:</strong> <t t-esc="o.state"/></p>
-                            <t t-if="o.notes">
-                                <h4>Notes:</h4>
-                                <p><t t-esc="o.notes"/></p>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- ESG Analytics Report Template -->
-        <template id="report_esg_analytics">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="esg_reporting.report_esg_analytics_document"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_esg_analytics_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>ESG Analytics Report</h2>
-                            <h3><t t-esc="o.name"/></h3>
-                            <p><strong>Analytics Type:</strong> <t t-esc="o.analytics_type"/></p>
-                            <p><strong>Date From:</strong> <t t-esc="getattr(o, 'date_from', None) or ''"/></p>
-                            <p><strong>Date To:</strong> <t t-esc="getattr(o, 'date_to', None) or ''"/></p>
-                            
-                            <h4>Analytics Configuration:</h4>
-                            <p><strong>Include Environmental:</strong> <t t-esc="o.include_environmental"/></p>
-                            <p><strong>Include Social:</strong> <t t-esc="o.include_social"/></p>
-                            <p><strong>Include Governance:</strong> <t t-esc="o.include_governance"/></p>
-                            
-                            <h4>Advanced Analytics Options:</h4>
-                            <p><strong>Correlation Analysis:</strong> <t t-esc="o.include_correlation_analysis"/></p>
-                            <p><strong>Anomaly Detection:</strong> <t t-esc="o.include_anomaly_detection"/></p>
-                            <p><strong>Predictive Modeling:</strong> <t t-esc="o.include_predictive_modeling"/></p>
-                            <p><strong>Risk Scoring:</strong> <t t-esc="o.include_risk_scoring"/></p>
-                            
-                            <h4>Results:</h4>
-                            <p><strong>Total Emissions:</strong> <t t-esc="o.total_emissions"/> t CO2</p>
-                            <p><strong>Total Offset:</strong> <t t-esc="o.total_offset"/> t CO2</p>
-                            <p><strong>Net Emissions:</strong> <t t-esc="o.net_emissions"/> t CO2</p>
-                            <p><strong>Overall Score:</strong> <t t-esc="o.overall_score"/></p>
-                            
-                            <p><strong>Status:</strong> <t t-esc="o.state"/></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- ESG Gender Parity Report Template -->
-        <template id="report_esg_gender_parity">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="esg_reporting.report_esg_gender_parity_document"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_esg_gender_parity_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>ESG Gender Parity Report</h2>
-                            <h3><t t-esc="o.name"/></h3>
-                            <p><strong>Date:</strong> <t t-esc="o.date"/></p>
-                            <p><strong>Department:</strong> <t t-esc="o.department_id.name or ''"/></p>
-                            <p><strong>Job Position:</strong> <t t-esc="o.job_id.name or ''"/></p>
-                            <p><strong>Period Type:</strong> <t t-esc="o.period_type"/></p>
-                            
-                            <h4>Gender Counts:</h4>
-                            <p><strong>Male Count:</strong> <t t-esc="o.male_count"/></p>
-                            <p><strong>Female Count:</strong> <t t-esc="o.female_count"/></p>
-                            <p><strong>Other Count:</strong> <t t-esc="o.other_count"/></p>
-                            <p><strong>Total Count:</strong> <t t-esc="o.total_count"/></p>
-                            
-                            <h4>Gender Ratios:</h4>
-                            <p><strong>Male Ratio:</strong> <t t-esc="o.male_ratio"/>%</p>
-                            <p><strong>Female Ratio:</strong> <t t-esc="o.female_ratio"/>%</p>
-                            <p><strong>Other Ratio:</strong> <t t-esc="o.other_ratio"/>%</p>
-                            
-                            <h4>Leadership Metrics:</h4>
-                            <p><strong>Male Leaders:</strong> <t t-esc="o.male_leaders"/></p>
-                            <p><strong>Female Leaders:</strong> <t t-esc="o.female_leaders"/></p>
-                            <p><strong>Other Leaders:</strong> <t t-esc="o.other_leaders"/></p>
-                            <p><strong>Leadership Gender Ratio:</strong> <t t-esc="o.leadership_gender_ratio"/></p>
-                            
-                            <p><strong>Diversity Score:</strong> <t t-esc="o.diversity_score"/></p>
-                            <p><strong>Status:</strong> <t t-esc="o.state"/></p>
-                            
-                            <t t-if="o.notes">
-                                <h4>Notes:</h4>
-                                <p><t t-esc="o.notes"/></p>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- ESG Pay Gap Report Template -->
-        <template id="report_esg_pay_gap">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="esg_reporting.report_esg_pay_gap_document"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_esg_pay_gap_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>ESG Pay Gap Report</h2>
-                            <h3><t t-esc="o.name"/></h3>
-                            <p><strong>Date:</strong> <t t-esc="o.date"/></p>
-                            <p><strong>Department:</strong> <t t-esc="o.department_id.name or ''"/></p>
-                            <p><strong>Job Position:</strong> <t t-esc="o.job_id.name or ''"/></p>
-                            <p><strong>Experience Level:</strong> <t t-esc="o.experience_level"/></p>
-                            <p><strong>Period Type:</strong> <t t-esc="o.period_type"/></p>
-                            
-                            <h4>Employee Counts:</h4>
-                            <p><strong>Male Count:</strong> <t t-esc="o.male_count"/></p>
-                            <p><strong>Female Count:</strong> <t t-esc="o.female_count"/></p>
-                            <p><strong>Other Count:</strong> <t t-esc="o.other_count"/></p>
-                            
-                            <h4>Average Salaries:</h4>
-                            <p><strong>Male Average Salary:</strong> <t t-esc="o.male_avg_salary"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Female Average Salary:</strong> <t t-esc="o.female_avg_salary"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Other Average Salary:</strong> <t t-esc="o.other_avg_salary"/> <t t-esc="o.currency_id.symbol"/></p>
-                            
-                            <h4>Pay Gap Analysis:</h4>
-                            <p><strong>Mean Pay Gap:</strong> <t t-esc="o.mean_pay_gap"/>%</p>
-                            <p><strong>Median Pay Gap:</strong> <t t-esc="o.median_pay_gap"/>%</p>
-                            <p><strong>Pay Gap Category:</strong> <t t-esc="o.pay_gap_category"/></p>
-                            
-                            <h4>Leadership Pay Gap:</h4>
-                            <p><strong>Male Leaders Average Salary:</strong> <t t-esc="o.male_leaders_avg_salary"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Female Leaders Average Salary:</strong> <t t-esc="o.female_leaders_avg_salary"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Leadership Pay Gap:</strong> <t t-esc="o.leadership_pay_gap"/>%</p>
-                            
-                            <p><strong>Compliance Status:</strong> <t t-esc="o.compliance_status"/></p>
-                            <p><strong>Status:</strong> <t t-esc="o.state"/></p>
-                            
-                            <t t-if="o.action_required">
-                                <h4>Action Required:</h4>
-                                <p><t t-esc="o.action_required"/></p>
-                            </t>
-                            
-                            <t t-if="o.notes">
-                                <h4>Notes:</h4>
-                                <p><t t-esc="o.notes"/></p>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- ESG Initiatives Report Template -->
-        <template id="report_esg_initiatives">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="esg_reporting.report_esg_initiatives_document"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_esg_initiatives_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h2>ESG Initiatives Report</h2>
-                            <h3><t t-esc="o.name"/></h3>
-                            <p><strong>Start Date:</strong> <t t-esc="o.date"/></p>
-                            <p><strong>End Date:</strong> <t t-esc="o.end_date or ''"/></p>
-                            <p><strong>Initiative Type:</strong> <t t-esc="o.initiative_type"/></p>
-                            <p><strong>Category:</strong> <t t-esc="o.category"/></p>
-                            <p><strong>Priority:</strong> <t t-esc="o.priority"/></p>
-                            <p><strong>Assigned To:</strong> <t t-esc="o.user_id.name or ''"/></p>
-                            <p><strong>Department:</strong> <t t-esc="o.team_id.name or ''"/></p>
-                            
-                            <h4>Financial Information:</h4>
-                            <p><strong>Budget:</strong> <t t-esc="o.budget"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Actual Cost:</strong> <t t-esc="o.actual_cost"/> <t t-esc="o.currency_id.symbol"/></p>
-                            <p><strong>Progress:</strong> <t t-esc="o.progress"/>%</p>
-                            
-                            <p><strong>Status:</strong> <t t-esc="o.state"/></p>
-                            
-                            <t t-if="o.description">
-                                <h4>Description:</h4>
-                                <p><t t-esc="o.description"/></p>
-                            </t>
-                            
-                            <t t-if="o.objectives">
-                                <h4>Objectives:</h4>
-                                <p><t t-esc="o.objectives"/></p>
-                            </t>
-                            
-                            <t t-if="o.expected_impact">
-                                <h4>Expected Impact:</h4>
-                                <p><t t-esc="o.expected_impact"/></p>
-                            </t>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- Comprehensive ESG Report Template -->
-        <template id="report_esg_comprehensive">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="o">
-                    <t t-call="esg_reporting.report_esg_comprehensive_document"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_esg_comprehensive_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1>Comprehensive ESG Report</h1>
-                            <h2><t t-esc="o.name"/></h2>
-                            <p><strong>Generated Date:</strong> <t t-esc="o.date"/></p>
-                            <p><strong>Analytics Type:</strong> <t t-esc="o.analytics_type"/></p>
-                            <p><strong>Period:</strong> <t t-esc="getattr(o, 'date_from', None) or ''"/> to <t t-esc="getattr(o, 'date_to', None) or ''"/></p>
-                            
-                            <h3>Executive Summary</h3>
-                            <p>This comprehensive ESG report provides a complete overview of environmental, social, and governance performance metrics.</p>
-                            
-                            <h3>Environmental Performance</h3>
-                            <p><strong>Total Emissions:</strong> <t t-esc="o.total_emissions or 0.0"/> t CO2</p>
-                            <p><strong>Total Offset:</strong> <t t-esc="o.total_offset or 0.0"/> t CO2</p>
-                            <p><strong>Net Emissions:</strong> <t t-esc="o.net_emissions or 0.0"/> t CO2</p>
-                            <p><strong>Emission Intensity:</strong> <t t-esc="o.emission_intensity or 0.0"/> t CO2/employee</p>
-                            <p><strong>Environmental Score:</strong> <t t-esc="o.environmental_score or 0.0"/></p>
-                            
-                            <h3>Social Performance</h3>
-                            <p><strong>Social Score:</strong> <t t-esc="o.social_score or 0.0"/></p>
-                            
-                            <h3>Governance Performance</h3>
-                            <p><strong>Governance Score:</strong> <t t-esc="o.governance_score or 0.0"/></p>
-                            
-                            <h3>Overall ESG Performance</h3>
-                            <p><strong>Overall ESG Score:</strong> <t t-esc="o.overall_score or 0.0"/></p>
-                            <p><strong>Compliance Status:</strong> <t t-esc="o.compliance_status or 'Pending'"/></p>
-                            
-                            <h3>Recommendations</h3>
-                            <p>Based on the analysis, the following recommendations are provided:</p>
-                            <ul>
-                                <li>Continue monitoring and reducing carbon emissions</li>
-                                <li>Increase investment in carbon offset projects</li>
-                                <li>Enhance social and governance practices</li>
-                                <li>Improve ESG reporting and transparency</li>
-                            </ul>
-                            
-                            <p><strong>Report Status:</strong> <t t-esc="o.state"/></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
         <!-- Enhanced ESG Wizard Report Template -->
         <template id="report_enhanced_esg_wizard">
             <t t-call="web.html_container">
                 <t t-if="docs and len(docs) > 0">
                     <t t-foreach="docs" t-as="o">
-                        <t t-if="o and hasattr(o, 'id') and o.id">
-                            <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
-                        </t>
-                        <t t-else="">
-                            <t t-call="esg_reporting.report_enhanced_esg_wizard_fallback"/>
-                        </t>
+                        <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
                     </t>
                 </t>
                 <t t-else="">
-                    <t t-call="esg_reporting.report_enhanced_esg_wizard_fallback"/>
-                </t>
-            </t>
-        </template>
-
-        <template id="report_enhanced_esg_wizard_fallback">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h1>Enhanced ESG Report</h1>
-                            <div class="alert alert-warning" role="alert">
-                                <h4>No Data Available</h4>
-                                <p>No wizard data was provided for report generation. Please ensure the ESG report wizard is properly configured and try again.</p>
-                                <p><strong>Possible solutions:</strong></p>
-                                <ul>
-                                    <li>Check that the ESG report wizard is properly saved</li>
-                                    <li>Verify that the report configuration is complete</li>
-                                    <li>Ensure that assets are available in the system</li>
-                                    <li>Try regenerating the report from the wizard</li>
-                                </ul>
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h1>Enhanced ESG Report</h1>
+                                    <div class="alert alert-warning" role="alert">
+                                        <h4>No Data Available</h4>
+                                        <p>No wizard data was provided for report generation.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </t>
+            </t>
         </template>
 
         <template id="report_enhanced_esg_wizard_document">
@@ -388,75 +35,147 @@
                     <div class="row">
                         <div class="col-12">
                             <h1>Enhanced ESG Report</h1>
-                            
-                            <!-- Basic Report Information -->
+
+                            <!-- Safely check if object exists and has valid ID -->
                             <t t-if="o and hasattr(o, 'id') and o.id">
-                                <h2><t t-esc="getattr(o, 'report_name', None) or 'ESG Report'"/></h2>
-                                
-                                <!-- Report Header Information -->
+                                <!-- Safe field access with proper fallbacks -->
+                                <h2>
+                                    <t t-esc="o.report_name if hasattr(o, 'report_name') and o.report_name else 'ESG Report'"/>
+                                </h2>
+
+                                <!-- Report Header Information with safe field access -->
                                 <div class="report-header mb-4">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <p><strong>Report Type:</strong> <t t-esc="getattr(o, 'report_type', None) or 'N/A'"/></p>
-                                            <p><strong>Date Range:</strong> <t t-esc="getattr(o, 'date_from', None) or 'N/A'"/> to <t t-esc="getattr(o, 'date_to', None) or 'N/A'"/></p>
-                                            <p><strong>Granularity:</strong> <t t-esc="getattr(o, 'granularity', None) or 'N/A'"/></p>
+                                            <p><strong>Report Type:</strong>
+                                                <t t-esc="o.report_type if hasattr(o, 'report_type') and o.report_type else 'N/A'"/>
+                                            </p>
+                                            <p><strong>Date Range:</strong>
+                                                <t t-esc="o.date_from if hasattr(o, 'date_from') and o.date_from else 'N/A'"/> to
+                                                <t t-esc="o.date_to if hasattr(o, 'date_to') and o.date_to else 'N/A'"/>
+                                            </p>
+                                            <p><strong>Granularity:</strong>
+                                                <t t-esc="o.granularity if hasattr(o, 'granularity') and o.granularity else 'N/A'"/>
+                                            </p>
                                         </div>
                                         <div class="col-md-6">
-                                            <p><strong>Company:</strong> <t t-esc="getattr(o, 'company_name', None) or 'N/A'"/></p>
-                                            <p><strong>Output Format:</strong> <t t-esc="getattr(o, 'output_format', None) or 'N/A'"/></p>
-                                            <p><strong>Theme:</strong> <t t-esc="getattr(o, 'report_theme', None) or 'N/A'"/></p>
+                                            <p><strong>Company:</strong>
+                                                <t t-if="hasattr(o, 'company_id') and o.company_id and hasattr(o.company_id, 'name')">
+                                                    <t t-esc="o.company_id.name"/>
+                                                </t>
+                                                <t t-elif="hasattr(o, 'company_name') and o.company_name">
+                                                    <t t-esc="o.company_name"/>
+                                                </t>
+                                                <t t-else="">N/A</t>
+                                            </p>
+                                            <p><strong>Output Format:</strong>
+                                                <t t-esc="o.output_format if hasattr(o, 'output_format') and o.output_format else 'PDF'"/>
+                                            </p>
+                                            <p><strong>Theme:</strong>
+                                                <t t-esc="o.report_theme if hasattr(o, 'report_theme') and o.report_theme else 'Standard'"/>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!-- Report Configuration -->
+
+                                <!-- Report Configuration with safe boolean checks -->
                                 <div class="report-config mb-4">
                                     <h3>Report Configuration</h3>
                                     <div class="row">
                                         <div class="col-md-4">
                                             <h5>Sections Included:</h5>
                                             <ul class="list-unstyled">
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_environmental', False) else 'fa fa-times text-danger'"></i> Environmental</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_social', False) else 'fa fa-times text-danger'"></i> Social</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_governance', False) else 'fa fa-times text-danger'"></i> Governance</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_section_analytics', False) else 'fa fa-times text-danger'"></i> Analytics</li>
+                                                <li>
+                                                    <t t-set="env_included" t-value="hasattr(o, 'include_section_environmental') and o.include_section_environmental"/>
+                                                    <i t-attf-class="fa fa-#{env_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Environmental
+                                                </li>
+                                                <li>
+                                                    <t t-set="social_included" t-value="hasattr(o, 'include_section_social') and o.include_section_social"/>
+                                                    <i t-attf-class="fa fa-#{social_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Social
+                                                </li>
+                                                <li>
+                                                    <t t-set="gov_included" t-value="hasattr(o, 'include_section_governance') and o.include_section_governance"/>
+                                                    <i t-attf-class="fa fa-#{gov_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Governance
+                                                </li>
+                                                <li>
+                                                    <t t-set="analytics_included" t-value="hasattr(o, 'include_section_analytics') and o.include_section_analytics"/>
+                                                    <i t-attf-class="fa fa-#{analytics_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Analytics
+                                                </li>
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
                                             <h5>Data Sources:</h5>
                                             <ul class="list-unstyled">
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_emissions_data', False) else 'fa fa-times text-danger'"></i> Emissions Data</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_offset_data', False) else 'fa fa-times text-danger'"></i> Offset Data</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_community_data', False) else 'fa fa-times text-danger'"></i> Community Data</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_initiatives_data', False) else 'fa fa-times text-danger'"></i> Initiatives Data</li>
+                                                <li>
+                                                    <t t-set="emissions_included" t-value="hasattr(o, 'include_emissions_data') and o.include_emissions_data"/>
+                                                    <i t-attf-class="fa fa-#{emissions_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Emissions Data
+                                                </li>
+                                                <li>
+                                                    <t t-set="offset_included" t-value="hasattr(o, 'include_offset_data') and o.include_offset_data"/>
+                                                    <i t-attf-class="fa fa-#{offset_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Offset Data
+                                                </li>
+                                                <li>
+                                                    <t t-set="community_included" t-value="hasattr(o, 'include_community_data') and o.include_community_data"/>
+                                                    <i t-attf-class="fa fa-#{community_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Community Data
+                                                </li>
+                                                <li>
+                                                    <t t-set="initiatives_included" t-value="hasattr(o, 'include_initiatives_data') and o.include_initiatives_data"/>
+                                                    <i t-attf-class="fa fa-#{initiatives_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Initiatives Data
+                                                </li>
                                             </ul>
                                         </div>
                                         <div class="col-md-4">
                                             <h5>Advanced Features:</h5>
                                             <ul class="list-unstyled">
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_charts', False) else 'fa fa-times text-danger'"></i> Charts and Graphs</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_benchmarks', False) else 'fa fa-times text-danger'"></i> Benchmarks</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_risk_analysis', False) else 'fa fa-times text-danger'"></i> Risk Analysis</li>
-                                                <li><i t-att-class="'fa fa-check text-success' if o and getattr(o, 'include_predictive_analysis', False) else 'fa fa-times text-danger'"></i> Predictive Analysis</li>
+                                                <li>
+                                                    <t t-set="charts_included" t-value="hasattr(o, 'include_charts') and o.include_charts"/>
+                                                    <i t-attf-class="fa fa-#{charts_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Charts and Graphs
+                                                </li>
+                                                <li>
+                                                    <t t-set="benchmarks_included" t-value="hasattr(o, 'include_benchmarks') and o.include_benchmarks"/>
+                                                    <i t-attf-class="fa fa-#{benchmarks_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Benchmarks
+                                                </li>
+                                                <li>
+                                                    <t t-set="risk_included" t-value="hasattr(o, 'include_risk_analysis') and o.include_risk_analysis"/>
+                                                    <i t-attf-class="fa fa-#{risk_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Risk Analysis
+                                                </li>
+                                                <li>
+                                                    <t t-set="predictive_included" t-value="hasattr(o, 'include_predictive_analysis') and o.include_predictive_analysis"/>
+                                                    <i t-attf-class="fa fa-#{predictive_included and 'check text-success' or 'times text-danger'}"></i>
+                                                    Predictive Analysis
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <!-- Report Data Display -->
+
+                                <!-- Safe report data computation -->
                                 <t t-set="report_data" t-value="{}"/>
-                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual_simple')">
-                                    <t t-set="report_data" t-value="o._compute_safe_report_data_manual_simple()"/>
+                                <t t-if="hasattr(o, '_compute_safe_report_data_manual') and callable(o._compute_safe_report_data_manual)">
+                                    <t t-try="">
+                                        <t t-set="report_data" t-value="o._compute_safe_report_data_manual()"/>
+                                    </t>
+                                    <t t-except="">
+                                        <t t-set="report_data" t-value="{}"/>
+                                    </t>
                                 </t>
-                                <t t-else="">
-                                    <t t-set="report_data" t-value="{}"/>
-                                </t>
-                                
+
                                 <!-- Executive Summary -->
                                 <div class="executive-summary mb-4">
                                     <h3>Executive Summary</h3>
                                     <p>This enhanced ESG report provides comprehensive analysis of environmental, social, and governance performance with advanced analytics and insights.</p>
-                                    <t t-if="report_data and report_data.get('report_info')">
+                                    <t t-if="report_data and isinstance(report_data, dict) and report_data.get('report_info')">
                                         <t t-set="report_info" t-value="report_data.get('report_info')"/>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -473,9 +192,11 @@
                                         </div>
                                     </t>
                                 </div>
-                                
+
                                 <!-- Environmental Metrics -->
-                                <t t-if="o and getattr(o, 'include_section_environmental', False) and report_data and report_data.get('environmental_metrics')">
+                                <t t-set="show_env" t-value="hasattr(o, 'include_section_environmental') and o.include_section_environmental"/>
+                                <t t-set="has_env_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('environmental_metrics')"/>
+                                <t t-if="show_env and has_env_data">
                                     <div class="environmental-section mb-4">
                                         <h3>Environmental Performance</h3>
                                         <t t-set="env_metrics" t-value="report_data.get('environmental_metrics')"/>
@@ -495,9 +216,11 @@
                                         </div>
                                     </div>
                                 </t>
-                                
+
                                 <!-- Social Metrics -->
-                                <t t-if="o and getattr(o, 'include_section_social', False) and report_data and report_data.get('social_metrics')">
+                                <t t-set="show_social" t-value="hasattr(o, 'include_section_social') and o.include_section_social"/>
+                                <t t-set="has_social_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('social_metrics')"/>
+                                <t t-if="show_social and has_social_data">
                                     <div class="social-section mb-4">
                                         <h3>Social Performance</h3>
                                         <t t-set="social_metrics" t-value="report_data.get('social_metrics')"/>
@@ -517,9 +240,11 @@
                                         </div>
                                     </div>
                                 </t>
-                                
+
                                 <!-- Governance Metrics -->
-                                <t t-if="o and getattr(o, 'include_section_governance', False) and report_data and report_data.get('governance_metrics')">
+                                <t t-set="show_gov" t-value="hasattr(o, 'include_section_governance') and o.include_section_governance"/>
+                                <t t-set="has_gov_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('governance_metrics')"/>
+                                <t t-if="show_gov and has_gov_data">
                                     <div class="governance-section mb-4">
                                         <h3>Governance Performance</h3>
                                         <t t-set="gov_metrics" t-value="report_data.get('governance_metrics')"/>
@@ -539,16 +264,31 @@
                                         </div>
                                     </div>
                                 </t>
-                                
+
                                 <!-- Recommendations -->
-                                <t t-if="o and getattr(o, 'include_section_recommendations', False) and report_data and report_data.get('recommendations')">
+                                <t t-set="show_rec" t-value="hasattr(o, 'include_section_recommendations') and o.include_section_recommendations"/>
+                                <t t-set="has_rec_data" t-value="report_data and isinstance(report_data, dict) and report_data.get('recommendations')"/>
+                                <t t-if="show_rec and has_rec_data">
                                     <div class="recommendations-section mb-4">
                                         <h3>Recommendations</h3>
                                         <t t-set="recommendations" t-value="report_data.get('recommendations', [])"/>
-                                        <t t-if="recommendations">
+                                        <t t-if="recommendations and len(recommendations) > 0">
                                             <ul>
                                                 <t t-foreach="recommendations" t-as="rec">
-                                                    <li><strong><t t-esc="rec.get('category', 'General').title()"/>:</strong> <t t-esc="rec.get('recommendation', '')"/></li>
+                                                    <li>
+                                                        <strong>
+                                                            <t t-if="isinstance(rec, dict) and rec.get('category')">
+                                                                <t t-esc="rec.get('category', 'General').title()"/>
+                                                            </t>
+                                                            <t t-else="">General</t>
+                                                        </strong>:
+                                                        <t t-if="isinstance(rec, dict) and rec.get('recommendation')">
+                                                            <t t-esc="rec.get('recommendation', '')"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t t-esc="str(rec)"/>
+                                                        </t>
+                                                    </li>
                                                 </t>
                                             </ul>
                                         </t>
@@ -557,9 +297,9 @@
                                         </t>
                                     </div>
                                 </t>
-                                
+
                                 <!-- Default content when no specific data is available -->
-                                <t t-if="not report_data or not isinstance(report_data, dict) or not report_data">
+                                <t t-if="not report_data or not isinstance(report_data, dict) or len(report_data) == 0">
                                     <div class="alert alert-info" role="alert">
                                         <h4>ESG Report Content</h4>
                                         <p>This enhanced ESG report is configured to include comprehensive analysis. Report data is being processed and will be available in the next generation cycle.</p>
@@ -573,7 +313,7 @@
                                         </ul>
                                     </div>
                                 </t>
-                                
+
                             </t>
                             <t t-else="">
                                 <div class="alert alert-warning" role="alert">
@@ -581,11 +321,13 @@
                                     <p>The ESG report wizard object is not available or has no valid ID. Please ensure the report is generated through the ESG Report Wizard.</p>
                                 </div>
                             </t>
-                            
+
                             <!-- Footer -->
                             <div class="report-footer mt-4">
                                 <hr/>
-                                <p class="text-muted"><strong>Generated at:</strong> <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')"/></p>
+                                <p class="text-muted"><strong>Generated at:</strong>
+                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
+                                </p>
                                 <p class="text-muted small">This report was generated using Odoo ESG Reporting Module v1.0</p>
                             </div>
                         </div>
