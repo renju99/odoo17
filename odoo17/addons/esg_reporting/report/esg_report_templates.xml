@@ -366,18 +366,24 @@
                                 <p><strong>Granularity:</strong> <t t-esc="o.granularity or 'N/A'"/></p>
                                 <p><strong>Company:</strong> <t t-esc="o.company_name or 'N/A'"/></p>
                                 
-                                <!-- Access report data from the wizard object -->
-                                <t t-set="report_data" t-value="o._compute_safe_report_data_manual() if o and hasattr(o, '_compute_safe_report_data_manual') else {}"/>
+                                <!-- Access report data from the wizard object with robust error handling -->
+                                <t t-set="report_data" t-value="{}"/>
+                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual')">
+                                    <t t-set="method" t-value="getattr(o, '_compute_safe_report_data_manual', None)"/>
+                                    <t t-if="method and callable(method)">
+                                        <t t-set="report_data" t-value="method()"/>
+                                    </t>
+                                </t>
                                 
                                 <!-- Debug information -->
                                 <div class="alert alert-info" role="alert">
                                     <h4>Debug Information</h4>
                                     <p><strong>Wizard object exists:</strong> Yes</p>
-                                    <p><strong>Wizard safe_report_data exists:</strong> <t t-esc="'Yes' if o and hasattr(o, '_compute_safe_report_data_manual') and o._compute_safe_report_data_manual() else 'No'"/></p>
+                                    <p><strong>Wizard safe_report_data method exists:</strong> <t t-esc="'Yes' if o and hasattr(o, '_compute_safe_report_data_manual') else 'No'"/></p>
                                     <p><strong>Report data exists:</strong> <t t-esc="'Yes' if report_data else 'No'"/></p>
                                     <p><strong>Report data type:</strong> <t t-esc="'dict' if report_data and isinstance(report_data, dict) else 'list' if report_data and isinstance(report_data, list) else 'str' if report_data and isinstance(report_data, str) else 'int' if report_data and isinstance(report_data, int) else 'float' if report_data and isinstance(report_data, float) else 'bool' if report_data and isinstance(report_data, bool) else 'None' if report_data is None else 'other'"/></p>
                                     <p><strong>Report data keys:</strong> <t t-esc="'Available' if report_data and isinstance(report_data, dict) and len(report_data) > 0 else 'No keys available'"/></p>
-                                    <p><strong>Wizard object keys:</strong> <t t-esc="'Available' if o and hasattr(o, '_fields') and getattr(o, '_fields', None) else 'None'"/></p>
+                                    <p><strong>Wizard object fields:</strong> <t t-esc="'Available' if o and hasattr(o, '_fields') and getattr(o, '_fields', None) else 'None'"/></p>
                                     <p><strong>Report data length:</strong> <t t-esc="str(len(report_data)) if report_data and hasattr(report_data, '__len__') else 'N/A'"/></p>
                                 </div>
                                 
