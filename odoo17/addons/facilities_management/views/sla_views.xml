@@ -152,10 +152,18 @@
             <field name="arch" type="xml">
                 <search string="SLA Search">
                     <field name="name"/>
+                    <field name="asset_criticality"/>
+                    <field name="maintenance_type"/>
                     <filter string="Active" name="active" domain="[('active', '=', True)]"/>
                     <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                    <filter string="High Priority" name="high_priority" domain="[('priority', '&gt;=', 8)]"/>
+                    <separator/>
+                    <filter string="All SLAs" name="all_slas" domain="[]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_active" context="{'group_by': 'active'}"/>
+                        <filter string="Asset Criticality" name="group_criticality" context="{'group_by': 'asset_criticality'}"/>
+                        <filter string="Maintenance Type" name="group_type" context="{'group_by': 'maintenance_type'}"/>
+                        <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
                     </group>
                 </search>
             </field>
