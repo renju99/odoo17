@@ -284,6 +284,13 @@ class EnhancedESGWizard(models.TransientModel):
             _logger.error(f"Error in _compute_safe_report_data_manual: {str(e)}")
             return self._get_default_report_data()
 
+    def _compute_safe_report_data_manual_simple(self):
+        """Simplified version for template access that always returns valid data"""
+        try:
+            return self._compute_safe_report_data_manual()
+        except Exception:
+            return self._get_default_report_data()
+
     def _get_default_report_data(self):
         """Get default report data structure"""
         try:

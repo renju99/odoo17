@@ -445,8 +445,8 @@
                                 
                                 <!-- Report Data Display -->
                                 <t t-set="report_data" t-value="{}"/>
-                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual') and o._compute_safe_report_data_manual">
-                                    <t t-set="report_data" t-value="o._compute_safe_report_data_manual()"/>
+                                <t t-if="o and hasattr(o, '_compute_safe_report_data_manual_simple')">
+                                    <t t-set="report_data" t-value="o._compute_safe_report_data_manual_simple()"/>
                                 </t>
                                 <t t-else="">
                                     <t t-set="report_data" t-value="{}"/>
