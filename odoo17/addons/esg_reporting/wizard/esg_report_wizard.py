@@ -200,6 +200,16 @@ class EnhancedESGWizard(models.TransientModel):
             except Exception:
                 record.safe_report_data = {}
     
+    def _compute_safe_report_data_manual(self):
+        """Manual computation of safe_report_data for template access"""
+        try:
+            if self.report_data and isinstance(self.report_data, dict):
+                return self.report_data
+            else:
+                return {}
+        except Exception:
+            return {}
+    
     safe_report_data = fields.Json(string='Safe Report Data', compute='_compute_safe_report_data', store=False)
     
     @api.model
@@ -223,6 +233,16 @@ class EnhancedESGWizard(models.TransientModel):
             _logger = logging.getLogger(__name__)
             _logger.error(f"Error in _get_report_data: {str(e)}")
             return {}
+
+    def _get_report_values(self, docids, data=None):
+        """Get report values for template rendering"""
+        docs = self.browse(docids)
+        return {
+            'doc_ids': docids,
+            'doc_model': self._name,
+            'docs': docs,
+            'data': data,
+        }
 
     @api.onchange('report_type')
     def _onchange_report_type(self):
