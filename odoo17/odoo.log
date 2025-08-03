@@ -1,16 +1,24 @@
 nohup: ignoring input
 /workspace/odoo17/odoo/modules/module.py:11: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
   import pkg_resources
-2025-08-02 13:59:35,461 15700 INFO ? odoo: Odoo version 17.0 
-2025-08-02 13:59:35,461 15700 INFO ? odoo: addons paths: ['/workspace/odoo17/odoo/addons', '/home/ubuntu/.local/share/Odoo/addons/17.0', '/workspace/odoo17/addons'] 
-2025-08-02 13:59:35,461 15700 INFO ? odoo: database: odoo@localhost:default 
-2025-08-02 13:59:35,523 15700 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
-2025-08-02 13:59:35,602 15700 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8070 
-2025-08-02 13:59:35,611 15700 INFO odoo17_test odoo.modules.loading: loading 1 modules... 
-2025-08-02 13:59:35,614 15700 INFO odoo17_test odoo.modules.loading: 1 modules loaded in 0.00s, 0 queries (+0 extra) 
-2025-08-02 13:59:35,619 15700 INFO odoo17_test odoo.modules.loading: loading 11 modules... 
-2025-08-02 13:59:35,646 15700 INFO odoo17_test odoo.modules.loading: 11 modules loaded in 0.03s, 0 queries (+0 extra) 
-2025-08-02 13:59:35,662 15700 INFO odoo17_test odoo.modules.loading: Modules loaded. 
-2025-08-02 13:59:35,663 15700 INFO odoo17_test odoo.modules.registry: Registry loaded in 0.061s 
-2025-08-02 13:59:52,266 15700 INFO odoo17_test odoo.addons.base.models.ir_http: Generating routing map for key None 
-2025-08-02 13:59:52,282 15700 INFO odoo17_test werkzeug: 127.0.0.1 - - [02/Aug/2025 13:59:52] "GET / HTTP/1.1" 303 - 5 0.005 0.016
+2025-08-03 17:25:19,776 11821 INFO ? odoo: Odoo version 17.0 
+2025-08-03 17:25:19,776 11821 INFO ? odoo: addons paths: ['/workspace/odoo17/odoo/addons', '/home/ubuntu/.local/share/Odoo/addons/17.0', '/workspace/odoo17/addons'] 
+2025-08-03 17:25:19,776 11821 INFO ? odoo: database: default@default:default 
+2025-08-03 17:25:19,839 11821 INFO ? odoo.addons.base.models.ir_actions_report: You need Wkhtmltopdf to print a pdf version of the reports. 
+2025-08-03 17:25:19,925 11821 INFO ? odoo.service.server: HTTP service (werkzeug) running on localhost:8070 
+2025-08-03 17:25:19,936 11821 INFO odoo17 odoo.modules.loading: loading 1 modules... 
+2025-08-03 17:25:19,942 11821 INFO odoo17 odoo.modules.loading: 1 modules loaded in 0.01s, 0 queries (+0 extra) 
+2025-08-03 17:25:19,956 11821 INFO odoo17 odoo.modules.loading: loading 63 modules... 
+2025-08-03 17:25:20,538 11821 WARNING odoo17 odoo.api.create: The model odoo.addons.esg_reporting.models.esg_analytics is not overriding the create method in batch 
+2025-08-03 17:25:20,542 11821 WARNING odoo17 odoo.api.create: The model odoo.addons.esg_reporting.wizard.esg_report_wizard is not overriding the create method in batch 
+2025-08-03 17:25:20,547 11821 INFO odoo17 odoo.modules.loading: 63 modules loaded in 0.59s, 0 queries (+0 extra) 
+2025-08-03 17:25:20,674 11821 INFO odoo17 odoo.modules.loading: Modules loaded. 
+2025-08-03 17:25:20,677 11821 INFO odoo17 odoo.modules.registry: Registry loaded in 0.752s 
+2025-08-03 17:25:34,140 11821 INFO odoo17 odoo.addons.base.models.ir_http: Generating routing map for key None 
+2025-08-03 17:25:34,154 11821 INFO odoo17 werkzeug: 127.0.0.1 - - [03/Aug/2025 17:25:34] "HEAD /web HTTP/1.1" 303 - 5 0.002 0.013
+ilestore gc 12 checked, 0 removed 
+2025-08-03 17:25:32,987 11068 INFO odoo17 odoo.addons.base.models.res_users: GC'd 0 user log entries 
+2025-08-03 17:25:33,009 11068 INFO odoo17 odoo.addons.auth_totp.models.auth_totp: GC'd 0 totp devices entries 
+2025-08-03 17:25:33,043 11068 INFO odoo17 odoo.models.unlink: User #1 deleted bus.bus records with IDs: [1, 2, 3, 4, 5] 
+2025-08-03 17:25:33,114 11068 INFO odoo17 odoo.addons.sms.models.sms_sms: GC'd 0 sms marked for deletion 
+2025-08-03 17:25:33,260 11068 INFO odoo17 odoo.addons.base.models.ir_cron: Job done: `Base: Auto-vacuum internal data` (0.340s). 
