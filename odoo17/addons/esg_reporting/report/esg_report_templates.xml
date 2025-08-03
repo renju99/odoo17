@@ -521,6 +521,7 @@
                                 <p><strong>Include Risk Analysis:</strong> <t t-esc="'Yes' if o and o.include_risk_analysis else 'No'"/></p>
                                 <p><strong>Include Trends:</strong> <t t-esc="'Yes' if o and o.include_trends else 'No'"/></p>
                                 <p><strong>Include Forecasting:</strong> <t t-esc="'Yes' if o and o.include_forecasting else 'No'"/></p>
+                                </t>
                             </t>
                             <t t-else="">
                                 <div class="alert alert-warning" role="alert">
