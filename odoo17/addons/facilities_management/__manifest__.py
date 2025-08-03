@@ -29,6 +29,7 @@ Features:
         'product',
         'stock',
         'web',
+        'maintenance',
     ],
     'data': [
         # Security
