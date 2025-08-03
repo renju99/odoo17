@@ -52,6 +52,7 @@ Features:
         'reports/monthly_building_report_pdf.xml',
         'reports/monthly_building_report_pdf_action.xml',
         'reports/workorder_maintenance_report.xml',
+        'reports/sla_performance_report.xml',
 
         # Demo
         'demo/facility_demo.xml',

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_sla_performance_report" model="ir.actions.report">
+        <field name="name">SLA Performance Report</field>
+        <field name="model">facilities.sla.dashboard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">facilities_management.sla_performance_report</field>
+        <field name="report_file">facilities_management.sla_performance_report</field>
+        <field name="print_report_name">'SLA Performance Report - %s' % (object.sla_id.name)</field>
+        <field name="binding_model_id" ref="facilities_management.model_facilities_sla_dashboard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="sla_performance_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="dashboard">
+                <t t-call="web.external_layout">
+                    <div class="page" style="padding:24px; max-width:800px;">
+                        <h2 style="color:#1b2945; border-bottom:2px solid #eee; margin-bottom:24px;">SLA Performance Report</h2>
+                        
+                        <!-- SLA Information -->
+                        <div style="background:#f8f9fa; padding:16px; border-radius:8px; margin-bottom:24px;">
+                            <h3 style="color:#1b2945; margin-top:0;">SLA Details</h3>
+                            <table style="width:100%; font-size:14px; border-collapse:collapse;">
+                                <tr>
+                                    <td style="font-weight:bold; color:#555; width:30%;">SLA Name</td>
+                                    <td><span t-field="dashboard.sla_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold; color:#555;">Description</td>
+                                    <td><span t-field="dashboard.sla_id.description"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold; color:#555;">Response Time</td>
+                                    <td><span t-field="dashboard.sla_id.response_time_hours"/> hours</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold; color:#555;">Resolution Time</td>
+                                    <td><span t-field="dashboard.sla_id.resolution_time_hours"/> hours</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight:bold; color:#555;">Report Period</td>
+                                    <td><span t-field="dashboard.date_from"/> to <span t-field="dashboard.date_to"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div style="margin-bottom:24px;">
+                            <h3 style="color:#1b2945; border-bottom:1px solid #eee; padding-bottom:4px;">Performance Metrics</h3>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-top:16px;">
+                                <div style="background:#e8f5e8; padding:16px; border-radius:8px; text-align:center;">
+                                    <div style="font-size:24px; font-weight:bold; color:#28a745;"><span t-field="dashboard.total_workorders"/></div>
+                                    <div style="font-size:14px; color:#666;">Total Work Orders</div>
+                                </div>
+                                <div style="background:#e8f5e8; padding:16px; border-radius:8px; text-align:center;">
+                                    <div style="font-size:24px; font-weight:bold; color:#28a745;"><span t-field="dashboard.compliant_workorders"/></div>
+                                    <div style="font-size:14px; color:#666;">Compliant Work Orders</div>
+                                </div>
+                                <div style="background:#fff3cd; padding:16px; border-radius:8px; text-align:center;">
+                                    <div style="font-size:24px; font-weight:bold; color:#ffc107;"><span t-field="dashboard.breached_workorders"/></div>
+                                    <div style="font-size:14px; color:#666;">Breached Work Orders</div>
+                                </div>
+                                <div style="background:#d1ecf1; padding:16px; border-radius:8px; text-align:center;">
+                                    <div style="font-size:24px; font-weight:bold; color:#17a2b8;"><span t-field="dashboard.compliance_rate"/>%</div>
+                                    <div style="font-size:14px; color:#666;">Compliance Rate</div>
+                                </div>
+                                <div style="background:#d1ecf1; padding:16px; border-radius:8px; text-align:center;">
+                                    <div style="font-size:24px; font-weight:bold; color:#17a2b8;"><span t-field="dashboard.avg_mttr"/>h</div>
+                                    <div style="font-size:14px; color:#666;">Average MTTR</div>
+                                </div>
+                                <div style="background:#d1ecf1; padding:16px; border-radius:8px; text-align:center;">
+                                    <div style="font-size:24px; font-weight:bold; color:#17a2b8;"><span t-field="dashboard.avg_first_time_fix_rate"/>%</div>
+                                    <div style="font-size:14px; color:#666;">First Time Fix Rate</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Daily Compliance Chart -->
+                        <div style="margin-bottom:24px;">
+                            <h3 style="color:#1b2945; border-bottom:1px solid #eee; padding-bottom:4px;">Daily Compliance Trend</h3>
+                            <table class="table table-bordered table-sm" style="width:100%; border-collapse:collapse; margin-top:16px;">
+                                <thead style="background:#f9f9f9;">
+                                    <tr>
+                                        <th style="width:20%; text-align:left; padding:8px;">Date</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Total</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Compliant</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Breached</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Compliance Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="dashboard.daily_compliance" t-as="daily" t-if="daily.total > 0">
+                                        <td style="padding:8px;"><span t-field="daily.date"/></td>
+                                        <td style="padding:8px;"><span t-field="daily.total"/></td>
+                                        <td style="padding:8px;"><span t-field="daily.compliant"/></td>
+                                        <td style="padding:8px;"><span t-field="daily.breached"/></td>
+                                        <td style="padding:8px;"><span t-field="daily.compliance_rate"/>%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Weekly Trend Analysis -->
+                        <div style="margin-bottom:24px;">
+                            <h3 style="color:#1b2945; border-bottom:1px solid #eee; padding-bottom:4px;">Weekly Trend Analysis</h3>
+                            <table class="table table-bordered table-sm" style="width:100%; border-collapse:collapse; margin-top:16px;">
+                                <thead style="background:#f9f9f9;">
+                                    <tr>
+                                        <th style="width:20%; text-align:left; padding:8px;">Week</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Total</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Compliance Rate</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Breach Rate</th>
+                                        <th style="width:20%; text-align:left; padding:8px;">Avg MTTR</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="dashboard.weekly_trend" t-as="weekly" t-if="weekly.total > 0">
+                                        <td style="padding:8px;"><span t-field="weekly.week"/></td>
+                                        <td style="padding:8px;"><span t-field="weekly.total"/></td>
+                                        <td style="padding:8px;"><span t-field="weekly.compliance_rate"/>%</td>
+                                        <td style="padding:8px;"><span t-field="weekly.breach_rate"/>%</td>
+                                        <td style="padding:8px;"><span t-field="weekly.avg_mttr"/>h</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div style="margin-bottom:24px;">
+                            <h3 style="color:#1b2945; border-bottom:1px solid #eee; padding-bottom:4px;">Recommendations</h3>
+                            <div style="background:#f8f9fa; padding:16px; border-radius:8px;">
+                                <t t-if="dashboard.compliance_rate &lt; 90">
+                                    <p style="color:#dc3545; margin:0;"><strong>Action Required:</strong> SLA compliance rate is below target. Consider reviewing response times and resource allocation.</p>
+                                </t>
+                                <t t-elif="dashboard.compliance_rate &lt; 95">
+                                    <p style="color:#ffc107; margin:0;"><strong>Monitor:</strong> SLA compliance rate is below optimal levels. Monitor trends and consider process improvements.</p>
+                                </t>
+                                <t t-else="">
+                                    <p style="color:#28a745; margin:0;"><strong>Good Performance:</strong> SLA compliance rate is within target range. Continue current practices.</p>
+                                </t>
+                                
+                                <t t-if="dashboard.avg_mttr &gt; dashboard.sla_id.target_mttr_hours">
+                                    <p style="color:#dc3545; margin:8px 0 0 0;"><strong>MTTR Issue:</strong> Average MTTR exceeds target. Review maintenance processes and resource allocation.</p>
+                                </t>
+                                
+                                <t t-if="dashboard.avg_first_time_fix_rate &lt; dashboard.sla_id.target_first_time_fix_rate">
+                                    <p style="color:#ffc107; margin:8px 0 0 0;"><strong>First Time Fix:</strong> First time fix rate is below target. Consider additional training or process improvements.</p>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Report Footer -->
+                        <div style="margin-top:32px; padding-top:16px; border-top:1px solid #eee; text-align:center; color:#666; font-size:12px;">
+                            <p>Report generated on <span t-field="context_timestamp()"/></p>
+                            <p>This report provides insights into SLA performance and compliance metrics for the specified period.</p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
