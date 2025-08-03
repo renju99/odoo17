@@ -156,7 +156,7 @@
                     <field name="maintenance_type"/>
                     <filter string="Active" name="active" domain="[('active', '=', True)]"/>
                     <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
-                    <filter string="High Priority" name="high_priority" domain="[('priority', '&gt;=', 8)]"/>
+                    <filter string="High Priority" name="high_priority" domain="[('priority', '>=', 8)]"/>
                     <separator/>
                     <filter string="All SLAs" name="all_slas" domain="[]" default="1"/>
                     <group expand="0" string="Group By">
