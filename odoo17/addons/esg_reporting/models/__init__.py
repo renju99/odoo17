@@ -9,3 +9,4 @@ from . import esg_framework
 from . import esg_target
 from . import purchase_order
 from . import enhanced_esg_dashboard
+from . import esg_carbon_footprint

@@ -386,8 +386,6 @@ class EnhancedESGWizard(models.TransientModel):
                 except (json.JSONDecodeError, TypeError):
                     raise ValidationError(_('Custom Charts must be valid JSON format.'))
 
-<<<<<<< HEAD
-=======
     @api.model
     def create(self, vals):
         """Ensure report_data is always initialized as a dictionary and set default values"""
@@ -517,7 +515,6 @@ class EnhancedESGWizard(models.TransientModel):
                     'data': data,
                 }
 
->>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
     @api.onchange('report_type')
     def _onchange_report_type(self):
         """Update default options based on report type"""
@@ -555,8 +552,6 @@ class EnhancedESGWizard(models.TransientModel):
     def action_generate_enhanced_esg_report(self):
         """Generate enhanced ESG report based on selected criteria with improved error handling"""
         try:
-<<<<<<< HEAD
-=======
             # Ensure the record is properly saved and accessible
             if not self.id:
                 self = self.create(self.read()[0])
@@ -565,7 +560,6 @@ class EnhancedESGWizard(models.TransientModel):
             if not self or not hasattr(self, 'id') or not self.id:
                 raise UserError(_('Failed to create a valid ESG report wizard record.'))
             
->>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
             # Input validation
             self._validate_inputs()
 
@@ -670,8 +664,6 @@ class EnhancedESGWizard(models.TransientModel):
     def _get_report_action(self):
         """Get appropriate report action based on output format"""
         try:
-<<<<<<< HEAD
-=======
             # Ensure the record is properly saved
             if not self.id:
                 self = self.create(self.read()[0])
@@ -680,7 +672,6 @@ class EnhancedESGWizard(models.TransientModel):
             if not self or not hasattr(self, 'id') or not self.id:
                 raise UserError(_('Failed to create a valid ESG report wizard record.'))
             
->>>>>>> 0e402c9e0deb69ac16821ac74fd1e12cf9e8b8dc
             # Ensure report data is available
             if not self.report_data or not isinstance(self.report_data, dict):
                 # Generate report data if not available
