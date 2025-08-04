@@ -43,52 +43,103 @@ export class ESGAdvancedDashboard extends Component {
                 [this.state.selectedPeriod, this.state.selectedCategory]
             );
             
-            this.state.dashboardData = data;
+            if (data && typeof data === 'object') {
+                this.state.dashboardData = data;
+            } else {
+                console.warn('Invalid dashboard data received:', data);
+                this.state.dashboardData = this.getDefaultDashboardData();
+            }
             
             // Load predictions
-            const predictions = await this.orm.call(
-                'esg.analytics',
-                'get_predictive_analytics',
-                []
-            );
-            this.state.predictions = predictions;
+            try {
+                const predictions = await this.orm.call(
+                    'esg.analytics',
+                    'get_predictive_analytics',
+                    []
+                );
+                this.state.predictions = predictions || {};
+            } catch (predictionError) {
+                console.warn('Failed to load predictions:', predictionError);
+                this.state.predictions = {};
+            }
             
             // Load alerts
-            const alerts = await this.orm.call(
-                'esg.analytics',
-                'get_esg_alerts',
-                []
-            );
-            this.state.alerts = alerts;
+            try {
+                const alerts = await this.orm.call(
+                    'esg.analytics',
+                    'get_esg_alerts',
+                    []
+                );
+                this.state.alerts = alerts || [];
+            } catch (alertError) {
+                console.warn('Failed to load alerts:', alertError);
+                this.state.alerts = [];
+            }
             
         } catch (error) {
             console.error("Error loading ESG dashboard data:", error);
-            this.state.error = "Failed to load dashboard data";
+            this.state.error = "Failed to load dashboard data. Please try refreshing the page.";
+            this.state.dashboardData = this.getDefaultDashboardData();
         } finally {
             this.state.loading = false;
         }
     }
 
+    getDefaultDashboardData() {
+        return {
+            period: this.state.selectedPeriod,
+            category: this.state.selectedCategory,
+            date_range: {
+                from: new Date().toISOString().split('T')[0],
+                to: new Date().toISOString().split('T')[0]
+            },
+            overall_score: 0,
+            carbon_reduction: 0,
+            diversity_score: 0,
+            target_progress: 0,
+            emissions: { scope1: 0, scope2: 0, scope3: 0, offset: 0 },
+            diversity: { male_count: 0, female_count: 0, other_count: 0 },
+            risk_assessment: {},
+            targets: [],
+            esg_scores: []
+        };
+    }
+
     async initializeCharts() {
-        // ESG Score Trend Chart
-        this.createESGScoreChart();
-        
-        // Emission Reduction Chart
-        this.createEmissionChart();
-        
-        // Diversity Metrics Chart
-        this.createDiversityChart();
-        
-        // Risk Assessment Heatmap
-        this.createRiskHeatmap();
-        
-        // Target Progress Chart
-        this.createTargetProgressChart();
+        // Wait a bit for the DOM to be ready
+        setTimeout(() => {
+            try {
+                // ESG Score Trend Chart
+                this.createESGScoreChart();
+                
+                // Emission Reduction Chart
+                this.createEmissionChart();
+                
+                // Diversity Metrics Chart
+                this.createDiversityChart();
+                
+                // Risk Assessment Heatmap
+                this.createRiskHeatmap();
+                
+                // Target Progress Chart
+                this.createTargetProgressChart();
+            } catch (error) {
+                console.error('Error initializing charts:', error);
+            }
+        }, 100);
     }
 
     createESGScoreChart() {
         const ctx = document.getElementById('esg-score-chart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('ESG score chart canvas not found');
+            return;
+        }
+        
+        // Destroy existing chart if it exists
+        if (this.state.charts.esgScore) {
+            this.state.charts.esgScore.destroy();
+        }
         
         const data = this.state.dashboardData?.esg_scores || [];
         
@@ -113,61 +164,74 @@ export class ESGAdvancedDashboard extends Component {
             return;
         }
         
-        this.state.charts.esgScore = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: validData.map(d => d.month),
-                datasets: [{
-                    label: 'Environmental Score',
-                    data: validData.map(d => d.environmental),
-                    borderColor: '#28a745',
-                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                    tension: 0.4
-                }, {
-                    label: 'Social Score',
-                    data: validData.map(d => d.social),
-                    borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    tension: 0.4
-                }, {
-                    label: 'Governance Score',
-                    data: validData.map(d => d.governance),
-                    borderColor: '#6f42c1',
-                    backgroundColor: 'rgba(111, 66, 193, 0.1)',
-                    tension: 0.4
-                }, {
-                    label: 'Overall Score',
-                    data: validData.map(d => d.overall),
-                    borderColor: '#fd7e14',
-                    backgroundColor: 'rgba(253, 126, 20, 0.1)',
-                    tension: 0.4,
-                    borderWidth: 3
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'ESG Performance Trends'
-                    },
-                    legend: {
-                        position: 'top'
-                    }
+        try {
+            this.state.charts.esgScore = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: validData.map(d => d.month),
+                    datasets: [{
+                        label: 'Environmental Score',
+                        data: validData.map(d => d.environmental),
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Social Score',
+                        data: validData.map(d => d.social),
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Governance Score',
+                        data: validData.map(d => d.governance),
+                        borderColor: '#6f42c1',
+                        backgroundColor: 'rgba(111, 66, 193, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Overall Score',
+                        data: validData.map(d => d.overall),
+                        borderColor: '#fd7e14',
+                        backgroundColor: 'rgba(253, 126, 20, 0.1)',
+                        tension: 0.4,
+                        borderWidth: 3
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ESG Performance Trends'
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Error creating ESG score chart:', error);
+        }
     }
 
     createEmissionChart() {
         const ctx = document.getElementById('emission-chart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('Emission chart canvas not found');
+            return;
+        }
+        
+        // Destroy existing chart if it exists
+        if (this.state.charts.emission) {
+            this.state.charts.emission.destroy();
+        }
         
         const data = this.state.dashboardData?.emissions || {};
         
@@ -183,38 +247,51 @@ export class ESGAdvancedDashboard extends Component {
         const scope3 = typeof data.scope3 === 'number' ? data.scope3 : 0;
         const offset = typeof data.offset === 'number' ? data.offset : 0;
         
-        this.state.charts.emission = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Scope 1', 'Scope 2', 'Scope 3', 'Offset'],
-                datasets: [{
-                    data: [scope1, scope2, scope3, offset],
-                    backgroundColor: [
-                        '#dc3545',
-                        '#fd7e14',
-                        '#ffc107',
-                        '#28a745'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Carbon Footprint Breakdown'
-                    },
-                    legend: {
-                        position: 'bottom'
+        try {
+            this.state.charts.emission = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Scope 1', 'Scope 2', 'Scope 3', 'Offset'],
+                    datasets: [{
+                        data: [scope1, scope2, scope3, offset],
+                        backgroundColor: [
+                            '#dc3545',
+                            '#fd7e14',
+                            '#ffc107',
+                            '#28a745'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Carbon Footprint Breakdown'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Error creating emission chart:', error);
+        }
     }
 
     createDiversityChart() {
         const ctx = document.getElementById('diversity-chart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('Diversity chart canvas not found');
+            return;
+        }
+        
+        // Destroy existing chart if it exists
+        if (this.state.charts.diversity) {
+            this.state.charts.diversity.destroy();
+        }
         
         const data = this.state.dashboardData?.diversity || {};
         
@@ -232,51 +309,64 @@ export class ESGAdvancedDashboard extends Component {
         const femaleLeaders = typeof data.female_leaders === 'number' ? data.female_leaders : 0;
         const otherLeaders = typeof data.other_leaders === 'number' ? data.other_leaders : 0;
         
-        this.state.charts.diversity = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Male', 'Female', 'Other'],
-                datasets: [{
-                    label: 'Overall Workforce',
-                    data: [maleCount, femaleCount, otherCount],
-                    backgroundColor: [
-                        '#007bff',
-                        '#e83e8c',
-                        '#6c757d'
-                    ]
-                }, {
-                    label: 'Leadership',
-                    data: [maleLeaders, femaleLeaders, otherLeaders],
-                    backgroundColor: [
-                        '#0056b3',
-                        '#c73e6b',
-                        '#545b62'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Workforce Diversity Metrics'
-                    },
-                    legend: {
-                        position: 'top'
-                    }
+        try {
+            this.state.charts.diversity = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Male', 'Female', 'Other'],
+                    datasets: [{
+                        label: 'Overall Workforce',
+                        data: [maleCount, femaleCount, otherCount],
+                        backgroundColor: [
+                            '#007bff',
+                            '#e83e8c',
+                            '#6c757d'
+                        ]
+                    }, {
+                        label: 'Leadership',
+                        data: [maleLeaders, femaleLeaders, otherLeaders],
+                        backgroundColor: [
+                            '#0056b3',
+                            '#c73e6b',
+                            '#545b62'
+                        ]
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Workforce Diversity Metrics'
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Error creating diversity chart:', error);
+        }
     }
 
     createRiskHeatmap() {
         const ctx = document.getElementById('risk-heatmap');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('Risk heatmap canvas not found');
+            return;
+        }
+        
+        // Destroy existing chart if it exists
+        if (this.state.charts.riskHeatmap) {
+            this.state.charts.riskHeatmap.destroy();
+        }
         
         const data = this.state.dashboardData?.risk_assessment || {};
         
@@ -310,47 +400,60 @@ export class ESGAdvancedDashboard extends Component {
             borderWidth: 1
         }));
         
-        this.state.charts.riskHeatmap = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: categories,
-                datasets: datasets
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'ESG Risk Assessment Heatmap'
-                    },
-                    legend: {
-                        display: true,
-                        position: 'top'
-                    }
+        try {
+            this.state.charts.riskHeatmap = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: categories,
+                    datasets: datasets
                 },
-                scales: {
-                    x: {
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
                         title: {
                             display: true,
-                            text: 'ESG Categories'
+                            text: 'ESG Risk Assessment Heatmap'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
                         }
                     },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Risk Level (%)'
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'ESG Categories'
+                            }
                         },
-                        beginAtZero: true,
-                        max: 100
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Risk Level (%)'
+                            },
+                            beginAtZero: true,
+                            max: 100
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Error creating risk heatmap:', error);
+        }
     }
 
     createTargetProgressChart() {
         const ctx = document.getElementById('target-progress-chart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('Target progress chart canvas not found');
+            return;
+        }
+        
+        // Destroy existing chart if it exists
+        if (this.state.charts.targetProgress) {
+            this.state.charts.targetProgress.destroy();
+        }
         
         const data = this.state.dashboardData?.targets || [];
         
@@ -372,47 +475,52 @@ export class ESGAdvancedDashboard extends Component {
             return;
         }
         
-        this.state.charts.targetProgress = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: validData.map(d => d.name),
-                datasets: [{
-                    label: 'Progress (%)',
-                    data: validData.map(d => d.progress_percentage),
-                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
-                    borderColor: '#28a745',
-                    pointBackgroundColor: '#28a745'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'ESG Target Progress'
-                    },
-                    legend: {
-                        position: 'top'
-                    }
+        try {
+            this.state.charts.targetProgress = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: validData.map(d => d.name),
+                    datasets: [{
+                        label: 'Progress (%)',
+                        data: validData.map(d => d.progress_percentage),
+                        backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                        borderColor: '#28a745',
+                        pointBackgroundColor: '#28a745'
+                    }]
                 },
-                scales: {
-                    r: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: {
-                            stepSize: 20
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'ESG Target Progress'
+                        },
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            console.error('Error creating target progress chart:', error);
+        }
     }
 
     startRealTimeUpdates() {
         if (!this.state.realTimeUpdates) return;
         
         // Update data every 30 seconds
-        setInterval(async () => {
+        this.updateInterval = setInterval(async () => {
             await this.loadDashboardData();
             this.updateCharts();
         }, 30000);
@@ -447,6 +555,8 @@ export class ESGAdvancedDashboard extends Component {
         this.state.realTimeUpdates = !this.state.realTimeUpdates;
         if (this.state.realTimeUpdates) {
             this.startRealTimeUpdates();
+        } else if (this.updateInterval) {
+            clearInterval(this.updateInterval);
         }
     }
 
@@ -516,6 +626,10 @@ export class ESGAdvancedDashboard extends Component {
 
     convertToCSV(data) {
         // Convert data to CSV format
+        if (!data || data.length === 0) {
+            return '';
+        }
+        
         const headers = Object.keys(data[0] || {});
         const csvRows = [headers.join(',')];
         
