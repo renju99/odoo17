@@ -356,14 +356,33 @@ export class SensorChartWidget extends Component {
     _initChart() {
         // Initialize chart library (Chart.js or similar)
         if (typeof Chart !== 'undefined') {
-            const ctx = this.el.querySelector('.sensor-chart').getContext('2d');
+            const canvas = this.el.querySelector('.sensor-chart');
+            if (!canvas) {
+                console.warn('Sensor chart canvas not found');
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            if (!ctx) {
+                console.warn('Could not get 2D context for sensor chart');
+                return;
+            }
+            
+            // Validate chart data before creating
+            const chartData = this.state.chartData || [];
+            const validData = chartData.filter(d => 
+                d && 
+                typeof d.reading_time !== 'undefined' && 
+                typeof d.value !== 'undefined'
+            );
+            
             this.chart = new Chart(ctx, {
                 type: this.state.chartType,
                 data: {
-                    labels: [],
+                    labels: validData.map(d => d.reading_time),
                     datasets: [{
                         label: 'Sensor Value',
-                        data: [],
+                        data: validData.map(d => d.value),
                         borderColor: 'rgb(75, 192, 192)',
                         tension: 0.1
                     }]
@@ -382,8 +401,22 @@ export class SensorChartWidget extends Component {
 
     _updateChart() {
         if (this.chart) {
-            const labels = this.state.chartData.map(d => d.reading_time);
-            const values = this.state.chartData.map(d => d.value);
+            const chartData = this.state.chartData || [];
+            
+            // Validate data before updating chart
+            const validData = chartData.filter(d => 
+                d && 
+                typeof d.reading_time !== 'undefined' && 
+                typeof d.value !== 'undefined'
+            );
+            
+            if (validData.length === 0) {
+                console.warn('No valid chart data available for update');
+                return;
+            }
+            
+            const labels = validData.map(d => d.reading_time);
+            const values = validData.map(d => d.value);
             
             this.chart.data.labels = labels;
             this.chart.data.datasets[0].data = values;
