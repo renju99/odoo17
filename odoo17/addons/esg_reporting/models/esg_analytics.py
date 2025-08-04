@@ -598,14 +598,11 @@ class ESGAnalytics(models.Model):
     @api.model
     def _calculate_overall_esg_score(self, data):
         """Calculate overall ESG score"""
-<<<<<<< HEAD
         environmental = data.get('environmental_score', 0)
         social = data.get('social_score', 0)
         governance = data.get('governance_score', 0)
         
         # Weighted average
-        return (environmental * 0.4 + social * 0.3 + governance * 0.3)
-=======
         try:
             environmental = data.get('environmental_score', 0)
             social = data.get('social_score', 0)
@@ -649,4 +646,3 @@ class ESGAnalytics(models.Model):
             return 0
         except Exception as e:
             return 0
->>>>>>> 6aaba2893f1578b8d8ba86d87b9022127f133896
