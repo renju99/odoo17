@@ -92,31 +92,52 @@ export class ESGAdvancedDashboard extends Component {
         
         const data = this.state.dashboardData?.esg_scores || [];
         
+        // Validate data before creating chart
+        if (!data || data.length === 0) {
+            console.warn('ESG score data is empty or undefined');
+            return;
+        }
+        
+        // Ensure all data points have valid values
+        const validData = data.filter(d => 
+            d && 
+            typeof d.month !== 'undefined' && 
+            typeof d.environmental !== 'undefined' && 
+            typeof d.social !== 'undefined' && 
+            typeof d.governance !== 'undefined' && 
+            typeof d.overall !== 'undefined'
+        );
+        
+        if (validData.length === 0) {
+            console.warn('No valid ESG score data points found');
+            return;
+        }
+        
         this.state.charts.esgScore = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: data.map(d => d.month),
+                labels: validData.map(d => d.month),
                 datasets: [{
                     label: 'Environmental Score',
-                    data: data.map(d => d.environmental),
+                    data: validData.map(d => d.environmental),
                     borderColor: '#28a745',
                     backgroundColor: 'rgba(40, 167, 69, 0.1)',
                     tension: 0.4
                 }, {
                     label: 'Social Score',
-                    data: data.map(d => d.social),
+                    data: validData.map(d => d.social),
                     borderColor: '#007bff',
                     backgroundColor: 'rgba(0, 123, 255, 0.1)',
                     tension: 0.4
                 }, {
                     label: 'Governance Score',
-                    data: data.map(d => d.governance),
+                    data: validData.map(d => d.governance),
                     borderColor: '#6f42c1',
                     backgroundColor: 'rgba(111, 66, 193, 0.1)',
                     tension: 0.4
                 }, {
                     label: 'Overall Score',
-                    data: data.map(d => d.overall),
+                    data: validData.map(d => d.overall),
                     borderColor: '#fd7e14',
                     backgroundColor: 'rgba(253, 126, 20, 0.1)',
                     tension: 0.4,
@@ -150,17 +171,24 @@ export class ESGAdvancedDashboard extends Component {
         
         const data = this.state.dashboardData?.emissions || {};
         
+        // Validate data before creating chart
+        if (!data || Object.keys(data).length === 0) {
+            console.warn('Emission data is empty or undefined');
+            return;
+        }
+        
+        // Ensure all emission values are valid numbers
+        const scope1 = typeof data.scope1 === 'number' ? data.scope1 : 0;
+        const scope2 = typeof data.scope2 === 'number' ? data.scope2 : 0;
+        const scope3 = typeof data.scope3 === 'number' ? data.scope3 : 0;
+        const offset = typeof data.offset === 'number' ? data.offset : 0;
+        
         this.state.charts.emission = new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: ['Scope 1', 'Scope 2', 'Scope 3', 'Offset'],
                 datasets: [{
-                    data: [
-                        data.scope1 || 0,
-                        data.scope2 || 0,
-                        data.scope3 || 0,
-                        data.offset || 0
-                    ],
+                    data: [scope1, scope2, scope3, offset],
                     backgroundColor: [
                         '#dc3545',
                         '#fd7e14',
@@ -190,17 +218,27 @@ export class ESGAdvancedDashboard extends Component {
         
         const data = this.state.dashboardData?.diversity || {};
         
+        // Validate data before creating chart
+        if (!data || Object.keys(data).length === 0) {
+            console.warn('Diversity data is empty or undefined');
+            return;
+        }
+        
+        // Ensure all diversity values are valid numbers
+        const maleCount = typeof data.male_count === 'number' ? data.male_count : 0;
+        const femaleCount = typeof data.female_count === 'number' ? data.female_count : 0;
+        const otherCount = typeof data.other_count === 'number' ? data.other_count : 0;
+        const maleLeaders = typeof data.male_leaders === 'number' ? data.male_leaders : 0;
+        const femaleLeaders = typeof data.female_leaders === 'number' ? data.female_leaders : 0;
+        const otherLeaders = typeof data.other_leaders === 'number' ? data.other_leaders : 0;
+        
         this.state.charts.diversity = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: ['Male', 'Female', 'Other'],
                 datasets: [{
                     label: 'Overall Workforce',
-                    data: [
-                        data.male_count || 0,
-                        data.female_count || 0,
-                        data.other_count || 0
-                    ],
+                    data: [maleCount, femaleCount, otherCount],
                     backgroundColor: [
                         '#007bff',
                         '#e83e8c',
@@ -208,11 +246,7 @@ export class ESGAdvancedDashboard extends Component {
                     ]
                 }, {
                     label: 'Leadership',
-                    data: [
-                        data.male_leaders || 0,
-                        data.female_leaders || 0,
-                        data.other_leaders || 0
-                    ],
+                    data: [maleLeaders, femaleLeaders, otherLeaders],
                     backgroundColor: [
                         '#0056b3',
                         '#c73e6b',
@@ -225,7 +259,7 @@ export class ESGAdvancedDashboard extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Workforce Diversity'
+                        text: 'Workforce Diversity Metrics'
                     },
                     legend: {
                         position: 'top'
@@ -246,6 +280,12 @@ export class ESGAdvancedDashboard extends Component {
         
         const data = this.state.dashboardData?.risk_assessment || {};
         
+        // Validate data before creating chart
+        if (!data || Object.keys(data).length === 0) {
+            console.warn('Risk assessment data is empty or undefined');
+            return;
+        }
+        
         // Prepare data for bar chart heatmap
         const categories = ['Environmental', 'Social', 'Governance'];
         const levels = ['High', 'Medium', 'Low'];
@@ -253,7 +293,8 @@ export class ESGAdvancedDashboard extends Component {
             label: level,
             data: categories.map(category => {
                 const key = `${category.toLowerCase()}_${level.toLowerCase()}`;
-                return data[key] || 0;
+                const value = data[key];
+                return typeof value === 'number' ? value : 0;
             }),
             backgroundColor: function(context) {
                 const value = context.raw;
@@ -313,13 +354,31 @@ export class ESGAdvancedDashboard extends Component {
         
         const data = this.state.dashboardData?.targets || [];
         
+        // Validate data before creating chart
+        if (!data || data.length === 0) {
+            console.warn('Target progress data is empty or undefined');
+            return;
+        }
+        
+        // Ensure all data points have valid values
+        const validData = data.filter(d => 
+            d && 
+            typeof d.name !== 'undefined' && 
+            typeof d.progress_percentage !== 'undefined'
+        );
+        
+        if (validData.length === 0) {
+            console.warn('No valid target progress data points found');
+            return;
+        }
+        
         this.state.charts.targetProgress = new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: data.map(d => d.name),
+                labels: validData.map(d => d.name),
                 datasets: [{
                     label: 'Progress (%)',
-                    data: data.map(d => d.progress_percentage),
+                    data: validData.map(d => d.progress_percentage),
                     backgroundColor: 'rgba(40, 167, 69, 0.2)',
                     borderColor: '#28a745',
                     pointBackgroundColor: '#28a745'
@@ -330,13 +389,19 @@ export class ESGAdvancedDashboard extends Component {
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Target Progress Overview'
+                        text: 'ESG Target Progress'
+                    },
+                    legend: {
+                        position: 'top'
                     }
                 },
                 scales: {
                     r: {
                         beginAtZero: true,
-                        max: 100
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
                     }
                 }
             }
