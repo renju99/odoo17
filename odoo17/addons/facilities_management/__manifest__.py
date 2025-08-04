@@ -119,6 +119,7 @@ Features:
     ],
     'assets': {
         'web.assets_backend': [
+            ('include', 'web.chartjs_lib'),
             'facilities_management/static/src/css/facilities.css',
             'facilities_management/static/src/css/portal.css',
             'facilities_management/static/src/js/dashboard_widgets.js',
