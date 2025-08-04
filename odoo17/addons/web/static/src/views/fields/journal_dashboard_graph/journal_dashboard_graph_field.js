@@ -40,15 +40,44 @@ export class JournalDashboardGraphField extends Component {
         if (this.chart) {
             this.chart.destroy();
         }
+        
+        // Validate data
+        if (!this.data || !Array.isArray(this.data) || this.data.length === 0) {
+            console.warn('Invalid data for journal dashboard graph');
+            return;
+        }
+        
+        // Validate canvas element
+        if (!this.canvasRef || !this.canvasRef.el) {
+            console.warn('Canvas element not found for journal dashboard graph');
+            return;
+        }
+        
         let config;
         if (this.props.graphType === "line") {
             config = this.getLineChartConfig();
         } else if (this.props.graphType === "bar") {
             config = this.getBarChartConfig();
+        } else {
+            console.warn('Invalid graph type:', this.props.graphType);
+            return;
         }
+        
+        // Validate config
+        if (!config || !config.data) {
+            console.warn('Invalid chart configuration');
+            return;
+        }
+        
         this.chart = new Chart(this.canvasRef.el, config);
     }
     getLineChartConfig() {
+        // Validate data structure
+        if (!this.data[0] || !this.data[0].values || !Array.isArray(this.data[0].values)) {
+            console.warn('Invalid data structure for line chart');
+            return { data: { labels: [], datasets: [] } };
+        }
+        
         const labels = this.data[0].values.map(function (pt) {
             return pt.x;
         });
@@ -100,6 +129,12 @@ export class JournalDashboardGraphField extends Component {
     }
 
     getBarChartConfig() {
+        // Validate data structure
+        if (!this.data[0] || !this.data[0].values || !Array.isArray(this.data[0].values)) {
+            console.warn('Invalid data structure for bar chart');
+            return { data: { labels: [], datasets: [] } };
+        }
+        
         const data = [];
         const labels = [];
         const backgroundColor = [];
@@ -107,8 +142,12 @@ export class JournalDashboardGraphField extends Component {
         const color13 = getColor(13, cookie.get("color_scheme"));
         const color19 = getColor(19, cookie.get("color_scheme"));
         this.data[0].values.forEach((pt) => {
-            data.push(pt.value);
-            labels.push(pt.label);
+            if (!pt) {
+                console.warn('Invalid data point in bar chart');
+                return;
+            }
+            data.push(pt.value || 0);
+            labels.push(pt.label || '');
             if (pt.type === "past") {
                 backgroundColor.push(color13);
             } else if (pt.type === "future") {
@@ -143,13 +182,11 @@ export class JournalDashboardGraphField extends Component {
                     y: {
                         display: false,
                     },
-                },
-                maintainAspectRatio: false,
-                elements: {
-                    line: {
-                        tension: 0.000001,
+                    x: {
+                        display: false,
                     },
                 },
+                maintainAspectRatio: false,
             },
         };
     }
