@@ -1,5 +1,4 @@
 {
-    'name': 'ESG',
     'name': 'ESG Reporting and Analytics',
     'version': '1.0',
     'category': 'Reporting',
