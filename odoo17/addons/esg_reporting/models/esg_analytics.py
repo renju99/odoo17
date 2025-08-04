@@ -136,9 +136,9 @@ class ESGAnalytics(models.Model):
         """Reset to draft state"""
         self.write({'state': 'draft'})
 
+    @api.model
     def get_comprehensive_dashboard_data(self, period=None, category=None):
         """Get comprehensive dashboard data for the frontend"""
-        self.ensure_one()
         
         # Set default values if None
         if period is None:
@@ -203,9 +203,9 @@ class ESGAnalytics(models.Model):
 
         return data
 
+    @api.model
     def get_predictive_analytics(self):
         """Get predictive analytics data"""
-        self.ensure_one()
         
         # Mock predictive data - in real implementation, this would use ML models
         return {
@@ -226,9 +226,9 @@ class ESGAnalytics(models.Model):
             }
         }
 
+    @api.model
     def get_esg_alerts(self):
         """Get ESG alerts and notifications"""
-        self.ensure_one()
         
         alerts = []
         
@@ -254,9 +254,9 @@ class ESGAnalytics(models.Model):
 
         return alerts
 
+    @api.model
     def generate_comprehensive_report(self, period=None, category=None):
         """Generate comprehensive ESG report"""
-        self.ensure_one()
         
         # Set default values if None
         if period is None:
@@ -268,13 +268,13 @@ class ESGAnalytics(models.Model):
         # For now, return mock data
         return {
             'report_url': '/esg/report/download',
-            'report_id': self.id,
+            'report_id': 1,  # Use a default ID since this is a class method
             'generated_at': fields.Datetime.now().isoformat()
         }
 
+    @api.model
     def export_dashboard_data(self, period=None, category=None):
         """Export dashboard data as CSV"""
-        self.ensure_one()
         
         # Set default values if None
         if period is None:
@@ -299,6 +299,7 @@ class ESGAnalytics(models.Model):
         
         return csv_data
 
+    @api.model
     def _get_emission_data(self, date_from, date_to):
         """Get emission data for the specified date range"""
         # Mock data - in real implementation, this would query actual emission records
@@ -311,6 +312,7 @@ class ESGAnalytics(models.Model):
             'net': 800.5
         }
 
+    @api.model
     def _get_diversity_data(self, date_from, date_to):
         """Get diversity data for the specified date range"""
         # Mock data - in real implementation, this would query actual employee records
@@ -325,6 +327,7 @@ class ESGAnalytics(models.Model):
             'leadership_diversity': 42.1
         }
 
+    @api.model
     def _get_risk_assessment_data(self, date_from, date_to):
         """Get risk assessment data"""
         # Mock data - in real implementation, this would calculate actual risk scores
@@ -340,6 +343,7 @@ class ESGAnalytics(models.Model):
             'governance_low': 12
         }
 
+    @api.model
     def _get_target_progress_data(self, date_from, date_to):
         """Get target progress data"""
         # Mock data - in real implementation, this would query actual target records
@@ -364,6 +368,7 @@ class ESGAnalytics(models.Model):
             }
         ]
 
+    @api.model
     def _get_esg_trend_data(self, date_from, date_to):
         """Get ESG trend data for charts"""
         # Mock monthly data for the last 12 months
@@ -379,21 +384,25 @@ class ESGAnalytics(models.Model):
             })
         return trend_data
 
+    @api.model
     def _calculate_environmental_score(self, date_from, date_to):
         """Calculate environmental score"""
         # Mock calculation - in real implementation, this would use actual metrics
         return 78.5
 
+    @api.model
     def _calculate_social_score(self, date_from, date_to):
         """Calculate social score"""
         # Mock calculation - in real implementation, this would use actual metrics
         return 82.3
 
+    @api.model
     def _calculate_governance_score(self, date_from, date_to):
         """Calculate governance score"""
         # Mock calculation - in real implementation, this would use actual metrics
         return 88.7
 
+    @api.model
     def _calculate_overall_esg_score(self, data):
         """Calculate overall ESG score"""
         environmental = data.get('environmental_score', 0)
