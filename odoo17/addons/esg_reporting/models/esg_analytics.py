@@ -135,3 +135,252 @@ class ESGAnalytics(models.Model):
     def action_draft(self):
         """Reset to draft state"""
         self.write({'state': 'draft'})
+
+    def get_comprehensive_dashboard_data(self, period='current_year', category='all'):
+        """Get comprehensive dashboard data for the frontend"""
+        self.ensure_one()
+        
+        # Calculate date range based on period
+        today = fields.Date.today()
+        if period == 'current_year':
+            date_from = today.replace(month=1, day=1)
+            date_to = today
+        elif period == 'last_year':
+            date_from = today.replace(year=today.year-1, month=1, day=1)
+            date_to = today.replace(year=today.year-1, month=12, day=31)
+        elif period == 'last_quarter':
+            # Calculate last quarter
+            current_quarter = (today.month - 1) // 3
+            if current_quarter == 0:
+                date_from = today.replace(year=today.year-1, month=10, day=1)
+                date_to = today.replace(year=today.year-1, month=12, day=31)
+            else:
+                start_month = (current_quarter - 1) * 3 + 1
+                date_from = today.replace(month=start_month, day=1)
+                date_to = today.replace(month=start_month+2, day=28)
+        else:
+            date_from = today - timedelta(days=30)
+            date_to = today
+
+        # Get ESG data based on category
+        data = {
+            'period': period,
+            'category': category,
+            'date_range': {
+                'from': date_from.isoformat(),
+                'to': date_to.isoformat()
+            }
+        }
+
+        if category in ['all', 'environmental']:
+            data['emissions'] = self._get_emission_data(date_from, date_to)
+            data['environmental_score'] = self._calculate_environmental_score(date_from, date_to)
+
+        if category in ['all', 'social']:
+            data['diversity'] = self._get_diversity_data(date_from, date_to)
+            data['social_score'] = self._calculate_social_score(date_from, date_to)
+
+        if category in ['all', 'governance']:
+            data['governance_score'] = self._calculate_governance_score(date_from, date_to)
+
+        if category in ['all', 'risk']:
+            data['risk_assessment'] = self._get_risk_assessment_data(date_from, date_to)
+
+        if category in ['all', 'targets']:
+            data['targets'] = self._get_target_progress_data(date_from, date_to)
+
+        # Calculate overall ESG score
+        data['overall_score'] = self._calculate_overall_esg_score(data)
+
+        # Add trend data
+        data['esg_scores'] = self._get_esg_trend_data(date_from, date_to)
+
+        return data
+
+    def get_predictive_analytics(self):
+        """Get predictive analytics data"""
+        self.ensure_one()
+        
+        # Mock predictive data - in real implementation, this would use ML models
+        return {
+            'emission_forecast': {
+                'next_month': 1250.5,
+                'next_quarter': 3800.2,
+                'next_year': 14500.8
+            },
+            'risk_predictions': {
+                'environmental_risk': 'medium',
+                'social_risk': 'low',
+                'governance_risk': 'low'
+            },
+            'target_achievement_probability': {
+                'emission_reduction': 0.85,
+                'diversity_improvement': 0.92,
+                'governance_compliance': 0.78
+            }
+        }
+
+    def get_esg_alerts(self):
+        """Get ESG alerts and notifications"""
+        self.ensure_one()
+        
+        alerts = []
+        
+        # Check for emission threshold alerts
+        emissions = self._get_emission_data(fields.Date.today() - timedelta(days=30), fields.Date.today())
+        if emissions.get('total', 0) > 1000:
+            alerts.append({
+                'type': 'warning',
+                'title': 'High Emissions Alert',
+                'message': 'Emissions have exceeded the monthly threshold',
+                'severity': 'medium'
+            })
+
+        # Check for diversity alerts
+        diversity = self._get_diversity_data(fields.Date.today() - timedelta(days=30), fields.Date.today())
+        if diversity.get('female_percentage', 0) < 30:
+            alerts.append({
+                'type': 'info',
+                'title': 'Diversity Improvement Needed',
+                'message': 'Female representation is below target',
+                'severity': 'low'
+            })
+
+        return alerts
+
+    def generate_comprehensive_report(self, period='current_year', category='all'):
+        """Generate comprehensive ESG report"""
+        self.ensure_one()
+        
+        # This would generate a PDF report
+        # For now, return mock data
+        return {
+            'report_url': '/esg/report/download',
+            'report_id': self.id,
+            'generated_at': fields.Datetime.now().isoformat()
+        }
+
+    def export_dashboard_data(self, period='current_year', category='all'):
+        """Export dashboard data as CSV"""
+        self.ensure_one()
+        
+        dashboard_data = self.get_comprehensive_dashboard_data(period, category)
+        
+        # Convert to CSV format
+        csv_data = []
+        
+        # Add ESG scores
+        for score_data in dashboard_data.get('esg_scores', []):
+            csv_data.append({
+                'Date': score_data.get('month'),
+                'Environmental_Score': score_data.get('environmental'),
+                'Social_Score': score_data.get('social'),
+                'Governance_Score': score_data.get('governance'),
+                'Overall_Score': score_data.get('overall')
+            })
+        
+        return csv_data
+
+    def _get_emission_data(self, date_from, date_to):
+        """Get emission data for the specified date range"""
+        # Mock data - in real implementation, this would query actual emission records
+        return {
+            'scope1': 450.5,
+            'scope2': 320.8,
+            'scope3': 180.2,
+            'offset': 150.0,
+            'total': 950.5,
+            'net': 800.5
+        }
+
+    def _get_diversity_data(self, date_from, date_to):
+        """Get diversity data for the specified date range"""
+        # Mock data - in real implementation, this would query actual employee records
+        return {
+            'male_count': 120,
+            'female_count': 85,
+            'other_count': 5,
+            'male_leaders': 15,
+            'female_leaders': 8,
+            'other_leaders': 1,
+            'female_percentage': 40.5,
+            'leadership_diversity': 42.1
+        }
+
+    def _get_risk_assessment_data(self, date_from, date_to):
+        """Get risk assessment data"""
+        # Mock data - in real implementation, this would calculate actual risk scores
+        return {
+            'environmental_high': 2,
+            'environmental_medium': 5,
+            'environmental_low': 8,
+            'social_high': 1,
+            'social_medium': 3,
+            'social_low': 10,
+            'governance_high': 0,
+            'governance_medium': 2,
+            'governance_low': 12
+        }
+
+    def _get_target_progress_data(self, date_from, date_to):
+        """Get target progress data"""
+        # Mock data - in real implementation, this would query actual target records
+        return [
+            {
+                'name': 'Emission Reduction',
+                'target': 20,
+                'current': 15,
+                'progress_percentage': 75
+            },
+            {
+                'name': 'Diversity Improvement',
+                'target': 50,
+                'current': 40.5,
+                'progress_percentage': 81
+            },
+            {
+                'name': 'Governance Compliance',
+                'target': 100,
+                'current': 95,
+                'progress_percentage': 95
+            }
+        ]
+
+    def _get_esg_trend_data(self, date_from, date_to):
+        """Get ESG trend data for charts"""
+        # Mock monthly data for the last 12 months
+        trend_data = []
+        for i in range(12):
+            month_date = date_from - timedelta(days=30*i)
+            trend_data.append({
+                'month': month_date.strftime('%Y-%m'),
+                'environmental': 75 + (i * 2),
+                'social': 80 + (i * 1.5),
+                'governance': 85 + (i * 1),
+                'overall': 80 + (i * 1.5)
+            })
+        return trend_data
+
+    def _calculate_environmental_score(self, date_from, date_to):
+        """Calculate environmental score"""
+        # Mock calculation - in real implementation, this would use actual metrics
+        return 78.5
+
+    def _calculate_social_score(self, date_from, date_to):
+        """Calculate social score"""
+        # Mock calculation - in real implementation, this would use actual metrics
+        return 82.3
+
+    def _calculate_governance_score(self, date_from, date_to):
+        """Calculate governance score"""
+        # Mock calculation - in real implementation, this would use actual metrics
+        return 88.7
+
+    def _calculate_overall_esg_score(self, data):
+        """Calculate overall ESG score"""
+        environmental = data.get('environmental_score', 0)
+        social = data.get('social_score', 0)
+        governance = data.get('governance_score', 0)
+        
+        # Weighted average
+        return (environmental * 0.4 + social * 0.3 + governance * 0.3)
