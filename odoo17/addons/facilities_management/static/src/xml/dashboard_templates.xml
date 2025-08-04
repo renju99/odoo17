@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Facilities Management Dashboard Template -->
+    <t t-name="facilities_management.Dashboard" owl="1">
+        <div class="facilities-dashboard">
+            <div class="o_control_panel">
+                <div class="o_cp_top">
+                    <div class="o_cp_top_left">
+                        <h2>Facilities Management Dashboard</h2>
+                    </div>
+                    <div class="o_cp_top_right">
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">
+                                Last Updated: <span t-esc="dashboardData?.current_time || 'N/A'"/>
+                            </span>
+                            <button class="btn btn-primary refresh-dashboard" t-on-click="loadDashboardData">
+                                <i class="fa fa-refresh"/> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <!-- Summary Cards -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Bookings</h5>
+                                <h2 class="card-text text-primary">
+                                    <t t-esc="dashboardData?.total_bookings || 0"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Today's Bookings</h5>
+                                <h2 class="card-text text-success">
+                                    <t t-esc="dashboardData?.today_bookings || 0"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">This Week</h5>
+                                <h2 class="card-text text-info">
+                                    <t t-esc="dashboardData?.week_bookings || 0"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">This Month</h5>
+                                <h2 class="card-text text-warning">
+                                    <t t-esc="dashboardData?.month_bookings || 0"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Breakdown -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Booking Status Breakdown</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="status-item">
+                                            <span class="badge badge-success">Confirmed</span>
+                                            <span class="status-count">
+                                                <t t-esc="dashboardData?.status_breakdown?.confirmed || 0"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="status-item">
+                                            <span class="badge badge-warning">Pending</span>
+                                            <span class="status-count">
+                                                <t t-esc="dashboardData?.status_breakdown?.pending || 0"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="status-item">
+                                            <span class="badge badge-info">Completed</span>
+                                            <span class="status-count">
+                                                <t t-esc="dashboardData?.status_breakdown?.completed || 0"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="status-item">
+                                            <span class="badge badge-danger">Cancelled</span>
+                                            <span class="status-count">
+                                                <t t-esc="dashboardData?.status_breakdown?.cancelled || 0"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Room Utilization -->
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Room Utilization (This Week)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="room-utilization-list">
+                                    <t t-foreach="dashboardData?.room_utilization || []" t-as="room" t-key="room.room_name">
+                                        <div class="room-item d-flex justify-content-between align-items-center mb-2">
+                                            <span class="room-name" t-esc="room.room_name"/>
+                                            <span class="room-bookings">
+                                                <t t-esc="room.bookings_count"/> bookings
+                                            </span>
+                                        </div>
+                                    </t>
+                                    <t t-if="!dashboardData?.room_utilization?.length">
+                                        <div class="text-muted">No room utilization data available</div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Bookings -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Recent Bookings</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Booking</th>
+                                                <th>Room</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                                <th>Type</th>
+                                                <th>Status</th>
+                                                <th>User</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="dashboardData?.recent_bookings || []" t-as="booking" t-key="booking.id">
+                                                <tr>
+                                                    <td>
+                                                        <a href="#" t-att-data-booking-id="booking.id" t-esc="booking.name"/>
+                                                    </td>
+                                                    <td t-esc="booking.room_name"/>
+                                                    <td t-esc="booking.start_datetime"/>
+                                                    <td t-esc="booking.end_datetime"/>
+                                                    <td>
+                                                        <span t-att-class="'badge badge-' + (booking.booking_type === 'meeting' ? 'primary' : booking.booking_type === 'event' ? 'success' : 'secondary')" t-esc="booking.booking_type"/>
+                                                    </td>
+                                                    <td>
+                                                        <span t-att-class="'badge badge-' + (booking.state === 'confirmed' ? 'success' : booking.state === 'pending' ? 'warning' : booking.state === 'completed' ? 'info' : 'danger')" t-esc="booking.state"/>
+                                                    </td>
+                                                    <td t-esc="booking.user_name"/>
+                                                </tr>
+                                            </t>
+                                            <t t-if="!dashboardData?.recent_bookings?.length">
+                                                <tr>
+                                                    <td colspan="7" class="text-center text-muted">No recent bookings</td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
