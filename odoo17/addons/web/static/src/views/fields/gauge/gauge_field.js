@@ -38,12 +38,27 @@ export class GaugeField extends Component {
 
     renderChart() {
         const gaugeValue = this.props.record.data[this.props.name];
+        
+        // Validate gauge value
+        if (gaugeValue === undefined || gaugeValue === null) {
+            console.warn('Gauge value is undefined or null');
+            return;
+        }
+        
         let maxValue = Math.max(gaugeValue, this.props.record.data[this.props.maxValueField] || this.props.maxValue);
         let maxLabel = maxValue;
+        
         if (gaugeValue === 0 && maxValue === 0) {
             maxValue = 1;
             maxLabel = 0;
         }
+        
+        // Validate maxValue
+        if (maxValue <= 0) {
+            console.warn('Invalid max value for gauge chart');
+            return;
+        }
+        
         const config = {
             type: "doughnut",
             data: {
@@ -85,6 +100,13 @@ export class GaugeField extends Component {
                 aspectRatio: 2,
             },
         };
+        
+        // Validate canvas element
+        if (!this.canvasRef || !this.canvasRef.el) {
+            console.warn('Canvas element not found for gauge chart');
+            return;
+        }
+        
         this.chart = new Chart(this.canvasRef.el, config);
     }
 }
