@@ -53,7 +53,12 @@
     ],
     'assets': {
         'web.assets_backend': [
+<<<<<<< HEAD
             'web/static/lib/chartjs/chart.js',
+=======
+            ('include', 'web.chartjs_lib'),
+            'esg_reporting/static/src/css/esg_dashboard.css',
+>>>>>>> 6aaba2893f1578b8d8ba86d87b9022127f133896
             'esg_reporting/static/src/js/esg_advanced_dashboard.js',
             'esg_reporting/static/src/js/esg_dashboard.js',
             'esg_reporting/static/src/xml/esg_advanced_dashboard.xml',
