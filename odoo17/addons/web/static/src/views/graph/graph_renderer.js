@@ -214,19 +214,50 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getBarChartData() {
-        // style data
+        // Validate model data first
+        if (!this.model || !this.model.data) {
+            console.warn('Model or model data is undefined');
+            return { labels: [], datasets: [] };
+        }
+        
         const { domains, stacked } = this.model.metaData;
         const { data, lineOverlayDataset } = this.model;
+        
+        // Validate data structure
+        if (!data || !data.datasets || !Array.isArray(data.datasets)) {
+            console.warn('Invalid data structure for bar chart');
+            return { labels: [], datasets: [] };
+        }
+        
+        // Validate domains
+        if (!domains || !Array.isArray(domains)) {
+            console.warn('Invalid domains for bar chart');
+            return { labels: [], datasets: [] };
+        }
+        
+        // style data
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
+            if (!dataset) {
+                console.warn('Invalid dataset at index:', index);
+                continue;
+            }
+            
             // used when stacked
-            if (stacked) {
+            if (stacked && dataset.originIndex !== undefined && domains[dataset.originIndex]) {
                 dataset.stack = domains[dataset.originIndex].description || "";
             }
             // set dataset color
             dataset.backgroundColor = getColor(index, cookie.get("color_scheme"));
         }
+        
         if (lineOverlayDataset) {
+            // Validate lineOverlayDataset
+            if (typeof lineOverlayDataset !== 'object') {
+                console.warn('Invalid lineOverlayDataset');
+                return data;
+            }
+            
             // Mutate the lineOverlayDataset to include the config on how it will be displayed.
             const color = cookie.get("color_scheme") === "dark" ? "ffffff" : "000000";
             Object.assign(lineOverlayDataset, {
@@ -362,12 +393,42 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLineChartData() {
+        // Validate model data first
+        if (!this.model || !this.model.data) {
+            console.warn('Model or model data is undefined');
+            return { labels: [], datasets: [] };
+        }
+        
         const { groupBy, domains, stacked, cumulated } = this.model.metaData;
         const data = this.model.data;
+        
+        // Validate data structure
+        if (!data || !data.datasets || !Array.isArray(data.datasets)) {
+            console.warn('Invalid data structure for line chart');
+            return { labels: [], datasets: [] };
+        }
+        
+        // Validate metaData
+        if (!groupBy || !Array.isArray(groupBy)) {
+            console.warn('Invalid groupBy for line chart');
+            return { labels: [], datasets: [] };
+        }
+        
+        if (!domains || !Array.isArray(domains)) {
+            console.warn('Invalid domains for line chart');
+            return { labels: [], datasets: [] };
+        }
+        
         const color0 = getColor(0, cookie.get("color_scheme"));
         const color1 = getColor(1, cookie.get("color_scheme"));
+        
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
+            if (!dataset) {
+                console.warn('Invalid dataset at index:', index);
+                continue;
+            }
+            
             if (groupBy.length <= 1 && domains.length > 1) {
                 if (dataset.originIndex === 0) {
                     dataset.fill = "origin";
@@ -381,35 +442,48 @@ export class GraphRenderer extends Component {
             } else {
                 dataset.borderColor = getColor(index, cookie.get("color_scheme"));
             }
+            
             if (cumulated) {
-                let accumulator = dataset.cumulatedStart;
+                let accumulator = dataset.cumulatedStart || 0;
                 dataset.data = dataset.data.map((value) => {
-                    accumulator += value;
+                    accumulator += value || 0;
                     return accumulator;
                 });
             }
-            if (data.labels.length === 1) {
+            
+            if (data.labels && data.labels.length === 1) {
                 // shift of the real value to right. This is done to
                 // center the points in the chart. See data.labels below in
                 // Chart parameters
                 dataset.data.unshift(undefined);
-                dataset.trueLabels.unshift(undefined);
-                dataset.domains.unshift(undefined);
+                if (dataset.trueLabels) {
+                    dataset.trueLabels.unshift(undefined);
+                }
+                if (dataset.domains) {
+                    dataset.domains.unshift(undefined);
+                }
             }
+            
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = "rgba(0,0,0,0.2)";
             if (stacked) {
                 dataset.backgroundColor = hexToRGBA(dataset.borderColor, LINE_FILL_TRANSPARENCY);
             }
         }
-        if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
+        
+        if (data.datasets.length === 1 && data.datasets[0] && data.datasets[0].originIndex === 0) {
             const dataset = data.datasets[0];
             dataset.fill = "origin";
             dataset.backgroundColor = hexToRGBA(color0, LINE_FILL_TRANSPARENCY);
         }
+        
         // center the points in the chart (without that code they are put
         // on the left and the graph seems empty)
-        data.labels = data.labels.length > 1 ? data.labels : ["", ...data.labels, ""];
+        if (data.labels && Array.isArray(data.labels)) {
+            data.labels = data.labels.length > 1 ? data.labels : ["", ...data.labels, ""];
+        } else {
+            data.labels = [];
+        }
 
         return data;
     }
@@ -419,25 +493,59 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getPieChartData() {
+        // Validate model data first
+        if (!this.model || !this.model.data) {
+            console.warn('Model or model data is undefined');
+            return { labels: [], datasets: [] };
+        }
+        
         const { domains } = this.model.metaData;
         const data = this.model.data;
+        
+        // Validate data structure
+        if (!data || !data.datasets || !Array.isArray(data.datasets)) {
+            console.warn('Invalid data structure for pie chart');
+            return { labels: [], datasets: [] };
+        }
+        
+        // Validate labels
+        if (!data.labels || !Array.isArray(data.labels)) {
+            console.warn('Invalid labels for pie chart');
+            return { labels: [], datasets: [] };
+        }
+        
+        // Validate domains
+        if (!domains || !Array.isArray(domains)) {
+            console.warn('Invalid domains for pie chart');
+            return { labels: [], datasets: [] };
+        }
+        
         // style/complete data
         // give same color to same groups from different origins
         const colors = data.labels.map((_, index) => getColor(index, cookie.get("color_scheme")));
         const borderColor = getBorderWhite(cookie.get("color_scheme"));
+        
         for (const dataset of data.datasets) {
+            if (!dataset) {
+                console.warn('Invalid dataset in pie chart');
+                continue;
+            }
             dataset.backgroundColor = colors;
             dataset.borderColor = borderColor;
         }
+        
         // make sure there is a zone associated with every origin
         const representedOriginIndexes = new Set(
-            data.datasets.map((dataset) => dataset.originIndex)
+            data.datasets.filter(dataset => dataset && dataset.originIndex !== undefined)
+                .map((dataset) => dataset.originIndex)
         );
+        
         let addNoDataToLegend = false;
         const fakeData = new Array(data.labels.length + 1);
         fakeData[data.labels.length] = 1;
         const fakeTrueLabels = new Array(data.labels.length + 1);
         fakeTrueLabels[data.labels.length] = NO_DATA;
+        
         for (let index = 0; index < domains.length; ++index) {
             if (!representedOriginIndexes.has(index)) {
                 data.datasets.push({
@@ -450,6 +558,7 @@ export class GraphRenderer extends Component {
                 addNoDataToLegend = true;
             }
         }
+        
         if (addNoDataToLegend) {
             data.labels.push(NO_DATA);
         }
@@ -704,7 +813,49 @@ export class GraphRenderer extends Component {
         if (this.chart) {
             this.chart.destroy();
         }
+        
         const config = this.getChartConfig();
+        
+        // Validate chart data before creating chart
+        if (!config || !config.data) {
+            console.warn('Chart configuration or data is undefined');
+            return;
+        }
+        
+        // Validate data structure
+        if (!config.data.labels || !Array.isArray(config.data.labels)) {
+            console.warn('Chart labels are undefined or not an array');
+            return;
+        }
+        
+        if (!config.data.datasets || !Array.isArray(config.data.datasets)) {
+            console.warn('Chart datasets are undefined or not an array');
+            return;
+        }
+        
+        // Validate datasets
+        const validDatasets = config.data.datasets.filter(dataset => {
+            if (!dataset || typeof dataset !== 'object') {
+                console.warn('Invalid dataset found:', dataset);
+                return false;
+            }
+            
+            if (!Array.isArray(dataset.data)) {
+                console.warn('Dataset data is not an array:', dataset);
+                return false;
+            }
+            
+            return true;
+        });
+        
+        if (validDatasets.length === 0) {
+            console.warn('No valid datasets found for chart');
+            return;
+        }
+        
+        // Update config with validated data
+        config.data.datasets = validDatasets;
+        
         this.chart = new Chart(this.canvasRef.el, config);
     }
 
