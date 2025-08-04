@@ -421,8 +421,12 @@ export class ESGAdvancedDashboard extends Component {
     updateCharts() {
         // Update all charts with new data
         Object.values(this.state.charts).forEach(chart => {
-            if (chart && chart.update) {
-                chart.update();
+            if (chart && typeof chart.update === 'function') {
+                try {
+                    chart.update();
+                } catch (error) {
+                    console.warn('Error updating chart:', error);
+                }
             }
         });
     }
