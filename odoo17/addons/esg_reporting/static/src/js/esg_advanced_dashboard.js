@@ -246,28 +246,34 @@ export class ESGAdvancedDashboard extends Component {
         
         const data = this.state.dashboardData?.risk_assessment || {};
         
+        // Prepare data for bar chart heatmap
+        const categories = ['Environmental', 'Social', 'Governance'];
+        const levels = ['High', 'Medium', 'Low'];
+        const datasets = levels.map((level, levelIndex) => ({
+            label: level,
+            data: categories.map(category => {
+                const key = `${category.toLowerCase()}_${level.toLowerCase()}`;
+                return data[key] || 0;
+            }),
+            backgroundColor: function(context) {
+                const value = context.raw;
+                const alpha = Math.min(value / 100, 1);
+                const colors = ['#dc3545', '#ffc107', '#28a745']; // Red, Yellow, Green
+                const color = colors[levelIndex];
+                return `rgba(${color}, ${alpha})`;
+            },
+            borderColor: function(context) {
+                const colors = ['#dc3545', '#ffc107', '#28a745']; // Red, Yellow, Green
+                return colors[levelIndex];
+            },
+            borderWidth: 1
+        }));
+        
         this.state.charts.riskHeatmap = new Chart(ctx, {
-            type: 'matrix',
+            type: 'bar',
             data: {
-                datasets: [{
-                    label: 'Risk Level',
-                    data: [
-                        { x: 'Environmental', y: 'High', v: data.environmental_high || 0 },
-                        { x: 'Environmental', y: 'Medium', v: data.environmental_medium || 0 },
-                        { x: 'Environmental', y: 'Low', v: data.environmental_low || 0 },
-                        { x: 'Social', y: 'High', v: data.social_high || 0 },
-                        { x: 'Social', y: 'Medium', v: data.social_medium || 0 },
-                        { x: 'Social', y: 'Low', v: data.social_low || 0 },
-                        { x: 'Governance', y: 'High', v: data.governance_high || 0 },
-                        { x: 'Governance', y: 'Medium', v: data.governance_medium || 0 },
-                        { x: 'Governance', y: 'Low', v: data.governance_low || 0 }
-                    ],
-                    backgroundColor: function(context) {
-                        const value = context.dataset.data[context.dataIndex].v;
-                        const alpha = Math.min(value / 100, 1);
-                        return `rgba(220, 53, 69, ${alpha})`;
-                    }
-                }]
+                labels: categories,
+                datasets: datasets
             },
             options: {
                 responsive: true,
@@ -277,17 +283,24 @@ export class ESGAdvancedDashboard extends Component {
                         text: 'ESG Risk Assessment Heatmap'
                     },
                     legend: {
-                        display: false
+                        display: true,
+                        position: 'top'
                     }
                 },
                 scales: {
                     x: {
-                        type: 'category',
-                        position: 'bottom'
+                        title: {
+                            display: true,
+                            text: 'ESG Categories'
+                        }
                     },
                     y: {
-                        type: 'category',
-                        position: 'left'
+                        title: {
+                            display: true,
+                            text: 'Risk Level (%)'
+                        },
+                        beginAtZero: true,
+                        max: 100
                     }
                 }
             }
