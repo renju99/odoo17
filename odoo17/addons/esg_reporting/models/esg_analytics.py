@@ -136,9 +136,15 @@ class ESGAnalytics(models.Model):
         """Reset to draft state"""
         self.write({'state': 'draft'})
 
-    def get_comprehensive_dashboard_data(self, period='current_year', category='all'):
+    def get_comprehensive_dashboard_data(self, period=None, category=None):
         """Get comprehensive dashboard data for the frontend"""
         self.ensure_one()
+        
+        # Set default values if None
+        if period is None:
+            period = 'current_year'
+        if category is None:
+            category = 'all'
         
         # Calculate date range based on period
         today = fields.Date.today()
@@ -248,9 +254,15 @@ class ESGAnalytics(models.Model):
 
         return alerts
 
-    def generate_comprehensive_report(self, period='current_year', category='all'):
+    def generate_comprehensive_report(self, period=None, category=None):
         """Generate comprehensive ESG report"""
         self.ensure_one()
+        
+        # Set default values if None
+        if period is None:
+            period = 'current_year'
+        if category is None:
+            category = 'all'
         
         # This would generate a PDF report
         # For now, return mock data
@@ -260,9 +272,15 @@ class ESGAnalytics(models.Model):
             'generated_at': fields.Datetime.now().isoformat()
         }
 
-    def export_dashboard_data(self, period='current_year', category='all'):
+    def export_dashboard_data(self, period=None, category=None):
         """Export dashboard data as CSV"""
         self.ensure_one()
+        
+        # Set default values if None
+        if period is None:
+            period = 'current_year'
+        if category is None:
+            category = 'all'
         
         dashboard_data = self.get_comprehensive_dashboard_data(period, category)
         
