@@ -232,6 +232,8 @@ class EnhancedESGWizard(models.TransientModel):
 
     # Company Information
     company_name = fields.Char(string='Company', default='YourCompany')
+    company_id = fields.Many2one('res.company', string='Company',
+                                 default=lambda self: self.env.company)
 
     # Report data storage for template access
     report_data = fields.Json(string='Report Data', readonly=True, default={})
