@@ -12,7 +12,6 @@
                         <group string="Report Configuration" name="report_config">
                             <group>
                                 <field name="report_name"/>
-                                <field name="report_type"/>
                                 <field name="company_name"/>
                                 <field name="output_format"/>
                             </group>
@@ -106,12 +105,6 @@
                                 <field name="include_logo"/>
                                 <field name="include_footer"/>
                             </group>
-                        </group>
-
-                        <!-- Custom Configuration Section -->
-                        <group string="Custom Configuration" name="custom_config">
-                            <field name="custom_metrics" widget="ace" options="{'mode': 'json'}"/>
-                            <field name="custom_charts" widget="ace" options="{'mode': 'json'}"/>
                         </group>
                     </sheet>
                     <footer>

@@ -96,7 +96,6 @@
                         </div>
                         <group>
                             <group>
-                                <field name="report_type"/>
                                 <field name="date_from"/>
                                 <field name="date_to"/>
                                 <field name="format"/>

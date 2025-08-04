@@ -135,3 +135,82 @@ class ESGAnalytics(models.Model):
     def action_draft(self):
         """Reset to draft state"""
         self.write({'state': 'draft'})
+
+    @api.model
+    def get_comprehensive_dashboard_data(self, company_id=None, **kwargs):
+        """
+        Gathers and formats a comprehensive set of data for the advanced ESG dashboard.
+        """
+        # If no company_id is provided, use the current user's company
+        if not company_id:
+            company_id = self.env.company.id
+
+        # Helper function to generate dummy chart data
+        def get_chart_data(labels, datasets_config):
+            return {
+                'labels': labels,
+                'datasets': [
+                    {
+                        'label': config['label'],
+                        'data': [self.env['ir.qweb.field.float'].value_to_html(d, {}) for d in config['data']],
+                        'backgroundColor': config.get('backgroundColor', '#875A7B'),
+                        'borderColor': config.get('borderColor', '#875A7B'),
+                        'fill': config.get('fill', False),
+                    } for config in datasets_config
+                ]
+            }
+
+        # --- KPIs ---
+        kpis = [
+            {'name': 'Overall ESG Score', 'value': '82', 'unit': '/100', 'icon': 'fa-star'},
+            {'name': 'Net Emissions', 'value': '1,250', 'unit': 'tCO2e', 'icon': 'fa-leaf'},
+            {'name': 'Gender Pay Gap', 'value': '12%', 'unit': '', 'icon': 'fa-percent'},
+            {'name': 'Community Investment', 'value': '$50k', 'unit': '', 'icon': 'fa-users'},
+        ]
+
+        # --- Chart Data ---
+        # 1. Emissions Trend (Line Chart)
+        emissions_trend_chart = get_chart_data(
+            labels=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets_config=[
+                {'label': 'Scope 1 Emissions', 'data': [120, 150, 130, 180, 200, 220], 'backgroundColor': 'rgba(255, 99, 132, 0.2)', 'borderColor': 'rgba(255, 99, 132, 1)'},
+                {'label': 'Scope 2 Emissions', 'data': [80, 90, 85, 100, 110, 105], 'backgroundColor': 'rgba(54, 162, 235, 0.2)', 'borderColor': 'rgba(54, 162, 235, 1)'},
+            ]
+        )
+
+        # 2. Gender Diversity (Doughnut Chart)
+        gender_diversity_chart = get_chart_data(
+            labels=['Female', 'Male', 'Non-Binary'],
+            datasets_config=[
+                {'label': 'Workforce Diversity', 'data': [45, 53, 2], 'backgroundColor': ['#FF6384', '#36A2EB', '#FFCE56']},
+            ]
+        )
+        
+        # 3. Governance Compliance (Bar chart)
+        governance_compliance_chart = get_chart_data(
+            labels=['Policy A', 'Policy B', 'Standard C', 'Regulation D'],
+             datasets_config=[
+                {'label': 'Compliance Status (%)', 'data': [95, 88, 100, 92], 'backgroundColor': ['#4BC0C0', '#FF9F40', '#9966FF', '#FFCD56']},
+            ]
+        )
+
+        # --- Tabular Data ---
+        initiatives_data = [
+            {'name': 'Solar Panel Installation', 'category': 'Environmental', 'status': 'Completed', 'impact_score': 8},
+            {'name': 'Diversity & Inclusion Training', 'category': 'Social', 'status': 'In Progress', 'impact_score': 7},
+            {'name': 'Ethical Supply Chain Audit', 'category': 'Governance', 'status': 'Planned', 'impact_score': 9},
+            {'name': 'Community Volunteering Program', 'category': 'Social', 'status': 'Completed', 'impact_score': 6},
+        ]
+
+        return {
+            'kpis': kpis,
+            'charts': {
+                'emissions_trend': emissions_trend_chart,
+                'gender_diversity': gender_diversity_chart,
+                'governance_compliance': governance_compliance_chart,
+            },
+            'tables': {
+                'initiatives': initiatives_data,
+            },
+            'company_name': self.env['res.company'].browse(company_id).name,
+        }

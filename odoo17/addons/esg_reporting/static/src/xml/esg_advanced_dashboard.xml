@@ -194,7 +194,7 @@
                                         <i class="fa fa-check-circle fa-2x mb-2"></i>
                                         <p>No alerts at this time</p>
                                     </div>
-                                    <div t-foreach="state.alerts" t-as="alert" class="alert-item mb-2">
+                                    <div t-foreach="state.alerts" t-as="alert" t-key="alert_index" class="alert-item mb-2">
                                         <div class="alert" t-attf-class="alert-#{alert.level}">
                                             <div class="d-flex justify-content-between">
                                                 <div>
@@ -222,7 +222,7 @@
                             </div>
                             <div class="card-body">
                                 <div t-if="state.predictions.insights" class="insights-container">
-                                    <div t-foreach="state.predictions.insights" t-as="insight" class="insight-item mb-3">
+                                    <div t-foreach="state.predictions.insights" t-as="insight" t-key="insight_index" class="insight-item mb-3">
                                         <div class="d-flex">
                                             <div class="me-3">
                                                 <i class="fa" t-attf-class="fa-#{insight.icon}"></i>

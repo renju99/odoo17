@@ -20,11 +20,6 @@ class ESGReportWizard(models.TransientModel):
     _description = 'ESG Report Wizard'
 
     name = fields.Char(string='Report Name', required=True, default='ESG Report')
-    report_type = fields.Selection([
-        ('sustainability', 'Sustainability Report'),
-        ('compliance', 'Compliance Report'),
-        ('performance', 'Performance Report')
-    ], string='Report Type', required=True, default='sustainability')
     date_from = fields.Date(string='Date From', required=True, default=fields.Date.today)
     date_to = fields.Date(string='Date To', required=True, default=fields.Date.today)
     format = fields.Selection([
@@ -88,7 +83,6 @@ class ESGReportWizard(models.TransientModel):
             # Create enhanced wizard with same parameters
             enhanced_wizard = self.env['enhanced.esg.wizard'].create({
                 'report_name': self.name,
-                'report_type': self.report_type,
                 'date_from': self.date_from,
                 'date_to': self.date_to,
                 'output_format': self.format,
@@ -117,16 +111,7 @@ class EnhancedESGWizard(models.TransientModel):
     _description = 'Enhanced ESG Report Wizard'
 
     # Basic Configuration
-    report_name = fields.Char(string='Report Name', required=True, default='Enhanced ESG Report')
-    report_type = fields.Selection([
-        ('sustainability', 'Sustainability Performance Report'),
-        ('compliance', 'Regulatory Compliance Report'),
-        ('risk_assessment', 'ESG Risk Assessment Report'),
-        ('performance_analytics', 'Performance Analytics Report'),
-        ('trend_analysis', 'Trend Analysis Report'),
-        ('benchmarking', 'Benchmarking Report'),
-        ('custom', 'Custom Report')
-    ], string='Report Type', required=True, default='sustainability')
+    report_name = fields.Char(string='Report Name')
 
     # Date Range with Granularity
     date_from = fields.Date(string='Date From', required=True, default=fields.Date.today)
@@ -200,7 +185,7 @@ class EnhancedESGWizard(models.TransientModel):
     include_thresholds = fields.Boolean(string='Include Performance Thresholds', default=False)
     carbon_threshold = fields.Float(string='Carbon Footprint Threshold (kg CO2)',
                                     default=DEFAULT_CARBON_THRESHOLD)
-    compliance_threshold = fields.Float(string='Compliance Rate Threshold (%)',
+    compliance_threshold = fields.Float(string='Compliance Rate Threshold (% dextop)',
                                         default=DEFAULT_COMPLIANCE_THRESHOLD)
     social_impact_threshold = fields.Float(string='Social Impact Score Threshold',
                                            default=DEFAULT_SOCIAL_IMPACT_THRESHOLD)
@@ -226,10 +211,6 @@ class EnhancedESGWizard(models.TransientModel):
         ('csv', 'CSV')
     ], string='Output Format', default='pdf', required=True)
 
-    # Custom Configuration
-    custom_metrics = fields.Text(string='Custom Metrics (JSON)', help='Define custom metrics in JSON format')
-    custom_charts = fields.Text(string='Custom Charts (JSON)', help='Define custom charts in JSON format')
-
     # Company Information
     company_name = fields.Char(string='Company', default='YourCompany')
     company_id = fields.Many2one('res.company', string='Company',
@@ -252,6 +233,13 @@ class EnhancedESGWizard(models.TransientModel):
                 _logger.error(f"Error computing safe report data: {str(e)}")
                 record.safe_report_data = record._get_default_report_data()
 
+    @api.onchange('date_from', 'date_to', 'company_id')
+    def _onchange_report_name(self):
+        if self.company_id and self.date_from and self.date_to:
+            self.report_name = f"ESG Report - {self.company_id.name} ({self.date_from.year}-{self.date_to.year})"
+        else:
+            self.report_name = 'Enhanced ESG Report'
+
     @api.model
     def create(self, vals):
         """Ensure report_data is always initialized as a dictionary and set default values"""
@@ -262,8 +250,6 @@ class EnhancedESGWizard(models.TransientModel):
 
             # Set default values if not provided
             defaults = {
-                'report_name': 'Enhanced ESG Report',
-                'report_type': 'sustainability',
                 'date_from': fields.Date.today(),
                 'date_to': fields.Date.today(),
                 'company_name': 'YourCompany',
@@ -275,6 +261,13 @@ class EnhancedESGWizard(models.TransientModel):
             for key, default_value in defaults.items():
                 if key not in vals or not vals[key]:
                     vals[key] = default_value
+            
+            # Generate report name if not provided
+            if 'report_name' not in vals or not vals['report_name']:
+                company = self.env['res.company'].browse(vals.get('company_id')) if vals.get('company_id') else self.env.company
+                date_from = vals.get('date_from', fields.Date.today())
+                date_to = vals.get('date_to', fields.Date.today())
+                vals['report_name'] = f"ESG Report - {company.name} ({date_from.year}-{date_to.year})"
 
             return super().create(vals)
         except Exception as e:
@@ -287,7 +280,6 @@ class EnhancedESGWizard(models.TransientModel):
             return {
                 'report_info': {
                     'name': getattr(self, 'report_name', 'ESG Report'),
-                    'type': getattr(self, 'report_type', 'sustainability'),
                     'date_from': str(getattr(self, 'date_from', fields.Date.today())),
                     'date_to': str(getattr(self, 'date_to', fields.Date.today())),
                     'company': getattr(self, 'company_name', 'YourCompany'),
@@ -330,7 +322,6 @@ class EnhancedESGWizard(models.TransientModel):
                     {'category': 'data', 'recommendation': 'Report data not available. Please regenerate the report.'}
                 ],
                 'thresholds': {},
-                'custom_metrics': {},
                 'comparison_data': {}
             }
         except Exception:
@@ -372,49 +363,6 @@ class EnhancedESGWizard(models.TransientModel):
             if not (0 <= record.social_impact_threshold <= 10):
                 raise ValidationError(_('Social impact threshold must be between 0 and 10.'))
 
-    @api.constrains('custom_metrics', 'custom_charts')
-    def _check_json_fields(self):
-        """Validate JSON field formats"""
-        for record in self:
-            if record.custom_metrics:
-                try:
-                    json.loads(record.custom_metrics)
-                except (json.JSONDecodeError, TypeError):
-                    raise ValidationError(_('Custom Metrics must be valid JSON format.'))
-
-            if record.custom_charts:
-                try:
-                    json.loads(record.custom_charts)
-                except (json.JSONDecodeError, TypeError):
-                    raise ValidationError(_('Custom Charts must be valid JSON format.'))
-
-    @api.model
-    def create(self, vals):
-        """Ensure report_data is always initialized as a dictionary and set default values"""
-        try:
-            # Ensure report_data is always a dictionary
-            if 'report_data' not in vals or vals['report_data'] is None:
-                vals['report_data'] = {}
-            
-            # Set default values if not provided
-            if 'report_name' not in vals or not vals['report_name']:
-                vals['report_name'] = 'Enhanced ESG Report'
-            if 'report_type' not in vals:
-                vals['report_type'] = 'sustainability'
-            if 'date_from' not in vals:
-                vals['date_from'] = fields.Date.today()
-            if 'date_to' not in vals:
-                vals['date_to'] = fields.Date.today()
-            if 'company_name' not in vals or not vals['company_name']:
-                vals['company_name'] = 'YourCompany'
-            if 'output_format' not in vals:
-                vals['output_format'] = 'pdf'
-            
-            return super().create(vals)
-        except Exception as e:
-            _logger.error(f"Error creating ESG wizard record: {str(e)}")
-            raise
-
     def _get_report_data(self):
         """Ensure report_data is always a dictionary"""
         try:
@@ -440,7 +388,6 @@ class EnhancedESGWizard(models.TransientModel):
                 _logger.warning("No valid docids provided, creating fallback doc")
                 fallback_doc = self.create({
                     'report_name': 'ESG Report',
-                    'report_type': 'sustainability',
                     'date_from': fields.Date.today(),
                     'date_to': fields.Date.today(),
                     'company_name': 'YourCompany',
@@ -474,7 +421,6 @@ class EnhancedESGWizard(models.TransientModel):
                 _logger.warning("No valid docs found, creating fallback doc")
                 fallback_doc = self.create({
                     'report_name': 'ESG Report',
-                    'report_type': 'sustainability',
                     'date_from': fields.Date.today(),
                     'date_to': fields.Date.today(),
                     'company_name': 'YourCompany',
@@ -495,7 +441,6 @@ class EnhancedESGWizard(models.TransientModel):
             try:
                 fallback_doc = self.create({
                     'report_name': 'ESG Report',
-                    'report_type': 'sustainability',
                     'date_from': fields.Date.today(),
                     'date_to': fields.Date.today(),
                     'company_name': 'YourCompany',
@@ -516,31 +461,6 @@ class EnhancedESGWizard(models.TransientModel):
                     'docs': [],
                     'data': data,
                 }
-
-    @api.onchange('report_type')
-    def _onchange_report_type(self):
-        """Update default options based on report type"""
-        if self.report_type == 'sustainability':
-            self.include_section_environmental = True
-            self.include_section_social = True
-            self.include_section_governance = True
-            self.include_section_analytics = True
-        elif self.report_type == 'compliance':
-            self.include_section_governance = True
-            self.include_thresholds = True
-        elif self.report_type == 'risk_assessment':
-            self.include_risk_analysis = True
-            self.include_advanced_analytics = True
-        elif self.report_type == 'performance_analytics':
-            self.include_advanced_analytics = True
-            self.include_predictive_analysis = True
-            self.include_correlation_analysis = True
-        elif self.report_type == 'trend_analysis':
-            self.include_trends = True
-            self.include_forecasting = True
-        elif self.report_type == 'benchmarking':
-            self.include_benchmarks = True
-            self.include_section_analytics = True
 
     @api.onchange('comparison_period')
     def _onchange_comparison_period(self):
@@ -565,7 +485,7 @@ class EnhancedESGWizard(models.TransientModel):
             # Input validation
             self._validate_inputs()
 
-            _logger.info(f"Starting ESG report generation: {self.report_name} ({self.report_type})")
+            _logger.info(f"Starting ESG report generation: {self.report_name}")
 
             # Get assets based on filters
             domain = self._build_asset_domain()
@@ -611,13 +531,6 @@ class EnhancedESGWizard(models.TransientModel):
 
         if self.date_from > self.date_to:
             raise UserError(_('Date From cannot be later than Date To.'))
-
-        # Validate custom metrics JSON if provided
-        if self.custom_metrics:
-            try:
-                json.loads(self.custom_metrics)
-            except json.JSONDecodeError:
-                raise ValidationError(_('Invalid JSON format in Custom Metrics field.'))
 
     def _build_asset_domain(self):
         """Build domain for asset filtering"""
@@ -712,7 +625,6 @@ class EnhancedESGWizard(models.TransientModel):
             return {
                 'report_info': {
                     'name': self.report_name,
-                    'type': self.report_type,
                     'date_from': str(self.date_from) if self.date_from else None,
                     'date_to': str(self.date_to) if self.date_to else None,
                     'company': self.company_name,
@@ -738,14 +650,12 @@ class EnhancedESGWizard(models.TransientModel):
                      'recommendation': 'Ensure ESG compliance data is filled in for existing assets'}
                 ],
                 'thresholds': {},
-                'custom_metrics': {},
                 'comparison_data': {}
             }
 
         report_data = {
             'report_info': {
                 'name': self.report_name,
-                'type': self.report_type,
                 'date_from': str(self.date_from) if self.date_from else None,
                 'date_to': str(self.date_to) if self.date_to else None,
                 'company': self.company_name,
@@ -765,7 +675,6 @@ class EnhancedESGWizard(models.TransientModel):
             'predictions': self._calculate_predictions(assets) if self.include_predictive_analysis else {},
             'recommendations': self._generate_recommendations(assets) if self.include_section_recommendations else [],
             'thresholds': self._check_thresholds_data(assets) if self.include_thresholds else {},
-            'custom_metrics': json.loads(self.custom_metrics) if self.custom_metrics else {},
             'comparison_data': self._get_comparison_data(assets) if self.comparison_period != 'none' else {}
         }
 
