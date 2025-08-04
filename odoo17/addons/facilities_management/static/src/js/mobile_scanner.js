@@ -88,9 +88,9 @@ class MobileScannerComponent extends Component {
             }, (err) => {
                 if (err) {
                     console.error('Scanner initialization failed:', err);
-                    return;
+                } else {
+                    Quagga.start();
                 }
-                Quagga.start();
             });
 
             Quagga.onDetected(this._onBarcodeDetected.bind(this));
