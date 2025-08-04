@@ -137,7 +137,6 @@ class ESGAnalytics(models.Model):
         self.write({'state': 'draft'})
 
     @api.model
-<<<<<<< HEAD
     def get_comprehensive_dashboard_data(self, company_id=None, **kwargs):
         """
         Gathers and formats a comprehensive set of data for the advanced ESG dashboard.
@@ -215,7 +214,6 @@ class ESGAnalytics(models.Model):
             },
             'company_name': self.env['res.company'].browse(company_id).name,
         }
-=======
     def get_comprehensive_dashboard_data(self, period=None, category=None):
         """Get comprehensive dashboard data for the frontend"""
         
@@ -490,4 +488,3 @@ class ESGAnalytics(models.Model):
         
         # Weighted average
         return (environmental * 0.4 + social * 0.3 + governance * 0.3)
->>>>>>> origin/main

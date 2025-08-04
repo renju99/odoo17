@@ -54,6 +54,7 @@
     ],
     'assets': {
         'web.assets_backend': [
+            'web/static/lib/chartjs/chart.js',
             'esg_reporting/static/src/js/esg_advanced_dashboard.js',
             'esg_reporting/static/src/js/esg_dashboard.js',
             'esg_reporting/static/src/xml/esg_advanced_dashboard.xml',
