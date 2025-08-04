@@ -156,12 +156,10 @@ class ESGFramework(models.Model):
             }
         return {}
     
-    @api.model
-    def assess_compliance(self, framework_id):
+    def assess_compliance(self):
         """Assess compliance with framework requirements"""
-        framework = self.browse(framework_id)
-        if not framework.exists():
-            return False
+        self.ensure_one()
+        framework = self
         
         # Calculate compliance score based on standards
         standards = framework.standards_ids.filtered(lambda s: s.required)
@@ -285,12 +283,10 @@ class ESGFrameworkStandard(models.Model):
         default=True
     )
     
-    @api.model
-    def assess_standard_compliance(self, standard_id):
+    def assess_standard_compliance(self):
         """Assess compliance with a specific standard"""
-        standard = self.browse(standard_id)
-        if not standard.exists():
-            return False
+        self.ensure_one()
+        standard = self
         
         # Check if data source is available
         if standard.data_source_model and standard.data_source_field:
