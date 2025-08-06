@@ -9,6 +9,7 @@ class FacilitiesDashboard extends Component {
     setup() {
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.isLayoutReady = false;
         
         onWillStart(async () => {
             try {
@@ -19,7 +20,7 @@ class FacilitiesDashboard extends Component {
         });
 
         onMounted(() => {
-            // Ensure layout is not forced before page is fully loaded
+            // Use multiple strategies to ensure proper timing
             this._ensureLayoutReady();
         });
     }
@@ -59,35 +60,89 @@ class FacilitiesDashboard extends Component {
     }
 
     _ensureLayoutReady() {
-        // Wait for DOM to be fully ready before any layout operations
+        // Strategy 1: Check if document is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                // Additional delay to ensure stylesheets are loaded
-                setTimeout(() => {
-                    this._performLayoutOperations();
-                }, 100);
+                this._waitForStylesheets();
             });
         } else {
-            // If DOM is already loaded, wait a bit more for stylesheets
+            this._waitForStylesheets();
+        }
+    }
+
+    _waitForStylesheets() {
+        // Strategy 2: Wait for stylesheets to load
+        const stylesheets = Array.from(document.styleSheets);
+        const unloadedStylesheets = stylesheets.filter(sheet => {
+            try {
+                return sheet.href && !sheet.href.startsWith('data:') && sheet.cssRules.length === 0;
+            } catch (e) {
+                return false;
+            }
+        });
+
+        if (unloadedStylesheets.length === 0) {
+            // All stylesheets loaded, proceed
+            this._performLayoutOperations();
+        } else {
+            // Wait for remaining stylesheets
+            let loadedCount = 0;
+            const totalStylesheets = unloadedStylesheets.length;
+            
+            unloadedStylesheets.forEach(sheet => {
+                const link = document.querySelector(`link[href="${sheet.href}"]`);
+                if (link) {
+                    link.addEventListener('load', () => {
+                        loadedCount++;
+                        if (loadedCount === totalStylesheets) {
+                            this._performLayoutOperations();
+                        }
+                    });
+                }
+            });
+            
+            // Fallback: proceed after a reasonable timeout
             setTimeout(() => {
-                this._performLayoutOperations();
-            }, 100);
+                if (!this.isLayoutReady) {
+                    this._performLayoutOperations();
+                }
+            }, 2000);
         }
     }
 
     _performLayoutOperations() {
-        // Any layout operations should go here
-        // This ensures they happen after the page is fully loaded
+        // Prevent multiple executions
+        if (this.isLayoutReady) {
+            return;
+        }
+        
+        // Ensure element exists before performing operations
+        if (!this.el) {
+            console.warn('Dashboard element not found, retrying...');
+            setTimeout(() => {
+                this._performLayoutOperations();
+            }, 100);
+            return;
+        }
+        
         console.log("Facilities dashboard layout ready");
         
-        // Trigger any necessary layout updates
-        if (this.el) {
-            // Force a reflow to ensure proper layout
-            this.el.offsetHeight;
-            
+        // Use requestAnimationFrame for final layout operations
+        requestAnimationFrame(() => {
             // Add loaded class to show the dashboard
             this.el.classList.add('loaded');
-        }
+            
+            // Mark as ready
+            this.isLayoutReady = true;
+            
+            // Trigger any necessary layout updates
+            if (this.el.offsetHeight) {
+                // Force a reflow to ensure proper layout
+                this.el.offsetHeight;
+            }
+            
+            console.log("Facilities Management JavaScript loaded");
+        });
     }
 }
 
@@ -119,5 +174,3 @@ window.facilitiesUtils = {
         return statusClasses[status] || 'o_sla_on_time';
     }
 };
-
-console.log("Facilities Management JavaScript loaded");
