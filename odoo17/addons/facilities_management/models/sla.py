@@ -107,6 +107,7 @@ class FacilitiesSLA(models.Model):
 
     def action_view_workorders(self):
         """View work orders assigned to this SLA"""
+        _logger.info(f"User {self.env.user.name} viewed work orders for SLA: {self.name}")
         return {
             'type': 'ir.actions.act_window',
             'name': f'Work Orders - {self.name}',
@@ -118,6 +119,7 @@ class FacilitiesSLA(models.Model):
 
     def action_view_performance_dashboard(self):
         """Open performance dashboard for this SLA"""
+        _logger.info(f"User {self.env.user.name} opened performance dashboard for SLA: {self.name}")
         return {
             'type': 'ir.actions.act_window',
             'name': f'SLA Performance - {self.name}',
@@ -133,36 +135,44 @@ class FacilitiesSLA(models.Model):
         if self.active:
             raise UserError(_('SLA is already active.'))
         
-        self.write({
-            'active': True,
-            'activated_by_id': self.env.user.id,
-            'activated_date': fields.Datetime.now(),
-            'deactivated_by_id': False,
-            'deactivated_date': False,
-            'deactivation_reason': False,
-        })
-        
-        # Log the activation
-        self.message_post(
-            body=_('SLA activated by %s') % self.env.user.name,
-            message_type='notification'
-        )
-        
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('SLA Activated'),
-                'message': _('SLA "%s" has been activated successfully.') % self.name,
-                'type': 'success',
+        try:
+            self.write({
+                'active': True,
+                'activated_by_id': self.env.user.id,
+                'activated_date': fields.Datetime.now(),
+                'deactivated_by_id': False,
+                'deactivated_date': False,
+                'deactivation_reason': False,
+            })
+            
+            # Log the activation
+            self.message_post(
+                body=_('SLA activated by %s') % self.env.user.name,
+                message_type='notification'
+            )
+            
+            _logger.info(f"SLA '{self.name}' activated by user {self.env.user.name}")
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('SLA Activated'),
+                    'message': _('SLA "%s" has been activated successfully.') % self.name,
+                    'type': 'success',
+                }
             }
-        }
+        except Exception as e:
+            _logger.error(f"Error activating SLA '{self.name}': {str(e)}")
+            raise UserError(_('Failed to activate SLA: %s') % str(e))
 
     def action_deactivate_sla(self):
         """Deactivate the SLA and log the action"""
         self.ensure_one()
         if not self.active:
             raise UserError(_('SLA is already inactive.'))
+        
+        _logger.info(f"User {self.env.user.name} initiated deactivation for SLA: {self.name}")
         
         # Open wizard to get deactivation reason
         return {
@@ -179,28 +189,34 @@ class FacilitiesSLA(models.Model):
     def _deactivate_sla_with_reason(self, reason):
         """Internal method to deactivate SLA with reason"""
         self.ensure_one()
-        self.write({
-            'active': False,
-            'deactivated_by_id': self.env.user.id,
-            'deactivated_date': fields.Datetime.now(),
-            'deactivation_reason': reason,
-        })
-        
-        # Log the deactivation
-        self.message_post(
-            body=_('SLA deactivated by %s. Reason: %s') % (self.env.user.name, reason),
-            message_type='notification'
-        )
-        
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('SLA Deactivated'),
-                'message': _('SLA "%s" has been deactivated successfully.') % self.name,
-                'type': 'success',
+        try:
+            self.write({
+                'active': False,
+                'deactivated_by_id': self.env.user.id,
+                'deactivated_date': fields.Datetime.now(),
+                'deactivation_reason': reason,
+            })
+            
+            # Log the deactivation
+            self.message_post(
+                body=_('SLA deactivated by %s. Reason: %s') % (self.env.user.name, reason),
+                message_type='notification'
+            )
+            
+            _logger.info(f"SLA '{self.name}' deactivated by user {self.env.user.name}. Reason: {reason}")
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('SLA Deactivated'),
+                    'message': _('SLA "%s" has been deactivated successfully.') % self.name,
+                    'type': 'success',
+                }
             }
-        }
+        except Exception as e:
+            _logger.error(f"Error deactivating SLA '{self.name}': {str(e)}")
+            raise UserError(_('Failed to deactivate SLA: %s') % str(e))
 
     def write(self, vals):
         """Override write to handle activation/deactivation logging"""
@@ -220,6 +236,7 @@ class FacilitiesSLA(models.Model):
                             body=_('SLA activated by %s') % self.env.user.name,
                             message_type='notification'
                         )
+                        _logger.info(f"SLA '{record.name}' activated by user {self.env.user.name}")
                 else:
                     # Deactivating - only log if not already deactivated
                     if not record.deactivated_by_id:
@@ -231,6 +248,7 @@ class FacilitiesSLA(models.Model):
                             body=_('SLA deactivated by %s') % self.env.user.name,
                             message_type='notification'
                         )
+                        _logger.info(f"SLA '{record.name}' deactivated by user {self.env.user.name}")
         
         return result
 
@@ -334,6 +352,7 @@ class FacilitiesSLA(models.Model):
         for sla_data in default_slas:
             created_sla = self.create(sla_data)
             created_slas.append(created_sla)
+            _logger.info(f"Created default SLA: {created_sla.name}")
         
         return created_slas
 
@@ -439,6 +458,7 @@ class SLADashboard(models.Model):
 
     def action_export_report(self):
         """Export SLA performance report"""
+        _logger.info(f"User {self.env.user.name} exported SLA performance report for SLA: {self.sla_id.name}")
         return {
             'type': 'ir.actions.report',
             'report_name': 'facilities_management.sla_performance_report',
@@ -447,6 +467,20 @@ class SLADashboard(models.Model):
                 'sla_id': self.sla_id.id,
                 'date_from': self.date_from,
                 'date_to': self.date_to
+            }
+        }
+
+    def action_refresh_metrics(self):
+        """Refresh metrics for the dashboard"""
+        _logger.info(f"User {self.env.user.name} refreshed metrics for SLA dashboard: {self.sla_id.name}")
+        self._compute_metrics()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Metrics Refreshed'),
+                'message': _('SLA metrics have been refreshed successfully.'),
+                'type': 'success',
             }
         }
 

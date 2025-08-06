@@ -14,6 +14,7 @@
                                 class="btn-success" invisible="active" confirm="Are you sure you want to activate this SLA?"/>
                         <button name="action_deactivate_sla" type="object" string="Deactivate" 
                                 class="btn-danger" invisible="not active" confirm="Are you sure you want to deactivate this SLA?"/>
+                        <field name="active" widget="boolean_toggle" invisible="1"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -23,7 +24,7 @@
                         </div>
                         <group>
                             <group string="Basic Information">
-                                <field name="active"/>
+                                <field name="active" widget="boolean_toggle"/>
                                 <field name="priority"/>
                                 <field name="description"/>
                             </group>
@@ -96,7 +97,7 @@
                                         <field name="activated_by_id" readonly="1"/>
                                         <field name="activated_date" readonly="1"/>
                                     </group>
-                                    <group string="Deactivation Info" invisible="active">
+                                    <group string="Deactivation Info" invisible="not active">
                                         <field name="deactivated_by_id" readonly="1"/>
                                         <field name="deactivated_date" readonly="1"/>
                                         <field name="deactivation_reason" readonly="1"/>
@@ -105,13 +106,11 @@
                             </page>
                         </notebook>
                     </sheet>
-                    <!--
                     <div class="oe_chatter">
                         <field name="message_follower_ids"/>
                         <field name="activity_ids"/>
                         <field name="message_ids"/>
                     </div>
-                    -->
                 </form>
             </field>
         </record>
@@ -121,7 +120,7 @@
             <field name="name">facilities.sla.tree</field>
             <field name="model">facilities.sla</field>
             <field name="arch" type="xml">
-                <tree string="SLAs" decoration-muted="not active">
+                <tree string="SLAs" decoration-muted="not active" decoration-danger="compliance_rate &lt; 80">
                     <field name="name"/>
                     <field name="active" widget="boolean_toggle"/>
                     <field name="priority"/>
@@ -152,11 +151,14 @@
                     <filter string="Active" name="active" domain="[('active', '=', True)]"/>
                     <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
                     <filter string="High Priority" name="high_priority" domain="[('priority', '&gt;=', 8)]"/>
+                    <filter string="Critical Assets" name="critical_assets" domain="[('asset_criticality', '=', 'critical')]"/>
+                    <filter string="Low Compliance" name="low_compliance" domain="[('compliance_rate', '&lt;', 80)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_active" context="{'group_by': 'active'}"/>
                         <filter string="Asset Criticality" name="group_criticality" context="{'group_by': 'asset_criticality'}"/>
                         <filter string="Maintenance Type" name="group_type" context="{'group_by': 'maintenance_type'}"/>
                         <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
+                        <filter string="Compliance Rate" name="group_compliance" context="{'group_by': 'compliance_rate'}"/>
                     </group>
                 </search>
             </field>
@@ -170,6 +172,7 @@
                 <form string="SLA Performance Dashboard">
                     <header>
                         <button name="action_export_report" type="object" string="Export Report" class="btn-primary"/>
+                        <button name="action_refresh_metrics" type="object" string="Refresh Metrics" class="btn-secondary"/>
                     </header>
                     <sheet>
                         <group>
