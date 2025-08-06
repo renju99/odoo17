@@ -26,7 +26,7 @@
                     <field name="approval_state" invisible="1"/>
                     <!-- Start Workorder Button for Mobile -->
                     <button name="action_start_progress" type="object" string="Start Work" class="btn-primary"
-                        invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft')"/>
+                        invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')"/>
                     <!-- Quick Start Button for Mobile -->
                     <button name="action_quick_start" type="object" string="Quick Start" class="btn-success"
                         invisible="status != 'draft' or approval_state != 'draft'"/>
