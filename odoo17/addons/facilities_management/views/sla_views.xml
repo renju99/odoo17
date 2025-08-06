@@ -10,6 +10,10 @@
                     <header>
                         <button name="action_view_workorders" type="object" string="View Work Orders" class="btn-primary"/>
                         <button name="action_view_performance_dashboard" type="object" string="Performance Dashboard" class="btn-secondary"/>
+                        <button name="action_activate_sla" type="object" string="Activate" 
+                                class="btn-success" invisible="active" confirm="Are you sure you want to activate this SLA?"/>
+                        <button name="action_deactivate_sla" type="object" string="Deactivate" 
+                                class="btn-danger" invisible="not active" confirm="Are you sure you want to deactivate this SLA?"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -85,6 +89,20 @@
                                     </group>
                                 </group>
                             </page>
+                            <page string="Activation History" name="activation_history">
+                                <group>
+                                    <group string="Current Status">
+                                        <field name="active" readonly="1"/>
+                                        <field name="activated_by_id" readonly="1"/>
+                                        <field name="activated_date" readonly="1"/>
+                                    </group>
+                                    <group string="Deactivation Info" attrs="{'invisible': [('active', '=', True)]}">
+                                        <field name="deactivated_by_id" readonly="1"/>
+                                        <field name="deactivated_date" readonly="1"/>
+                                        <field name="deactivation_reason" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                     <!--
@@ -103,9 +121,9 @@
             <field name="name">facilities.sla.tree</field>
             <field name="model">facilities.sla</field>
             <field name="arch" type="xml">
-                <tree string="SLAs">
+                <tree string="SLAs" decoration-muted="not active">
                     <field name="name"/>
-                    <field name="active"/>
+                    <field name="active" widget="boolean_toggle"/>
                     <field name="priority"/>
                     <field name="response_time_hours"/>
                     <field name="resolution_time_hours"/>
@@ -113,6 +131,11 @@
                     <field name="maintenance_type"/>
                     <field name="compliance_rate" widget="percentage"/>
                     <field name="total_workorders"/>
+                    <field name="activated_by_id" invisible="1"/>
+                    <field name="activated_date" invisible="1"/>
+                    <field name="deactivated_by_id" invisible="1"/>
+                    <field name="deactivated_date" invisible="1"/>
+                    <field name="deactivation_reason" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -127,8 +150,10 @@
                     <field name="asset_criticality"/>
                     <field name="maintenance_type"/>
                     <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
                     <filter string="High Priority" name="high_priority" domain="[('priority', '&gt;=', 8)]"/>
                     <group expand="0" string="Group By">
+                        <filter string="Status" name="group_active" context="{'group_by': 'active'}"/>
                         <filter string="Asset Criticality" name="group_criticality" context="{'group_by': 'asset_criticality'}"/>
                         <filter string="Maintenance Type" name="group_type" context="{'group_by': 'maintenance_type'}"/>
                         <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
