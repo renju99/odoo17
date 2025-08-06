@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- This file is kept for compatibility but the main menu structure is now in esg_menu_views.xml -->
+        <!-- Enhanced ESG Reports Menu -->
+        <menuitem id="menu_enhanced_esg_reports"
+                  name="Enhanced ESG Reports"
+                  parent="facilities_management.menu_facilities_root"
+                  sequence="20"/>
+
+        <!-- Enhanced ESG Report Wizard Menu -->
+        <menuitem id="menu_enhanced_esg_wizard"
+                  name="Generate Enhanced ESG Report"
+                  parent="menu_enhanced_esg_reports"
+                  action="action_enhanced_esg_wizard"
+                  sequence="10"/>
+
+        <!-- ESG Dashboard Menu -->
+        <menuitem id="menu_esg_dashboard"
+                  name="ESG Dashboard"
+                  parent="menu_enhanced_esg_reports"
+                  action="action_esg_dashboard"
+                  sequence="20"/>
+
+        <!-- ESG Analytics Menu -->
+        <menuitem id="menu_esg_analytics"
+                  name="ESG Analytics"
+                  parent="menu_enhanced_esg_reports"
+                  action="action_esg_analytics"
+                  sequence="30"/>
     </data>
 </odoo>
