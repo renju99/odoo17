@@ -239,6 +239,52 @@
                   action="action_facilities_sla"
                   sequence="25"/>
 
+        <!-- SLA Dashboard Action -->
+        <record id="action_facilities_sla_dashboard" model="ir.actions.act_window">
+            <field name="name">SLA Performance Dashboard</field>
+            <field name="res_model">facilities.sla.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new SLA Performance Dashboard!
+                </p>
+                <p>
+                    Monitor SLA performance metrics and trends.
+                </p>
+            </field>
+        </record>
+
+        <!-- Maintenance KPI Dashboard Action -->
+        <record id="action_maintenance_kpi_dashboard" model="ir.actions.act_window">
+            <field name="name">Maintenance KPI Dashboard</field>
+            <field name="res_model">maintenance.kpi.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new Maintenance KPI Dashboard!
+                </p>
+                <p>
+                    Monitor maintenance performance and KPIs.
+                </p>
+            </field>
+        </record>
+
+        <!-- SLA Dashboard Menu -->
+        <menuitem id="menu_facilities_sla_dashboard"
+                  name="SLA Dashboard"
+                  parent="menu_maintenance_analytics"
+                  action="action_facilities_sla_dashboard"
+                  sequence="25"/>
+
+        <!-- Maintenance KPI Dashboard Menu -->
+        <menuitem id="menu_maintenance_kpi_dashboard_item"
+                  name="KPI Dashboard"
+                  parent="menu_maintenance_analytics"
+                  action="action_maintenance_kpi_dashboard"
+                  sequence="35"/>
+
         <!-- Enhanced Work Order Form View -->
         <record id="view_maintenance_workorder_enhanced_form" model="ir.ui.view">
             <field name="name">maintenance.workorder.enhanced.form</field>
