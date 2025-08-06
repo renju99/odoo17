@@ -267,7 +267,7 @@ class MobileScannerComponent extends Component {
 
     async _updateAssetLocation(asset) {
         try {
-            const location = this._getCurrentLocation();
+            const location = await this._getCurrentLocation();
             
             await this.orm.write('facilities.asset', [asset.id], {
                 last_scan_location: location ? `${location.latitude}, ${location.longitude}` : 'Unknown',
