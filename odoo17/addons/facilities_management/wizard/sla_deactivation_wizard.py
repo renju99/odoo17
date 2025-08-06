@@ -1,6 +1,8 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class SLADeactivationWizard(models.TransientModel):
     _name = 'facilities.sla.deactivation.wizard'
@@ -16,6 +18,7 @@ class SLADeactivationWizard(models.TransientModel):
         res = super().default_get(fields_list)
         if self.env.context.get('default_sla_id'):
             res['sla_id'] = self.env.context.get('default_sla_id')
+            _logger.info(f"Initialized SLA deactivation wizard for SLA ID: {res['sla_id']}")
         return res
 
     def action_confirm_deactivation(self):
@@ -24,5 +27,15 @@ class SLADeactivationWizard(models.TransientModel):
         if not self.deactivation_reason.strip():
             raise UserError(_('Please provide a reason for deactivating this SLA.'))
         
-        # Call the SLA model's deactivation method
-        return self.sla_id._deactivate_sla_with_reason(self.deactivation_reason)
+        try:
+            _logger.info(f"User {self.env.user.name} confirming deactivation for SLA: {self.sla_id.name}")
+            
+            # Call the SLA model's deactivation method
+            result = self.sla_id._deactivate_sla_with_reason(self.deactivation_reason)
+            
+            _logger.info(f"SLA '{self.sla_id.name}' deactivation confirmed by user {self.env.user.name}")
+            
+            return result
+        except Exception as e:
+            _logger.error(f"Error in SLA deactivation wizard for SLA '{self.sla_id.name}': {str(e)}")
+            raise UserError(_('Failed to deactivate SLA: %s') % str(e))
