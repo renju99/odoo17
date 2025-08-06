@@ -33,18 +33,18 @@ class MaintenanceTeam(models.Model):
         domain="[('work_email', '!=', False)]",
         help="Employees who are part of this maintenance team."
     )
-    workorder_ids = fields.One2many(
-        'maintenance.workorder', 'maintenance_team_id', string="Maintenance Work Orders"
+    request_ids = fields.One2many(
+        'maintenance.request', 'maintenance_team_id', string="Maintenance Requests"
     )
     workorder_count = fields.Integer(
-        string="Number of Work Orders", compute='_compute_workorder_count'
+        string="Number of Requests", compute='_compute_workorder_count'
     )
     company_id = fields.Many2one(
         'res.company', string='Company', required=True,
         default=lambda self: self.env.company
     )
 
-    @api.depends('workorder_ids')
+    @api.depends('request_ids')
     def _compute_workorder_count(self):
         for team in self:
-            team.workorder_count = len(team.workorder_ids)
+            team.workorder_count = len(team.request_ids)

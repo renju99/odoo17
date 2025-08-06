@@ -21,66 +21,36 @@
                     <tr>
                         <td style="vertical-align:top; width:33%;">
                             <h3>Status Distribution</h3>
-                            <t t-if="doc['chart_status']">
-                                <img t-att-src="'data:image/png;base64,%s' % doc['chart_status']" style="max-width:100%;"/>
-                            </t>
-                            <t t-else="">
-                                <p><em>No data available</em></p>
-                            </t>
+                            <img t-att-src="'data:image/png;base64,%s' % doc['chart_status']" style="max-width:100%;"/>
                         </td>
                         <td style="vertical-align:top; width:33%;">
                             <h3>Work Orders by Type</h3>
-                            <t t-if="doc['chart_type']">
-                                <img t-att-src="'data:image/png;base64,%s' % doc['chart_type']" style="max-width:100%;"/>
-                            </t>
-                            <t t-else="">
-                                <p><em>No data available</em></p>
-                            </t>
+                            <img t-att-src="'data:image/png;base64,%s' % doc['chart_type']" style="max-width:100%;"/>
                         </td>
                         <td style="vertical-align:top; width:33%;">
                             <h3>Work Orders by Priority</h3>
-                            <t t-if="doc['chart_priority']">
-                                <img t-att-src="'data:image/png;base64,%s' % doc['chart_priority']" style="max-width:100%;"/>
-                            </t>
-                            <t t-else="">
-                                <p><em>No data available</em></p>
-                            </t>
+                            <img t-att-src="'data:image/png;base64,%s' % doc['chart_priority']" style="max-width:100%;"/>
                         </td>
                     </tr>
                     <tr>
                         <td style="vertical-align:top;">
                             <h3>Work Orders by Day</h3>
-                            <t t-if="doc['chart_days']">
-                                <img t-att-src="'data:image/png;base64,%s' % doc['chart_days']" style="max-width:100%;"/>
-                            </t>
-                            <t t-else="">
-                                <p><em>No data available</em></p>
-                            </t>
+                            <img t-att-src="'data:image/png;base64,%s' % doc['chart_days']" style="max-width:100%;"/>
                         </td>
                         <td style="vertical-align:top;">
                             <h3>SLA Compliance</h3>
-                            <t t-if="doc['chart_sla']">
-                                <img t-att-src="'data:image/png;base64,%s' % doc['chart_sla']" style="max-width:100%;"/>
-                            </t>
-                            <t t-else="">
-                                <p><em>No data available</em></p>
-                            </t>
+                            <img t-att-src="'data:image/png;base64,%s' % doc['chart_sla']" style="max-width:100%;"/>
                         </td>
                         <td style="vertical-align:top;">
                             <h3>Wordcloud</h3>
                             <t t-if="doc['chart_wordcloud']">
                                 <img t-att-src="'data:image/png;base64,%s' % doc['chart_wordcloud']" style="max-width:100%;"/>
                             </t>
-                            <t t-else="">
-                                <p><em>No data available</em></p>
-                            </t>
                         </td>
                     </tr>
                 </table>
                 <h3>Top 5 Assets</h3>
-                <t t-if="doc['chart_assets']">
-                    <img t-att-src="'data:image/png;base64,%s' % doc['chart_assets']" style="max-width:500px;"/>
-                </t>
+                <img t-att-src="'data:image/png;base64,%s' % doc['chart_assets']" style="max-width:500px;"/>
                 <table class="table table-sm">
                     <tr><th>Asset</th><th>Work Orders</th></tr>
                     <t t-foreach="doc['top_assets']" t-as="a">
@@ -88,9 +58,7 @@
                     </t>
                 </table>
                 <h3>Top 5 Rooms</h3>
-                <t t-if="doc['chart_rooms']">
-                    <img t-att-src="'data:image/png;base64,%s' % doc['chart_rooms']" style="max-width:500px;"/>
-                </t>
+                <img t-att-src="'data:image/png;base64,%s' % doc['chart_rooms']" style="max-width:500px;"/>
                 <table class="table table-sm">
                     <tr><th>Room</th><th>Work Orders</th></tr>
                     <t t-foreach="doc['top_rooms']" t-as="r">
@@ -98,9 +66,7 @@
                     </t>
                 </table>
                 <h3>Top 5 Parts Used</h3>
-                <t t-if="doc['chart_parts']">
-                    <img t-att-src="'data:image/png;base64,%s' % doc['chart_parts']" style="max-width:500px;"/>
-                </t>
+                <img t-att-src="'data:image/png;base64,%s' % doc['chart_parts']" style="max-width:500px;"/>
                 <table class="table table-sm">
                     <tr><th>Part</th><th>Qty Used</th></tr>
                     <t t-foreach="doc['top_parts']" t-as="p">

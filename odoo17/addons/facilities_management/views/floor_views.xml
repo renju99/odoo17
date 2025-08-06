@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
     <record id="view_facilities_floor_tree" model="ir.ui.view">
         <field name="name">facilities.floor.tree</field>
         <field name="model">facilities.floor</field>
@@ -24,7 +23,7 @@
             <form string="Floor">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="action_view_rooms" type="object" icon="fa-cube">
+                        <button class="oe_stat_button" name="%(action_facilities_room)d" type="action" icon="fa-cube">
                             <field name="room_count" widget="statinfo" string="Rooms"/>
                         </button>
                     </div>
@@ -96,5 +95,15 @@
         </field>
     </record>
 
-    </data>
+    <record id="action_facilities_floor" model="ir.actions.act_window">
+        <field name="name">Floors</field>
+        <field name="res_model">facilities.floor</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Floor
+            </p>
+        </field>
+    </record>
+
 </odoo>

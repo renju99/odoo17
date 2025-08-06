@@ -1,5 +1,4 @@
 <odoo>
-    <data>
     <record id="view_assign_technician_wizard_form" model="ir.ui.view">
         <field name="name">assign.technician.wizard.form</field>
         <field name="model">assign.technician.wizard</field>
@@ -15,5 +14,4 @@
             </form>
         </field>
     </record>
-    </data>
 </odoo>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
     <!-- Asset Tree View -->
     <record id="view_facilities_asset_tree" model="ir.ui.view">
         <field name="name">facilities.asset.tree</field>
@@ -21,9 +20,6 @@
                 <field name="state"/>
                 <field name="installation_status"/>
                 <field name="compliance_status"/>
-                <field name="esg_compliance" widget="boolean_toggle"/>
-                <field name="carbon_footprint" optional="hide"/>
-                <field name="energy_efficiency_rating" optional="hide"/>
                 <field name="warranty_status"/>
                 <field name="asset_health_score" widget="progressbar"/>
                 <field name="risk_score"/>
@@ -240,37 +236,6 @@
                             <separator string="Documents"/>
                             <field name="attachment_ids" widget="many2many_binary"/>
                         </page>
-                        <page string="ESG Metrics" name="esg_metrics">
-                            <group>
-                                <group string="Environmental Metrics">
-                                    <field name="esg_compliance"/>
-                                    <field name="carbon_footprint"/>
-                                    <field name="energy_efficiency_rating"/>
-                                    <field name="renewable_energy_usage" widget="percentage"/>
-                                    <field name="waste_management_score"/>
-                                    <field name="water_consumption"/>
-                                    <field name="biodiversity_impact"/>
-                                </group>
-                                <group string="Social Metrics">
-                                    <field name="community_impact_score"/>
-                                    <field name="employee_satisfaction"/>
-                                    <field name="diversity_index"/>
-                                    <field name="health_safety_score"/>
-                                    <field name="training_hours"/>
-                                    <field name="local_procurement" widget="percentage"/>
-                                </group>
-                            </group>
-                            <group>
-                                <group string="Governance Metrics">
-                                    <field name="compliance_rate" widget="percentage"/>
-                                    <field name="risk_management_score"/>
-                                    <field name="transparency_index"/>
-                                    <field name="board_diversity"/>
-                                    <field name="ethics_score"/>
-                                    <field name="stakeholder_engagement"/>
-                                </group>
-                            </group>
-                        </page>
                         <page string="History Timeline" name="history_timeline">
                             <field name="history_events_html" readonly="1" widget="html"/>
                         </page>
@@ -319,9 +284,6 @@
                 <field name="manufacturer_id"/>
                 <field name="model_number"/>
                 <field name="iot_device_id"/>
-                <field name="carbon_footprint"/>
-                <field name="energy_efficiency_rating"/>
-                <field name="esg_compliance"/>
                 
                 <!-- Quick Filters -->
                 <filter string="Active" name="active" domain="[('active', '=', True)]"/>
@@ -335,11 +297,6 @@
                 <filter string="Non-Compliant" name="non_compliant" domain="[('compliance_status', '=', 'non_compliant')]"/>
                 <filter string="Warranty Expired" name="warranty_expired" domain="[('warranty_status', '=', 'expired')]"/>
                 <filter string="Remote Monitoring" name="remote_monitoring" domain="[('remote_monitoring', '=', True)]"/>
-                <separator/>
-                <filter string="ESG Compliant" name="esg_compliant" domain="[('esg_compliance', '=', True)]"/>
-                <filter string="Non-ESG Compliant" name="non_esg_compliant" domain="[('esg_compliance', '=', False)]"/>
-                <filter string="High Carbon Footprint" name="high_carbon" domain="[('carbon_footprint', '&gt;', 1000)]"/>
-                <filter string="Low Energy Efficiency" name="low_energy_efficiency" domain="[('energy_efficiency_rating', 'in', ['d', 'e'])]"/>
                 <separator/>
                 <filter string="Under Maintenance" name="under_maintenance" domain="[('state', '=', 'maintenance')]"/>
                 <filter string="In Service" name="in_service" domain="[('state', '=', 'active')]"/>
@@ -388,5 +345,14 @@
         </field>
     </record>
 
-    </data>
+    <!-- Asset Dashboard Action -->
+    <record id="action_asset_dashboard" model="ir.actions.act_window">
+        <field name="name">Asset Dashboard</field>
+        <field name="res_model">facilities.asset</field>
+        <field name="view_mode">graph,pivot,calendar</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="target">current</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
 </odoo>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ESG Assets Menus -->
+    <menuitem id="menu_esg_assets_root" name="ESG Assets" sequence="10"/>
+
+    <menuitem id="menu_esg_asset" name="Assets" parent="menu_esg_assets_root" action="action_esg_asset" sequence="10"/>
+    <menuitem id="menu_esg_asset_category" name="Asset Categories" parent="menu_esg_assets_root" action="action_esg_asset_category" sequence="20"/>
+</odoo>

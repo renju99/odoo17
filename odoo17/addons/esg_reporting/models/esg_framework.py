@@ -156,10 +156,12 @@ class ESGFramework(models.Model):
             }
         return {}
     
-    def assess_compliance(self):
+    @api.model
+    def assess_compliance(self, framework_id):
         """Assess compliance with framework requirements"""
-        self.ensure_one()
-        framework = self
+        framework = self.browse(framework_id)
+        if not framework.exists():
+            return False
         
         # Calculate compliance score based on standards
         standards = framework.standards_ids.filtered(lambda s: s.required)
@@ -283,10 +285,12 @@ class ESGFrameworkStandard(models.Model):
         default=True
     )
     
-    def assess_standard_compliance(self):
+    @api.model
+    def assess_standard_compliance(self, standard_id):
         """Assess compliance with a specific standard"""
-        self.ensure_one()
-        standard = self
+        standard = self.browse(standard_id)
+        if not standard.exists():
+            return False
         
         # Check if data source is available
         if standard.data_source_model and standard.data_source_field:
@@ -313,212 +317,3 @@ class ESGFrameworkStandard(models.Model):
                 return True
         
         return False
-
-
-class ESGMaterialityAssessment(models.Model):
-    _name = 'esg.materiality.assessment'
-    _description = 'ESG Materiality Assessment'
-    _order = 'date desc, id desc'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-
-    name = fields.Char(
-        string='Assessment Name',
-        required=True,
-        tracking=True
-    )
-    
-    date = fields.Date(
-        string='Assessment Date',
-        default=fields.Date.today,
-        required=True,
-        tracking=True
-    )
-    
-    framework_id = fields.Many2one(
-        'esg.framework',
-        string='Framework',
-        required=True,
-        tracking=True
-    )
-    
-    assessment_type = fields.Selection([
-        ('initial', 'Initial Assessment'),
-        ('periodic', 'Periodic Review'),
-        ('update', 'Update Assessment'),
-    ], string='Assessment Type', required=True, default='initial')
-    
-    # Materiality Matrix
-    topics_ids = fields.One2many(
-        'esg.materiality.topic',
-        'assessment_id',
-        string='Materiality Topics'
-    )
-    
-    # Stakeholder Engagement
-    stakeholder_engagement = fields.Text(
-        string='Stakeholder Engagement',
-        tracking=True,
-        help="Description of stakeholder engagement process"
-    )
-    
-    stakeholders_consulted = fields.Integer(
-        string='Stakeholders Consulted',
-        tracking=True
-    )
-    
-    # Assessment Results
-    materiality_threshold = fields.Float(
-        string='Materiality Threshold',
-        default=5.0,
-        tracking=True
-    )
-    
-    significant_topics_count = fields.Integer(
-        string='Significant Topics Count',
-        compute='_compute_significant_topics',
-        store=True
-    )
-    
-    assessment_score = fields.Float(
-        string='Assessment Score',
-        compute='_compute_assessment_score',
-        store=True
-    )
-    
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
-        ('validated', 'Validated'),
-    ], string='Status', default='draft', tracking=True)
-    
-    notes = fields.Text(
-        string='Notes',
-        tracking=True
-    )
-    
-    company_id = fields.Many2one(
-        'res.company',
-        string='Company',
-        default=lambda self: self.env.company,
-        required=True
-    )
-    
-    @api.depends('topics_ids.impact_score', 'topics_ids.probability_score')
-    def _compute_significant_topics(self):
-        for record in self:
-            significant_topics = record.topics_ids.filtered(
-                lambda t: t.impact_score * t.probability_score >= record.materiality_threshold
-            )
-            record.significant_topics_count = len(significant_topics)
-    
-    @api.depends('topics_ids.impact_score', 'topics_ids.probability_score')
-    def _compute_assessment_score(self):
-        for record in self:
-            if record.topics_ids:
-                total_score = sum(
-                    topic.impact_score * topic.probability_score 
-                    for topic in record.topics_ids
-                )
-                record.assessment_score = total_score / len(record.topics_ids)
-            else:
-                record.assessment_score = 0.0
-    
-    def action_start_assessment(self):
-        self.write({'state': 'in_progress'})
-    
-    def action_complete_assessment(self):
-        self.write({'state': 'completed'})
-    
-    def action_validate_assessment(self):
-        self.write({'state': 'validated'})
-    
-    def action_draft(self):
-        self.write({'state': 'draft'})
-
-
-class ESGMaterialityTopic(models.Model):
-    _name = 'esg.materiality.topic'
-    _description = 'ESG Materiality Topic'
-    _order = 'sequence'
-
-    name = fields.Char(
-        string='Topic Name',
-        required=True
-    )
-    
-    assessment_id = fields.Many2one(
-        'esg.materiality.assessment',
-        string='Assessment',
-        required=True,
-        ondelete='cascade'
-    )
-    
-    category = fields.Selection([
-        ('environmental', 'Environmental'),
-        ('social', 'Social'),
-        ('governance', 'Governance'),
-        ('economic', 'Economic'),
-    ], string='Category', required=True, default='environmental')
-    
-    subcategory = fields.Char(
-        string='Subcategory'
-    )
-    
-    description = fields.Text(
-        string='Description'
-    )
-    
-    # Materiality Scoring
-    impact_score = fields.Float(
-        string='Impact Score (1-10)',
-        default=5.0,
-        help="Impact on stakeholders and business (1-10 scale)"
-    )
-    
-    probability_score = fields.Float(
-        string='Probability Score (1-10)',
-        default=5.0,
-        help="Probability of occurrence (1-10 scale)"
-    )
-    
-    materiality_score = fields.Float(
-        string='Materiality Score',
-        compute='_compute_materiality_score',
-        store=True,
-        help="Impact Score × Probability Score"
-    )
-    
-    is_significant = fields.Boolean(
-        string='Is Significant',
-        compute='_compute_is_significant',
-        store=True
-    )
-    
-    sequence = fields.Integer(
-        string='Sequence',
-        default=10
-    )
-    
-    notes = fields.Text(
-        string='Notes'
-    )
-    
-    @api.depends('impact_score', 'probability_score')
-    def _compute_materiality_score(self):
-        for record in self:
-            record.materiality_score = record.impact_score * record.probability_score
-    
-    @api.depends('materiality_score', 'assessment_id.materiality_threshold')
-    def _compute_is_significant(self):
-        for record in self:
-            threshold = record.assessment_id.materiality_threshold
-            record.is_significant = record.materiality_score >= threshold
-    
-    @api.constrains('impact_score', 'probability_score')
-    def _check_scores(self):
-        for record in self:
-            if record.impact_score < 1 or record.impact_score > 10:
-                raise ValidationError(_('Impact score must be between 1 and 10.'))
-            if record.probability_score < 1 or record.probability_score > 10:
-                raise ValidationError(_('Probability score must be between 1 and 10.'))

@@ -1,9 +1,6 @@
 from odoo import models, fields, api, _
 from datetime import datetime, timedelta
 from odoo.exceptions import UserError
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class MaintenanceWorkOrder(models.Model):
@@ -53,28 +50,7 @@ class MaintenanceWorkOrder(models.Model):
     def _apply_sla(self):
         """Apply appropriate SLA to the work order"""
         try:
-            # Find matching SLA from facilities.sla model
-            sla_domain = [('active', '=', True)]
-            
-            # Match by asset criticality
-            if self.asset_id and self.asset_id.criticality:
-                sla_domain.append(('asset_criticality', '=', self.asset_id.criticality))
-            
-            # Match by maintenance type
-            if self.maintenance_type:
-                sla_domain.append(('maintenance_type', '=', self.maintenance_type))
-            
-            # Match by priority
-            if self.priority:
-                sla_domain.append(('priority_level', '=', self.priority))
-            
-            # Match by facility
-            if self.asset_id and self.asset_id.facility_id:
-                sla_domain.append(('facility_ids', 'in', self.asset_id.facility_id.id))
-            
-            # Order by priority (higher priority first)
-            sla = self.env['facilities.sla'].search(sla_domain, order='priority desc', limit=1)
-            
+            sla = self.env['maintenance.workorder.sla'].find_matching_sla(self)
             if sla:
                 current_time = fields.Datetime.now()
                 self.write({
@@ -82,8 +58,7 @@ class MaintenanceWorkOrder(models.Model):
                     'sla_response_deadline': current_time + timedelta(hours=sla.response_time_hours),
                     'sla_resolution_deadline': current_time + timedelta(hours=sla.resolution_time_hours),
                 })
-        except Exception as e:
-            _logger.warning(f"Error applying SLA to work order {self.name}: {str(e)}")
+        except Exception:
             # If SLA model doesn't exist yet, skip
             pass
 
@@ -107,9 +82,9 @@ class MaintenanceWorkOrder(models.Model):
 
                 if time_remaining <= 0:
                     record.sla_response_status = 'breached'
-                elif percentage_used >= (95 if not record.sla_id else 95):  # Use percentage for critical
+                elif percentage_used >= (record.sla_id.critical_threshold if record.sla_id else 95):
                     record.sla_response_status = 'critical'
-                elif percentage_used >= (80 if not record.sla_id else 80):  # Use percentage for warning
+                elif percentage_used >= (record.sla_id.warning_threshold if record.sla_id else 80):
                     record.sla_response_status = 'warning'
                 else:
                     record.sla_response_status = 'on_time'
@@ -124,9 +99,9 @@ class MaintenanceWorkOrder(models.Model):
 
                 if time_remaining <= 0:
                     record.sla_resolution_status = 'breached'
-                elif percentage_used >= (95 if not record.sla_id else 95):  # Use percentage for critical
+                elif percentage_used >= (record.sla_id.critical_threshold if record.sla_id else 95):
                     record.sla_resolution_status = 'critical'
-                elif percentage_used >= (80 if not record.sla_id else 80):  # Use percentage for warning
+                elif percentage_used >= (record.sla_id.warning_threshold if record.sla_id else 80):
                     record.sla_resolution_status = 'warning'
                 else:
                     record.sla_resolution_status = 'on_time'

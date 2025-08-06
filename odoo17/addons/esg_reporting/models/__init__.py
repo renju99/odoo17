@@ -1,3 +1,4 @@
+from . import esg_asset
 from . import esg_emission
 from . import esg_offset
 from . import esg_employee_community
@@ -7,11 +8,5 @@ from . import esg_gender_parity
 from . import esg_pay_gap
 from . import esg_framework
 from . import esg_target
-from . import purchase_order
 from . import enhanced_esg_dashboard
-from . import esg_carbon_footprint
-from . import esg_emission_factor
-from . import esg_materiality_assessment
-from . import esg_community_initiative
-from . import esg_offset_type
-from . import esg_initiative_tag
+from . import purchase_order

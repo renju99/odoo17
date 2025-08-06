@@ -81,7 +81,6 @@ export class IoTMonitoringWidget extends Component {
 
     _removeBusListeners() {
         // Bus service handles cleanup automatically in Odoo 17
-        // No manual cleanup needed
     }
 
     _handleSensorUpdate(data) {
@@ -170,7 +169,6 @@ export class IoTMonitoringWidget extends Component {
             this.alertSound.volume = 0.5; // Set volume to 50%
         }
         
-        // Play alert sound with error handling
         this.alertSound.play().catch(error => {
             console.log('Could not play alert sound:', error);
         });
@@ -358,125 +356,38 @@ export class SensorChartWidget extends Component {
     _initChart() {
         // Initialize chart library (Chart.js or similar)
         if (typeof Chart !== 'undefined') {
-            const canvas = this.el.querySelector('.sensor-chart');
-            if (!canvas) {
-                console.warn('Sensor chart canvas not found');
-                return;
-            }
-            
-            const ctx = canvas.getContext('2d');
-            if (!ctx) {
-                console.warn('Could not get 2D context for sensor chart');
-                return;
-            }
-            
-            // Validate chart data before creating
-            const chartData = this.state.chartData || [];
-            const validData = chartData.filter(d => 
-                d && 
-                typeof d.reading_time !== 'undefined' && 
-                typeof d.value !== 'undefined'
-            );
-            
-            try {
-                this.chart = new Chart(ctx, {
-                    type: this.state.chartType,
-                    data: {
-                        labels: validData.map(d => d.reading_time),
-                        datasets: [{
-                            label: 'Sensor Value',
-                            data: validData.map(d => d.value),
-                            borderColor: 'rgb(75, 192, 192)',
-                            tension: 0.1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
+            const ctx = this.el.querySelector('.sensor-chart').getContext('2d');
+            this.chart = new Chart(ctx, {
+                type: this.state.chartType,
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Sensor Value',
+                        data: [],
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
-                });
-            } catch (error) {
-                console.error('Error initializing Chart.js:', error);
-                // Fallback: show data in a simple format
-                this._showChartFallback(validData);
-            }
-        } else {
-            console.warn('Chart.js is not loaded. Chart functionality will be disabled.');
-            // Fallback: show data in a simple format
-            const chartData = this.state.chartData || [];
-            const validData = chartData.filter(d => 
-                d && 
-                typeof d.reading_time !== 'undefined' && 
-                typeof d.value !== 'undefined'
-            );
-            this._showChartFallback(validData);
-        }
-    }
-
-    _showChartFallback(data) {
-        // Simple fallback when Chart.js is not available
-        const canvas = this.el.querySelector('.sensor-chart');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                // Clear canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw a simple text representation
-                ctx.fillStyle = '#333';
-                ctx.font = '12px Arial';
-                ctx.textAlign = 'center';
-                
-                if (data.length === 0) {
-                    ctx.fillText('No data available', canvas.width / 2, canvas.height / 2);
-                } else {
-                    ctx.fillText(`${data.length} data points available`, canvas.width / 2, canvas.height / 2);
-                    ctx.fillText('Chart.js required for visualization', canvas.width / 2, canvas.height / 2 + 20);
                 }
-            }
+            });
         }
     }
 
     _updateChart() {
-        if (this.chart && typeof Chart !== 'undefined') {
-            const chartData = this.state.chartData || [];
+        if (this.chart) {
+            const labels = this.state.chartData.map(d => d.reading_time);
+            const values = this.state.chartData.map(d => d.value);
             
-            // Validate data before updating chart
-            const validData = chartData.filter(d => 
-                d && 
-                typeof d.reading_time !== 'undefined' && 
-                typeof d.value !== 'undefined'
-            );
-            
-            if (validData.length === 0) {
-                console.warn('No valid chart data available for update');
-                return;
-            }
-            
-            try {
-                const labels = validData.map(d => d.reading_time);
-                const values = validData.map(d => d.value);
-                
-                this.chart.data.labels = labels;
-                this.chart.data.datasets[0].data = values;
-                this.chart.update();
-            } catch (error) {
-                console.error('Error updating Chart.js:', error);
-                this._showChartFallback(validData);
-            }
-        } else if (typeof Chart === 'undefined') {
-            // Chart.js not available, update fallback
-            const chartData = this.state.chartData || [];
-            const validData = chartData.filter(d => 
-                d && 
-                typeof d.reading_time !== 'undefined' && 
-                typeof d.value !== 'undefined'
-            );
-            this._showChartFallback(validData);
+            this.chart.data.labels = labels;
+            this.chart.data.datasets[0].data = values;
+            this.chart.update();
         }
     }
 

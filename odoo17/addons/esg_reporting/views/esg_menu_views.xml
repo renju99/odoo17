@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        
         <!-- Main ESG Application Menu -->
         <menuitem id="menu_esg_root"
                   name="ESG Reporting"
                   web_icon="esg_reporting,static/description/icon.png"
-                  sequence="50"/>
-
-        <!-- ESG Dashboard Menu -->
-        <menuitem id="menu_esg_dashboard"
-                  name="ESG Dashboard"
-                  parent="menu_esg_root"
                   action="action_esg_dashboard"
-                  sequence="10"/>
+                  sequence="50"/>
 
         <!-- Environmental Menu -->
         <menuitem id="menu_esg_environmental"
                   name="Environmental"
                   parent="menu_esg_root"
+                  sequence="10"/>
+
+        <!-- Social Menu -->
+        <menuitem id="menu_esg_social"
+                  name="Social"
+                  parent="menu_esg_root"
                   sequence="20"/>
 
+        <!-- Governance Menu -->
+        <menuitem id="menu_esg_governance"
+                  name="Governance"
+                  parent="menu_esg_root"
+                  sequence="30"/>
+
+        <!-- Analytics Menu -->
+        <menuitem id="menu_esg_analytics"
+                  name="Analytics"
+                  parent="menu_esg_root"
+                  sequence="40"/>
+
+        <!-- Reports Menu -->
+        <menuitem id="menu_esg_reports"
+                  name="Reports"
+                  parent="menu_esg_root"
+                  sequence="50"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_esg_configuration"
+                  name="Configuration"
+                  parent="menu_esg_root"
+                  sequence="60"/>
+
+        <!-- Environmental Submenus -->
         <menuitem id="menu_esg_emissions"
                   name="Emissions"
                   parent="menu_esg_environmental"
@@ -32,12 +58,7 @@
                   action="action_esg_offset"
                   sequence="20"/>
 
-        <!-- Social Menu -->
-        <menuitem id="menu_esg_social"
-                  name="Social"
-                  parent="menu_esg_root"
-                  sequence="30"/>
-
+        <!-- Social Submenus -->
         <menuitem id="menu_esg_employee_community"
                   name="Employee Community"
                   parent="menu_esg_social"
@@ -62,12 +83,13 @@
                   action="action_esg_pay_gap"
                   sequence="40"/>
 
-        <!-- Governance Menu -->
-        <menuitem id="menu_esg_governance"
-                  name="Governance"
-                  parent="menu_esg_root"
-                  sequence="40"/>
+        <menuitem id="menu_esg_targets"
+                  name="ESG Targets"
+                  parent="menu_esg_social"
+                  action="action_esg_target"
+                  sequence="50"/>
 
+        <!-- Governance Submenus -->
         <menuitem id="menu_esg_initiatives"
                   name="ESG Initiatives"
                   parent="menu_esg_governance"
@@ -86,58 +108,50 @@
                   action="action_esg_materiality_assessment"
                   sequence="30"/>
 
-        <!-- Analytics and Reports Menu -->
-        <menuitem id="menu_esg_analytics_and_reports"
-                  name="Analytics &amp; Reports"
-                  parent="menu_esg_root"
-                  sequence="50"/>
-
+        <!-- Analytics Submenus -->
         <menuitem id="menu_esg_analytics_reports"
                   name="Analytics Reports"
-                  parent="menu_esg_analytics_and_reports"
+                  parent="menu_esg_analytics"
                   action="action_esg_analytics"
                   sequence="10"/>
 
-        <menuitem id="menu_esg_advanced_dashboard"
-                  name="Advanced Dashboard"
-                  parent="menu_esg_analytics_and_reports"
-                  action="action_esg_advanced_dashboard"
+        <menuitem id="menu_esg_dashboard"
+                  name="ESG Dashboard"
+                  parent="menu_esg_analytics"
+                  action="action_esg_dashboard"
                   sequence="20"/>
 
+        <menuitem id="menu_esg_advanced_dashboard"
+                  name="Advanced Dashboard"
+                  parent="menu_esg_analytics"
+                  action="action_esg_advanced_dashboard"
+                  sequence="25"/>
+
+        <!-- Reports Submenus -->
         <menuitem id="menu_esg_report_wizard"
                   name="Generate ESG Report"
-                  parent="menu_esg_analytics_and_reports"
+                  parent="menu_esg_reports"
                   action="action_enhanced_esg_wizard"
-                  sequence="30"/>
-                  
-        <!-- Configuration Menu -->
-        <menuitem id="menu_esg_configuration"
-                  name="Configuration"
-                  parent="menu_esg_root"
-                  sequence="100"/>
-
-        <menuitem id="menu_esg_targets"
-                  name="ESG Targets"
-                  parent="menu_esg_configuration"
-                  action="action_esg_target"
                   sequence="10"/>
 
+        <!-- Configuration Submenus -->
         <menuitem id="menu_esg_emission_factors"
                   name="Emission Factors"
                   parent="menu_esg_configuration"
                   action="action_esg_emission_factor"
-                  sequence="20"/>
+                  sequence="10"/>
 
         <menuitem id="menu_esg_offset_types"
                   name="Offset Types"
                   parent="menu_esg_configuration"
                   action="action_esg_offset_type"
-                  sequence="30"/>
+                  sequence="20"/>
 
         <menuitem id="menu_esg_initiative_tags"
                   name="Initiative Tags"
                   parent="menu_esg_configuration"
                   action="action_esg_initiative_tag"
-                  sequence="40"/>
+                  sequence="30"/>
+
     </data>
 </odoo>

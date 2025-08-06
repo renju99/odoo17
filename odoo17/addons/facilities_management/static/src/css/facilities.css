@@ -1,46 +1,5 @@
 /* Facilities Management CSS */
 
-/* Prevent layout issues during loading */
-.facilities-dashboard {
-    min-height: 100vh;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    /* Prevent layout calculations until ready */
-    visibility: hidden;
-}
-
-.facilities-dashboard.loaded {
-    opacity: 1;
-    visibility: visible;
-}
-
-/* Ensure proper layout timing */
-.o_control_panel {
-    position: relative;
-    z-index: 1;
-}
-
-.dashboard-content {
-    position: relative;
-    z-index: 0;
-}
-
-/* Prevent FOUC (Flash of Unstyled Content) */
-.o_web_client {
-    /* Ensure layout is not calculated until ready */
-    min-height: 100vh;
-}
-
-/* Ensure proper loading sequence */
-.facilities-dashboard:not(.loaded) {
-    /* Hide content until JavaScript is ready */
-    display: none;
-}
-
-.facilities-dashboard.loaded {
-    display: block;
-}
-
 /* Space Booking Styles */
 .o_kanban_record_top .o_kanban_record_headings {
     margin-bottom: 8px;

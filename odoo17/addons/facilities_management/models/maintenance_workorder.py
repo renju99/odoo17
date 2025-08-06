@@ -16,7 +16,6 @@ class MaintenanceWorkOrder(models.Model):
                        default=lambda self: _('New'))
     asset_id = fields.Many2one('facilities.asset', string='Asset', required=True, tracking=True)
     schedule_id = fields.Many2one('asset.maintenance.schedule', string='Maintenance Schedule', tracking=True)
-    signature = fields.Binary(string='Signature', attachment=True)
     maintenance_type = fields.Selection([
         ('preventive', 'Preventive'),
         ('corrective', 'Corrective'),
@@ -178,10 +177,6 @@ class MaintenanceWorkOrder(models.Model):
     parts_used_ids = fields.One2many('maintenance.workorder.part_line', 'workorder_id', string='Parts Used')
     permit_ids = fields.One2many('maintenance.workorder.permit', 'workorder_id', string='Permits')
     workorder_task_ids = fields.One2many('maintenance.workorder.task', 'workorder_id', string='Work Order Tasks')
-    
-    # Mobile and Signature Fields
-    signature = fields.Binary(string='Technician Signature', help='Digital signature of the technician')
-    show_tasks_to_complete_btn = fields.Boolean(string='Show Tasks Button', compute='_compute_show_tasks_button')
 
     # Status field for view compatibility
     status = fields.Selection(related='state', string='Status', store=True)
@@ -568,16 +563,6 @@ class MaintenanceWorkOrder(models.Model):
         })
         self.message_post(body=_("Work order completed by %s") % self.env.user.name)
 
-    def action_cancel(self):
-        self.ensure_one()
-        if self.state in ('done', 'cancelled'):
-            raise UserError(_("Cannot cancel a work order that is already done or cancelled."))
-        self.write({
-            'approval_state': 'cancelled',
-            'state': 'cancelled'
-        })
-        self.message_post(body=_("Work order cancelled by %s") % self.env.user.name)
-
     @api.depends('section_ids.task_ids.is_done', 'workorder_task_ids.is_done')
     def _compute_all_tasks_completed(self):
         for workorder in self:
@@ -588,14 +573,6 @@ class MaintenanceWorkOrder(models.Model):
                 workorder.all_tasks_completed = True
             else:
                 workorder.all_tasks_completed = all(task.is_done for task in all_tasks if task.is_checklist_item)
-
-    @api.depends('section_ids', 'workorder_task_ids')
-    def _compute_show_tasks_button(self):
-        for workorder in self:
-            section_tasks = workorder.section_ids.mapped('task_ids')
-            workorder_tasks = workorder.workorder_task_ids
-            all_tasks = section_tasks | workorder_tasks
-            workorder.show_tasks_to_complete_btn = bool(all_tasks)
 
     def _compute_picking_count(self):
         for workorder in self:
@@ -671,39 +648,6 @@ class MaintenanceWorkOrder(models.Model):
                     workorder.sla_resolution_status = 'on_time'
             except MissingError:
                 workorder.sla_resolution_status = 'on_time'
-
-    @api.model
-    def cron_auto_escalate_workorders(self):
-        """Cron job method to automatically escalate overdue work orders"""
-        now = fields.Datetime.now()
-        
-        # Find work orders that need escalation
-        workorders = self.search([
-            ('state', 'in', ['draft', 'assigned', 'in_progress']),
-            ('sla_deadline', '<', now),
-            ('escalation_triggered', '=', False)
-        ])
-        
-        escalated_count = 0
-        for workorder in workorders:
-            try:
-                # Check if SLA is breached
-                if workorder.sla_status == 'breached':
-                    workorder._trigger_escalation()
-                    escalated_count += 1
-                    
-                    # Log the escalation
-                    workorder.message_post(
-                        body=_("Work order automatically escalated due to SLA breach. "
-                              "Escalation level: %s") % workorder.sla_escalation_level
-                    )
-                    
-            except Exception as e:
-                _logger.error(f"Error escalating work order {workorder.name}: {str(e)}")
-                continue
-        
-        _logger.info(f"Auto-escalated {escalated_count} work orders")
-        return escalated_count
 
 
 class MaintenanceEscalationLog(models.Model):

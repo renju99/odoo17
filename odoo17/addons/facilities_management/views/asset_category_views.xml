@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
     <!-- Asset Category Tree View with Hierarchy -->
     <record id="view_asset_category_tree" model="ir.ui.view">
         <field name="name">facilities.asset.category.tree</field>
@@ -181,20 +180,4 @@
             </search>
         </field>
     </record>
-
-    <!-- Asset Category Action -->
-    <record id="action_asset_category" model="ir.actions.act_window">
-        <field name="name">Asset Categories</field>
-        <field name="res_model">facilities.asset.category</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create your first asset category!
-            </p>
-            <p>
-                Organize your assets by creating categories.
-            </p>
-        </field>
-    </record>
-    </data>
 </odoo>

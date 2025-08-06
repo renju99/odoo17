@@ -10,7 +10,6 @@ class Facility(models.Model):
     _description = 'Facility Management'
     _rec_name = 'name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _parent_name = 'parent_facility_id'
 
     # Basic Information
     name = fields.Char(string='Facility Name', required=True, help="The official name of the facility or property.")

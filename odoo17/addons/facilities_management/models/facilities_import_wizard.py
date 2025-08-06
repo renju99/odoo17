@@ -23,7 +23,7 @@ class FacilitiesImportWizard(models.TransientModel):
         ('assets', 'Assets')
     ], string='Import Type', required=True, default='facilities')
     
-    import_file = fields.Binary(string='Import File', required=False)
+    import_file = fields.Binary(string='Import File', required=True)
     import_filename = fields.Char(string='Filename')
     file_type = fields.Selection([
         ('csv', 'CSV'),

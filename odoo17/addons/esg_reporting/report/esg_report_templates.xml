@@ -1,170 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Main report template -->
-        <template id="report_enhanced_esg_wizard">
+        <!-- Main ESG Report Template -->
+        <template id="esg_reporting_main_template">
             <t t-call="web.html_container">
-                <t t-if="report_data and isinstance(report_data, dict) and report_data.get('report_info')">
-                    <t t-call="esg_reporting.report_enhanced_esg_wizard_document"/>
-                </t>
-                <t t-else="">
-                    <!-- Fallback if report_data is not available -->
-                    <t t-call="esg_reporting.report_enhanced_esg_wizard_fallback_nodata"/>
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="container mt-5">
+                                <!-- Report Header -->
+                                <div class="row mb-4">
+                                    <div class="col-8">
+                                        <h1 t-esc="data.get('report_info', {}).get('name', 'Enhanced ESG Report')"/>
+                                        <p class="lead" t-esc="data.get('report_info', {}).get('type', 'sustainability')"/>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 80px;" alt="Company Logo"/>
+                                        <h4 t-esc="data.get('report_info', {}).get('company', '')"/>
+                                    </div>
+                                </div>
+
+                                <!-- Report Info -->
+                                <div class="row mb-4 p-3 bg-light rounded">
+                                    <div class="col-4">
+                                        <strong>Date From:</strong>
+                                        <span t-esc="data.get('report_info', {}).get('date_from', '')"/>
+                                    </div>
+                                    <div class="col-4">
+                                        <strong>Date To:</strong>
+                                        <span t-esc="data.get('report_info', {}).get('date_to', '')"/>
+                                    </div>
+                                    <div class="col-4">
+                                        <strong>Generated At:</strong>
+                                        <span t-esc="data.get('report_info', {}).get('generated_at', '')"/>
+                                    </div>
+                                </div>
+
+                                <!-- Note if no assets found -->
+                                <t t-if="data.get('report_info', {}).get('note')">
+                                    <div class="alert alert-warning" role="alert">
+                                        <h4 class="alert-heading">Data Notice</h4>
+                                        <p t-esc="data.get('report_info', {}).get('note', '')"/>
+                                    </div>
+                                </t>
+
+                                <!-- Environmental Metrics -->
+                                <t t-if="data.get('environmental_metrics')">
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <h2>Environmental Metrics</h2>
+                                            <table class="table table-sm table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Total Carbon Footprint</th>
+                                                        <td t-esc="data['environmental_metrics'].get('total_carbon_footprint', 0)"/>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Energy Efficiency Score</th>
+                                                        <td t-esc="data['environmental_metrics'].get('energy_efficiency_score', 0)"/>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Social Metrics -->
+                                <t t-if="data.get('social_metrics')">
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <h2>Social Metrics</h2>
+                                            <table class="table table-sm table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Community Impact Score</th>
+                                                        <td t-esc="data['social_metrics'].get('community_impact_score', 0)"/>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Employee Satisfaction</th>
+                                                        <td t-esc="data['social_metrics'].get('employee_satisfaction', 0)"/>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Governance Metrics -->
+                                <t t-if="data.get('governance_metrics')">
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <h2>Governance Metrics</h2>
+                                            <table class="table table-sm table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Compliance Rate</th>
+                                                        <td t-esc="data['governance_metrics'].get('compliance_rate', 0)"/>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Risk Management Score</th>
+                                                        <td t-esc="data['governance_metrics'].get('risk_management_score', 0)"/>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <!-- Recommendations -->
+                                <t t-if="data.get('recommendations')">
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <h2>Recommendations</h2>
+                                            <ul class="list-group">
+                                                <t t-foreach="data['recommendations']" t-as="rec">
+                                                    <li class="list-group-item">
+                                                        <strong t-esc="rec.get('category', '')"/>:
+                                                        <span t-esc="rec.get('recommendation', '')"/>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
                 </t>
             </t>
         </template>
 
-        <!-- Report document structure -->
-        <template id="report_enhanced_esg_wizard_document">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <t t-set="info" t-value="report_data.get('report_info', {})"/>
-                            
-                            <h1><t t-esc="info.get('name', 'Enhanced ESG Report')"/></h1>
-                            
-                            <!-- Report Header Information -->
-                            <div class="report-header mb-4">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Report Type:</strong> <t t-esc="info.get('type', 'N/A')"/></p>
-                                        <p><strong>Date Range:</strong> <t t-esc="info.get('date_from', 'N/A')"/> to <t t-esc="info.get('date_to', 'N/A')"/></p>
-                                        <p><strong>Granularity:</strong> <t t-esc="info.get('granularity', 'N/A')"/></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Company:</strong> <t t-esc="info.get('company', 'N/A')"/></p>
-                                        <p><strong>Generated At:</strong> <t t-esc="info.get('generated_at', 'N/A')"/></p>
-                                        <p><strong>Total Assets Analyzed:</strong> <t t-esc="info.get('total_assets', 0)"/></p>
-                                    </div>
-                                </div>
-                                <t t-if="info.get('note')">
-                                    <div class="alert alert-info">
-                                        <strong>Note:</strong> <t t-esc="info.get('note')"/>
-                                    </div>
-                                </t>
-                            </div>
-
-                            <!-- Environmental Section -->
-                            <t t-set="env_metrics" t-value="report_data.get('environmental_metrics', {})"/>
-                            <t t-if="env_metrics">
-                                <div class="environmental-section mb-4">
-                                    <h3>Environmental Performance</h3>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><strong>Total Carbon Footprint:</strong> <t t-esc="env_metrics.get('total_carbon_footprint', 0)"/> kg CO2</p>
-                                            <p><strong>Energy Efficiency Score:</strong> <t t-esc="env_metrics.get('energy_efficiency_score', 0)"/>%</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><strong>Waste Management Score:</strong> <t t-esc="env_metrics.get('waste_management_score', 0)"/>%</p>
-                                            <p><strong>Water Consumption:</strong> <t t-esc="env_metrics.get('water_consumption', 0)"/> liters</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </t>
-
-                            <!-- Social Section -->
-                            <t t-set="social_metrics" t-value="report_data.get('social_metrics', {})"/>
-                            <t t-if="social_metrics">
-                                <div class="social-section mb-4">
-                                    <h3>Social Performance</h3>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><strong>Community Impact Score:</strong> <t t-esc="social_metrics.get('community_impact_score', 0)"/>/10</p>
-                                            <p><strong>Employee Satisfaction:</strong> <t t-esc="social_metrics.get('employee_satisfaction', 0)"/>/10</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><strong>Diversity Index:</strong> <t t-esc="social_metrics.get('diversity_index', 0)"/></p>
-                                            <p><strong>Health &amp; Safety Score:</strong> <t t-esc="social_metrics.get('health_safety_score', 0)"/>/10</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </t>
-
-                            <!-- Governance Section -->
-                            <t t-set="gov_metrics" t-value="report_data.get('governance_metrics', {})"/>
-                            <t t-if="gov_metrics">
-                                <div class="governance-section mb-4">
-                                    <h3>Governance Performance</h3>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><strong>Compliance Rate:</strong> <t t-esc="gov_metrics.get('compliance_rate', 0)"/>%</p>
-                                            <p><strong>Risk Management Score:</strong> <t t-esc="gov_metrics.get('risk_management_score', 0)"/>/10</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><strong>Transparency Index:</strong> <t t-esc="gov_metrics.get('transparency_index', 0)"/>/10</p>
-                                            <p><strong>Ethics Score:</strong> <t t-esc="gov_metrics.get('ethics_score', 0)"/>/10</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </t>
-
-                            <!-- Recommendations Section -->
-                            <t t-set="recommendations" t-value="report_data.get('recommendations', [])"/>
-                            <t t-if="recommendations">
-                                <div class="recommendations-section mb-4">
-                                    <h3>Recommendations</h3>
-                                    <ul>
-                                        <t t-foreach="recommendations" t-as="rec">
-                                            <li>
-                                                <strong><t t-esc="rec.get('category', 'General').title()"/>:</strong>
-                                                <t t-esc="rec.get('recommendation', '')"/>
-                                            </li>
-                                        </t>
-                                    </ul>
-                                </div>
-                            </t>
-                            <t t-else="">
-                                <p>No specific recommendations available for this report.</p>
-                            </t>
-
-                            <!-- Footer -->
-                            <div class="report-footer mt-4">
-                                <hr/>
-                                <p class="text-muted"><strong>Generated at:</strong>
-                                    <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M:%S')"/>
-                                </p>
-                                <p class="text-muted small">This report was generated using Odoo ESG Reporting Module.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-
-        <!-- Fallback template for when a record cannot be processed -->
-        <template id="report_enhanced_esg_wizard_fallback">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
+        <!-- Fallback Template -->
+        <template id="esg_reporting_fallback_template">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="container mt-5">
                             <div class="alert alert-danger" role="alert">
-                                <h4>Error Processing Record</h4>
-                                <p>A record could not be processed for the report. It might be missing required data or is not a valid wizard object.</p>
+                                <h4 class="alert-heading">Report Generation Error</h4>
+                                <p>An unexpected error occurred while generating the ESG report. Please check the server logs for more details or contact your administrator.</p>
+                                <hr/>
+                                <p class="mb-0">You can try regenerating the report with different parameters.</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </template>
-        
-        <!-- Fallback template for when no data is available at all -->
-        <template id="report_enhanced_esg_wizard_fallback_nodata">
-            <div class="page">
-                <div class="oe_structure"/>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="alert alert-warning" role="alert">
-                                <h4>No Data Available</h4>
-                                <p>No report data was found. Please try generating the report again from the wizard.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </t>
+            </t>
         </template>
     </data>
 </odoo>

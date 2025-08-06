@@ -8,25 +8,8 @@
             <field name="arch" type="xml">
                 <form string="SLA">
                     <header>
-                        <button name="action_activate_sla" type="object" string="Activate SLA" 
-                                class="btn-primary" 
-                                invisible="active"/>
-                        <button name="action_deactivate_sla" type="object" string="Deactivate SLA" 
-                                class="btn-warning" 
-                                invisible="not active"/>
-                        <button name="action_duplicate_sla" type="object" string="Duplicate SLA" class="btn-secondary"/>
-                        <button name="action_test_sla_assignment" type="object" string="Test Assignment" class="btn-secondary"/>
-                        <button name="action_view_workorders" type="object" string="View Work Orders" class="btn-secondary"/>
+                        <button name="action_view_workorders" type="object" string="View Work Orders" class="btn-primary"/>
                         <button name="action_view_performance_dashboard" type="object" string="Performance Dashboard" class="btn-secondary"/>
-                        <field name="active" invisible="1"/>
-                        <widget name="web_ribbon" 
-                                text="Active" 
-                                bg_color="bg-success" 
-                                invisible="not active"/>
-                        <widget name="web_ribbon" 
-                                text="Archived" 
-                                bg_color="bg-warning" 
-                                invisible="active"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -36,7 +19,7 @@
                         </div>
                         <group>
                             <group string="Basic Information">
-                                <field name="active" widget="boolean_toggle"/>
+                                <field name="active"/>
                                 <field name="priority"/>
                                 <field name="description"/>
                             </group>
@@ -44,7 +27,6 @@
                                 <field name="response_time_hours"/>
                                 <field name="resolution_time_hours"/>
                                 <field name="warning_threshold_hours"/>
-                                <field name="critical_threshold_hours"/>
                                 <field name="escalation_delay_hours"/>
                             </group>
                         </group>
@@ -52,9 +34,9 @@
                             <page string="Assignment Rules" name="assignment_rules">
                                 <group>
                                     <group string="Asset Criteria">
-                                        <field name="asset_criticality" placeholder="Select asset criticality level"/>
-                                        <field name="maintenance_type" placeholder="Select maintenance type"/>
-                                        <field name="priority_level" placeholder="Select priority level"/>
+                                        <field name="asset_criticality"/>
+                                        <field name="maintenance_type"/>
+                                        <field name="priority_level"/>
                                     </group>
                                     <group string="Location">
                                         <field name="facility_ids" widget="many2many_tags"/>
@@ -65,8 +47,8 @@
                                 <group>
                                     <group string="Escalation Configuration">
                                         <field name="escalation_enabled"/>
-                                        <field name="max_escalation_level" invisible="not escalation_enabled"/>
-                                        <field name="escalation_recipients" widget="many2many_tags" invisible="not escalation_enabled"/>
+                                        <field name="max_escalation_level"/>
+                                        <field name="escalation_recipients" widget="many2many_tags"/>
                                     </group>
                                     <group string="Notifications">
                                         <field name="email_notifications"/>
@@ -86,7 +68,7 @@
                                         <field name="business_hours_only"/>
                                         <field name="business_hours_start"/>
                                         <field name="business_hours_end"/>
-                                        <field name="business_days" placeholder="monday,tuesday,wednesday,thursday,friday"/>
+                                        <field name="business_days"/>
                                     </group>
                                 </group>
                             </page>
@@ -119,13 +101,9 @@
             <field name="name">facilities.sla.tree</field>
             <field name="model">facilities.sla</field>
             <field name="arch" type="xml">
-                <tree string="SLAs" multi_edit="1" 
-                      decoration-muted="not active" 
-                      decoration-bf="active"
-                      default_order="active desc, priority desc, name">
-                    <field name="active" column_invisible="1"/>
+                <tree string="SLAs">
                     <field name="name"/>
-                    <field name="active" widget="boolean_toggle"/>
+                    <field name="active"/>
                     <field name="priority"/>
                     <field name="response_time_hours"/>
                     <field name="resolution_time_hours"/>
@@ -133,14 +111,6 @@
                     <field name="maintenance_type"/>
                     <field name="compliance_rate" widget="percentage"/>
                     <field name="total_workorders"/>
-                    <button name="action_activate_sla" type="object" string="Activate" 
-                            icon="fa-play" 
-                            title="Activate SLA"
-                            invisible="active"/>
-                    <button name="action_deactivate_sla" type="object" string="Deactivate" 
-                            icon="fa-pause" 
-                            title="Deactivate SLA"
-                            invisible="not active"/>
                 </tree>
             </field>
         </record>
@@ -155,12 +125,8 @@
                     <field name="asset_criticality"/>
                     <field name="maintenance_type"/>
                     <filter string="Active" name="active" domain="[('active', '=', True)]"/>
-                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
                     <filter string="High Priority" name="high_priority" domain="[('priority', '&gt;=', 8)]"/>
-                    <separator/>
-                    <filter string="All SLAs" name="all_slas" domain="[]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Status" name="group_active" context="{'group_by': 'active'}"/>
                         <filter string="Asset Criticality" name="group_criticality" context="{'group_by': 'asset_criticality'}"/>
                         <filter string="Maintenance Type" name="group_type" context="{'group_by': 'maintenance_type'}"/>
                         <filter string="Priority" name="group_priority" context="{'group_by': 'priority'}"/>
@@ -177,9 +143,6 @@
                 <form string="SLA Performance Dashboard">
                     <header>
                         <button name="action_export_report" type="object" string="Export Report" class="btn-primary"/>
-                        <button name="action_debug_data" type="object" string="Debug Data" class="btn-secondary"/>
-                        <button name="action_create_test_data" type="object" string="Create Test Data" class="btn-secondary"/>
-                        <button name="action_create_default_slas" type="object" string="Create Default SLAs" class="btn-secondary"/>
                     </header>
                     <sheet>
                         <group>
@@ -205,33 +168,10 @@
                         </group>
                         <notebook>
                             <page string="Daily Compliance Trend" name="daily_trend">
-                                <group string="Daily Compliance Data">
-                                    <field name="daily_compliance" readonly="1" widget="json"/>
-                                </group>
-                                <group string="Daily Compliance Summary" invisible="not daily_compliance">
-                                    <field name="daily_compliance" readonly="1" widget="json" options="{'display': 'table'}"/>
-                                </group>
+                                <field name="daily_compliance" readonly="1"/>
                             </page>
                             <page string="Weekly Trend Analysis" name="weekly_trend">
-                                <group string="Weekly Trend Data">
-                                    <field name="weekly_trend" readonly="1" widget="json"/>
-                                </group>
-                                <group string="Weekly Trend Summary" invisible="not weekly_trend">
-                                    <field name="weekly_trend" readonly="1" widget="json" options="{'display': 'table'}"/>
-                                </group>
-                            </page>
-                            <page string="Debug Information" name="debug">
-                                <group string="Data Debug">
-                                    <field name="sla_id" readonly="1"/>
-                                    <field name="date_from" readonly="1"/>
-                                    <field name="date_to" readonly="1"/>
-                                    <field name="total_workorders" readonly="1"/>
-                                    <field name="compliant_workorders" readonly="1"/>
-                                    <field name="breached_workorders" readonly="1"/>
-                                    <field name="compliance_rate" readonly="1"/>
-                                    <field name="avg_mttr" readonly="1"/>
-                                    <field name="avg_first_time_fix_rate" readonly="1"/>
-                                </group>
+                                <field name="weekly_trend" readonly="1"/>
                             </page>
                         </notebook>
                     </sheet>
@@ -280,7 +220,6 @@
             <field name="name">Service Level Agreements</field>
             <field name="res_model">facilities.sla</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_all_slas': 1, 'active_test': False}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Create your first SLA!
@@ -291,34 +230,10 @@
             </field>
         </record>
 
-        <!-- Bulk Activate Action -->
-        <record id="action_sla_bulk_activate" model="ir.actions.server">
-            <field name="name">Activate Selected SLAs</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
-            <field name="binding_model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.action_bulk_activate()
-            </field>
-        </record>
-
-        <!-- Bulk Deactivate Action -->
-        <record id="action_sla_bulk_deactivate" model="ir.actions.server">
-            <field name="name">Deactivate Selected SLAs</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
-            <field name="binding_model_id" model="ir.model" search="[('model', '=', 'facilities.sla')]"/>
-            <field name="binding_view_types">list</field>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.action_bulk_deactivate()
-            </field>
-        </record>
-
         <!-- SLA Menu -->
         <menuitem id="menu_facilities_sla"
                   name="SLAs"
-                  parent="menu_maintenance"
+                  parent="menu_facilities_maintenance"
                   action="action_facilities_sla"
                   sequence="20"/>
 

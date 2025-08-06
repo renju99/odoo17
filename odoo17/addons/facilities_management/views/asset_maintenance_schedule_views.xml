@@ -1,5 +1,4 @@
 <odoo>
-    <data>
     <!-- Tree View for Asset Maintenance Schedule -->
     <record id="view_asset_maintenance_schedule_tree" model="ir.ui.view">
         <field name="name">asset.maintenance.schedule.tree</field>
@@ -95,5 +94,4 @@
             </p>
         </field>
     </record>
-    </data>
 </odoo>

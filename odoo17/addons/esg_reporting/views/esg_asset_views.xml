@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ESG Asset Views -->
+    <record id="view_esg_asset_form" model="ir.ui.view">
+        <field name="name">esg.asset.form</field>
+        <field name="model">esg.asset</field>
+        <field name="arch" type="xml">
+            <form string="ESG Asset">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="company_id"/>
+                        <field name="category_id"/>
+                        <field name="purchase_date"/>
+                        <field name="asset_value"/>
+                    </group>
+                    <notebook>
+                        <page string="Environmental">
+                            <group>
+                                <field name="energy_consumption"/>
+                                <field name="water_consumption"/>
+                                <field name="carbon_footprint"/>
+                                <field name="waste_generated"/>
+                                <field name="recycling_rate"/>
+                            </group>
+                        </page>
+                        <page string="Social">
+                            <group>
+                                <field name="number_of_employees"/>
+                                <field name="training_hours"/>
+                                <field name="safety_incidents"/>
+                                <field name="community_investment"/>
+                                <field name="diversity_ratio"/>
+                                <field name="gender_pay_gap"/>
+                            </group>
+                        </page>
+                        <page string="Governance">
+                            <group>
+                                <field name="ethical_violations"/>
+                                <field name="governance_score"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_esg_asset_tree" model="ir.ui.view">
+        <field name="name">esg.asset.tree</field>
+        <field name="model">esg.asset</field>
+        <field name="arch" type="xml">
+            <tree string="ESG Assets">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="purchase_date"/>
+                <field name="asset_value"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_esg_asset_search" model="ir.ui.view">
+        <field name="name">esg.asset.search</field>
+        <field name="model">esg.asset</field>
+        <field name="arch" type="xml">
+            <search string="Search ESG Assets">
+                <field name="name"/>
+                <field name="category_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_esg_asset" model="ir.actions.act_window">
+        <field name="name">ESG Assets</field>
+        <field name="res_model">esg.asset</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- ESG Asset Category Views -->
+    <record id="view_esg_asset_category_form" model="ir.ui.view">
+        <field name="name">esg.asset.category.form</field>
+        <field name="model">esg.asset.category</field>
+        <field name="arch" type="xml">
+            <form string="ESG Asset Category">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="category_type"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_esg_asset_category_tree" model="ir.ui.view">
+        <field name="name">esg.asset.category.tree</field>
+        <field name="model">esg.asset.category</field>
+        <field name="arch" type="xml">
+            <tree string="ESG Asset Categories">
+                <field name="name"/>
+                <field name="category_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_esg_asset_category" model="ir.actions.act_window">
+        <field name="name">ESG Asset Categories</field>
+        <field name="res_model">esg.asset.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

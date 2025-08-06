@@ -88,9 +88,9 @@ class MobileScannerComponent extends Component {
             }, (err) => {
                 if (err) {
                     console.error('Scanner initialization failed:', err);
-                } else {
-                    Quagga.start();
+                    return;
                 }
+                Quagga.start();
             });
 
             Quagga.onDetected(this._onBarcodeDetected.bind(this));
@@ -176,27 +176,26 @@ class MobileScannerComponent extends Component {
         }
     }
 
-    async _onBarcodeDetected(result) {
+    _onBarcodeDetected(result) {
         if (this.state.isScanning) {
-            await this._processScanResult(result.codeResult.code, 'barcode');
+            this._processScanResult(result.codeResult.code, 'barcode');
         }
     }
 
-    async _onQRCodeDetected(data) {
+    _onQRCodeDetected(data) {
         if (this.state.isScanning) {
-            await this._processScanResult(data, 'qr');
+            this._processScanResult(data, 'qr');
         }
     }
 
-    async _processScanResult(code, type) {
+    _processScanResult(code, type) {
         this._stopScanning();
         
-        const location = await this._getCurrentLocation();
         const scanResult = {
             code: code,
             type: type,
             timestamp: new Date(),
-            location: location
+            location: this._getCurrentLocation()
         };
 
         this.state.scanResults.unshift(scanResult);
@@ -205,18 +204,14 @@ class MobileScannerComponent extends Component {
 
     _getCurrentLocation() {
         if (navigator.geolocation) {
-            return new Promise((resolve) => {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    resolve({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    });
-                }, () => {
-                    resolve(null);
-                });
+            navigator.geolocation.getCurrentPosition((position) => {
+                return {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                };
             });
         }
-        return Promise.resolve(null);
+        return null;
     }
 
     async _lookupAsset(code) {

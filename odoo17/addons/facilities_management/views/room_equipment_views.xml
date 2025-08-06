@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
     <!-- Room Equipment Tree View -->
     <record id="view_room_equipment_tree" model="ir.ui.view">
         <field name="name">facilities.room.equipment.tree</field>
@@ -205,5 +204,4 @@
         </field>
     </record>
 
-    </data>
 </odoo>

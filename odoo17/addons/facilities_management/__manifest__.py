@@ -29,7 +29,6 @@ Features:
         'product',
         'stock',
         'web',
-        'maintenance',
     ],
     'data': [
         # Security
@@ -52,19 +51,19 @@ Features:
         'reports/monthly_building_report_pdf.xml',
         'reports/monthly_building_report_pdf_action.xml',
         'reports/workorder_maintenance_report.xml',
-        'reports/sla_performance_report.xml',
 
         # Demo
         'demo/facility_demo.xml',
 
         # Views - Core Facilities
         'views/facility_views.xml',
+        'views/building_views.xml',
+        'views/floor_views.xml',
         'views/room_views.xml',
 
         # Views - Assets
         'views/asset_calendar_views.xml',
-        'views/building_views.xml',
-        'views/floor_views.xml',
+        'views/facility_asset_menus.xml',
         'views/facility_asset_views.xml',
         'views/asset_category_views.xml',
         'views/asset_dashboard_views.xml',
@@ -77,12 +76,9 @@ Features:
         'views/asset_sensor_views.xml',
         'views/asset_scan_wizard_views.xml',
         'views/asset_disposal_wizard_views.xml',
+        'views/facilities_import_wizard_views.xml',
 
-        # Views - Wizards and Actions (must be loaded before menus)
-        'views/monthly_building_report_wizard_action.xml',
-        'views/monthly_building_report_wizard_view.xml',
-
-        # Views - Maintenance (must be loaded before menus)
+        # Views - Maintenance
         'views/maintenance_team_views.xml',
         'views/maintenance_workorder_views.xml',
         'views/maintenance_workorder_part_line_views.xml',
@@ -92,12 +88,6 @@ Features:
         'views/maintenance_job_plan_views.xml',
         'views/maintenance_report_views.xml',
         'views/maintenance_workorder_calendar_views.xml',
-
-        # Views - Menus (must be loaded after actions)
-        'views/facility_asset_menus.xml',
-
-        # Views - Import/Export (must be loaded after menus)
-        'views/facilities_import_wizard_views.xml',
 
         # Views - Other
         'views/sla_views.xml',
@@ -109,6 +99,8 @@ Features:
         'views/room_equipment_views.xml',
         'views/booking_reject_wizard_views.xml',
         'views/facility_asset_search.xml',
+        'views/monthly_building_report_wizard_action.xml',
+        'views/monthly_building_report_wizard_view.xml',
         'views/technician_performance_dashboard_views.xml',
         'views/hr_employee_views.xml',
         'views/hr_employee_tree_technician.xml',
@@ -119,16 +111,11 @@ Features:
     ],
     'assets': {
         'web.assets_backend': [
-            # Include Chart.js library first
-            ('include', 'web.chartjs_lib'),
-            # CSS files - load before JavaScript
             'facilities_management/static/src/css/facilities.css',
             'facilities_management/static/src/css/portal.css',
-            # JavaScript files in dependency order - load after CSS
             'facilities_management/static/src/js/dashboard_widgets.js',
             'facilities_management/static/src/js/iot_monitoring.js',
             'facilities_management/static/src/js/mobile_scanner.js',
-            # XML templates - load last
             'facilities_management/static/src/xml/*.xml',
         ],
         'web.assets_frontend': [

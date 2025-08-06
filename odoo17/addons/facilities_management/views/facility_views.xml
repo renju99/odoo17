@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
     <!-- Facility Tree View -->
     <record id="facility_tree_view" model="ir.ui.view">
         <field name="name">facilities.facility.tree</field>
@@ -339,6 +338,10 @@
         </field>
     </record>
 
-
-    </data>
+    <!-- Facility Menu -->
+    <menuitem id="menu_facility"
+              name="Facilities"
+              parent="menu_facility_records"
+              action="action_facility"
+              sequence="10"/>
 </odoo>

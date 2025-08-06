@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
     <!-- Enhanced Asset Action with better view modes -->
     <record id="action_asset" model="ir.actions.act_window">
         <field name="name">Assets</field>
@@ -20,7 +19,65 @@
         </field>
     </record>
 
+    <!-- Facilities Action -->
+    <record id="action_facility" model="ir.actions.act_window">
+        <field name="name">Facilities</field>
+        <field name="res_model">facilities.facility</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first facility!
+            </p>
+            <p>
+                Manage your facilities and their properties.
+            </p>
+        </field>
+    </record>
 
+    <!-- Asset Categories Action -->
+    <record id="action_asset_category" model="ir.actions.act_window">
+        <field name="name">Asset Categories</field>
+        <field name="res_model">facilities.asset.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first asset category!
+            </p>
+            <p>
+                Organize your assets by creating categories.
+            </p>
+        </field>
+    </record>
+
+    <!-- Maintenance Schedule Action -->
+    <record id="action_maintenance_schedule" model="ir.actions.act_window">
+        <field name="name">Maintenance Schedules</field>
+        <field name="res_model">asset.maintenance.schedule</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first maintenance schedule!
+            </p>
+            <p>
+                Schedule maintenance activities for your assets.
+            </p>
+        </field>
+    </record>
+
+    <!-- Maintenance Work Orders Action -->
+    <record id="action_maintenance_workorder" model="ir.actions.act_window">
+        <field name="name">Maintenance Work Orders</field>
+        <field name="res_model">maintenance.workorder</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first work order!
+            </p>
+            <p>
+                Manage maintenance work orders and track their progress.
+            </p>
+        </field>
+    </record>
 
     <!-- Enhanced Dashboard Actions -->
     <record id="action_asset_overview" model="ir.actions.act_window">
@@ -246,7 +303,24 @@
         </field>
     </record>
 
-
+    <record id="action_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">facilities.asset</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{
+            'search_default_active': 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first facility asset!
+            </p>
+            <p>
+                Manage your facility assets including equipment, furniture, and infrastructure.
+                Use calendar view to track important dates.
+            </p>
+        </field>
+    </record>
 
     <record id="action_assets_overview" model="ir.actions.act_window">
         <field name="name">Assets Overview</field>
@@ -257,6 +331,18 @@
             'search_default_filter_active': 1
             }
         </field>
+    </record>
+
+    <record id="action_warranty_monitoring" model="ir.actions.act_window">
+        <field name="name">Warranty Monitoring</field>
+        <field name="res_model">facilities.asset</field>
+        <field name="view_mode">calendar,tree,kanban</field>
+        <field name="view_id" ref="view_facilities_asset_calendar_warranty"/>
+        <field name="context">{
+            'search_default_has_warranty': 1
+            }
+        </field>
+        <field name="domain">[('warranty_expiration_date', '!=', False)]</field>
     </record>
 
     <!-- ROOT MENU -->
@@ -319,12 +405,6 @@
               action="action_asset_category"
               sequence="20"/>
 
-    <menuitem id="menu_asset_disposal"
-              name="Asset Disposals"
-              parent="menu_asset_operations"
-              action="action_asset_disposal"
-              sequence="30"/>
-
             <!-- Asset Analytics &amp; Dashboards -->
     <menuitem id="menu_asset_analytics"
               name="Analytics &amp; Dashboards"
@@ -379,24 +459,6 @@
               action="action_predictive_maintenance"
               sequence="30"/>
 
-    <menuitem id="menu_asset_sensor"
-              name="Asset Sensors"
-              parent="menu_asset_monitoring"
-              action="action_asset_sensor"
-              sequence="40"/>
-
-    <menuitem id="menu_asset_threshold"
-              name="Asset Thresholds"
-              parent="menu_asset_monitoring"
-              action="action_asset_threshold"
-              sequence="41"/>
-
-    <menuitem id="menu_asset_sensor_data"
-              name="Sensor Data"
-              parent="menu_asset_monitoring"
-              action="action_asset_sensor_data"
-              sequence="42"/>
-
     <!-- MAINTENANCE SECTION -->
     <menuitem id="menu_maintenance"
               name="Maintenance"
@@ -418,7 +480,7 @@
     <menuitem id="menu_maintenance_schedule"
               name="Schedules"
               parent="menu_maintenance_operations"
-              action="action_asset_maintenance_schedule"
+              action="action_maintenance_schedule"
               sequence="20"/>
 
     <menuitem id="menu_maintenance_calendar_item"
@@ -426,25 +488,6 @@
               parent="menu_maintenance_operations"
               action="action_maintenance_calendar"
               sequence="30"/>
-
-    <menuitem id="menu_maintenance_workorder_mobile"
-              name="Work Orders (Mobile)"
-              parent="menu_maintenance_operations"
-              action="action_maintenance_workorder_mobile_list"
-              sequence="40"
-              groups="base.group_user"/>
-
-    <menuitem id="menu_maintenance_workorder_technician_calendar"
-              name="Technician Calendar"
-              parent="menu_maintenance_operations"
-              action="action_workorder_technician_calendar"
-              sequence="50"/>
-
-    <menuitem id="menu_maintenance_workorder_team_calendar"
-              name="Team Calendar"
-              parent="menu_maintenance_operations"
-              action="action_workorder_team_calendar"
-              sequence="55"/>
 
     <!-- Maintenance Planning -->
     <menuitem id="menu_maintenance_planning"
@@ -589,13 +632,6 @@
               action="action_workorder_permit"
               sequence="10"/>
 
-        <!-- Import/Export Menu - Commented out due to missing action -->
-    <!-- <menuitem id="menu_facilities_import_export"
-              name="Import/Export"
-              parent="menu_facilities_config"
-              action="action_facilities_import_wizard"
-              sequence="100"/> -->
-
     <!-- Mobile Scanner Actions -->
     <record id="action_mobile_scanner" model="ir.actions.client">
         <field name="name">Mobile Scanner</field>
@@ -622,5 +658,4 @@
               action="action_offline_scanner"
               sequence="101"/>
 
-    </data>
 </odoo>

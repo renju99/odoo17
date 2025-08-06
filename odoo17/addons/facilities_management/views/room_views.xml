@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
     <record id="view_facilities_room_tree" model="ir.ui.view">
         <field name="name">facilities.room.tree</field>
         <field name="model">facilities.room</field>
@@ -82,5 +81,15 @@
         </field>
     </record>
 
-    </data>
+    <record id="action_facilities_room" model="ir.actions.act_window">
+        <field name="name">Rooms</field>
+        <field name="res_model">facilities.room</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Room
+            </p>
+        </field>
+    </record>
+
 </odoo>

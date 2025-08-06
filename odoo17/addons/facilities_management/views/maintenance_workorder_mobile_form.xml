@@ -1,5 +1,4 @@
 <odoo>
-    <data>
     <!-- Minimal Mobile List View for Technicians -->
     <record id="view_workorder_mobile_list" model="ir.ui.view">
         <field name="name">maintenance.workorder.mobile.list</field>
@@ -100,5 +99,12 @@
         <field name="view_id" ref="view_workorder_mobile_list"/>
         <field name="context">{}</field>
     </record>
-    </data>
+
+    <!-- Menu item referencing the mobile list action -->
+    <menuitem id="menu_maintenance_workorder_mobile"
+              name="Work Orders (Mobile)"
+              parent="menu_maintenance_operations"
+              action="action_maintenance_workorder_mobile_list"
+              sequence="20"
+              groups="base.group_user"/>
 </odoo>

@@ -3,14 +3,11 @@ from odoo.exceptions import ValidationError
 import base64
 import io
 from datetime import date, datetime, timedelta
-import logging
 
 try:
     import qrcode
 except ImportError:
     qrcode = None
-
-_logger = logging.getLogger(__name__)
 
 class FacilityAsset(models.Model):
     _name = 'facilities.asset'
@@ -602,58 +599,6 @@ class FacilityAsset(models.Model):
             }
         return True
 
-    # ESG (Environmental, Social, Governance) Fields
-    esg_compliance = fields.Boolean(string='ESG Compliant', default=True, tracking=True,
-                                   help="Indicates if this asset meets ESG compliance standards")
-    carbon_footprint = fields.Float(string='Carbon Footprint (kg CO2)', tracking=True,
-                                   help="Estimated carbon footprint of this asset")
-    energy_efficiency_rating = fields.Selection([
-        ('a', 'A - Excellent'),
-        ('b', 'B - Good'),
-        ('c', 'C - Average'),
-        ('d', 'D - Below Average'),
-        ('e', 'E - Poor')
-    ], string='Energy Efficiency Rating', tracking=True)
-    renewable_energy_usage = fields.Float(string='Renewable Energy Usage (%)', tracking=True,
-                                        help="Percentage of energy from renewable sources")
-    waste_management_score = fields.Float(string='Waste Management Score', tracking=True,
-                                        help="Score indicating waste management effectiveness")
-    water_consumption = fields.Float(string='Water Consumption (L/day)', tracking=True,
-                                   help="Daily water consumption of this asset")
-    biodiversity_impact = fields.Selection([
-        ('low', 'Low Impact'),
-        ('medium', 'Medium Impact'),
-        ('high', 'High Impact')
-    ], string='Biodiversity Impact', default='low', tracking=True)
-    
-    # Social Metrics
-    community_impact_score = fields.Float(string='Community Impact Score', tracking=True,
-                                        help="Score indicating positive community impact")
-    employee_satisfaction = fields.Float(string='Employee Satisfaction Score', tracking=True,
-                                       help="Employee satisfaction rating for this asset")
-    diversity_index = fields.Float(string='Diversity Index', tracking=True,
-                                 help="Diversity and inclusion metric")
-    health_safety_score = fields.Float(string='Health & Safety Score', tracking=True,
-                                     help="Health and safety performance score")
-    training_hours = fields.Float(string='Training Hours', tracking=True,
-                                help="Annual training hours provided")
-    local_procurement = fields.Float(string='Local Procurement (%)', tracking=True,
-                                   help="Percentage of procurement from local suppliers")
-    
-    # Governance Metrics
-    compliance_rate = fields.Float(string='Compliance Rate (%)', tracking=True,
-                                 help="Overall compliance rate for this asset")
-    risk_management_score = fields.Float(string='Risk Management Score', tracking=True,
-                                       help="Risk management effectiveness score")
-    transparency_index = fields.Float(string='Transparency Index', tracking=True,
-                                    help="Transparency and reporting score")
-    board_diversity = fields.Float(string='Board Diversity Score', tracking=True,
-                                 help="Board diversity and inclusion score")
-    ethics_score = fields.Float(string='Ethics Score', tracking=True,
-                              help="Ethical business practices score")
-    stakeholder_engagement = fields.Float(string='Stakeholder Engagement Score', tracking=True,
-                                        help="Stakeholder engagement effectiveness")
-    
     # Enhanced Asset Status and Risk Assessment
     risk_score = fields.Float(string='Risk Score', compute='_compute_risk_score', store=True)
     maintenance_cost_ytd = fields.Monetary(string='Maintenance Cost YTD', 
@@ -718,116 +663,3 @@ class FacilityAsset(models.Model):
             total_operating = asset.annual_operating_cost * years_owned
             
             asset.total_cost_of_ownership = (asset.purchase_value or 0) + total_maintenance + total_operating
-
-    @api.model
-    def _update_health_scores(self):
-        """Cron job method to update asset health scores"""
-        assets = self.search([('active', '=', True)])
-        
-        updated_count = 0
-        for asset in assets:
-            try:
-                # Trigger recomputation of health score
-                asset._compute_health_score()
-                asset._compute_health_trend()
-                updated_count += 1
-                
-            except Exception as e:
-                _logger.error(f"Error updating health score for asset {asset.name}: {str(e)}")
-                continue
-        
-        _logger.info(f"Updated health scores for {updated_count} assets")
-        return updated_count
-
-    @api.model
-    def _run_predictive_analysis(self):
-        """Cron job method to run predictive maintenance analysis"""
-        assets = self.search([
-            ('active', '=', True),
-            ('predictive_maintenance_enabled', '=', True)
-        ])
-        
-        analyzed_count = 0
-        for asset in assets:
-            try:
-                # Simulate predictive analysis (in real implementation, this would call ML models)
-                import random
-                
-                # Generate a random prediction confidence
-                confidence = random.uniform(60, 95)
-                asset.prediction_confidence = confidence
-                
-                # Simulate next failure prediction (within next 30 days)
-                from datetime import timedelta
-                days_to_failure = random.randint(1, 30)
-                next_failure = fields.Datetime.now() + timedelta(days=days_to_failure)
-                asset.next_failure_prediction = next_failure
-                
-                # If confidence is high and failure is predicted soon, create preventive work order
-                if confidence > 80 and days_to_failure <= 7:
-                    workorder_vals = {
-                        'name': f"Predictive Maintenance - {asset.name}",
-                        'asset_id': asset.id,
-                        'work_order_type': 'predictive',
-                        'priority': '3',  # High priority
-                        'description': f"Predictive maintenance triggered for {asset.name}. "
-                                     f"Failure predicted in {days_to_failure} days with {confidence:.1f}% confidence.",
-                        'status': 'draft'
-                    }
-                    self.env['maintenance.workorder'].create(workorder_vals)
-                
-                analyzed_count += 1
-                
-            except Exception as e:
-                _logger.error(f"Error running predictive analysis for asset {asset.name}: {str(e)}")
-                continue
-        
-        _logger.info(f"Predictive analysis completed for {analyzed_count} assets")
-        return analyzed_count
-
-    @api.model
-    def _check_disposal_candidates(self):
-        """Cron job method to check for assets that should be disposed"""
-        today = fields.Date.today()
-        
-        # Find assets that meet disposal criteria
-        disposal_candidates = self.search([
-            ('active', '=', True),
-            ('state', '!=', 'disposed'),
-            '|',
-            ('current_value', '<=', 0),
-            ('health_score', '<', 20),
-            ('warranty_status', '=', 'expired'),
-            ('condition', '=', 'poor')
-        ])
-        
-        disposed_count = 0
-        for asset in disposal_candidates:
-            try:
-                # Check if asset meets multiple disposal criteria
-                disposal_score = 0
-                
-                if asset.current_value <= 0:
-                    disposal_score += 30
-                if asset.health_score < 20:
-                    disposal_score += 25
-                if asset.warranty_status == 'expired':
-                    disposal_score += 20
-                if asset.condition == 'poor':
-                    disposal_score += 25
-                
-                # If disposal score is high enough, mark for disposal
-                if disposal_score >= 50:
-                    asset.disposal_workflow_state = 'pending'
-                    asset.message_post(
-                        body=_("Asset marked for disposal due to poor condition, "
-                              "expired warranty, or zero value. Disposal score: %s") % disposal_score
-                    )
-                    disposed_count += 1
-                
-            except Exception as e:
-                _logger.error(f"Error checking disposal for asset {asset.name}: {str(e)}")
-                continue
-        
-        _logger.info(f"Disposal check completed. {disposed_count} assets marked for disposal")
-        return disposed_count

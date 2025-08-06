@@ -1,12 +1,9 @@
 from odoo import models, fields, api, _
 from datetime import datetime
 import io, base64
+import matplotlib.pyplot as plt
 from collections import Counter
 import calendar
-import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend
-import matplotlib.pyplot as plt
-import numpy as np
 
 class MonthlyBuildingReportWizard(models.TransientModel):
     _name = 'monthly.building.report.wizard'
@@ -17,68 +14,6 @@ class MonthlyBuildingReportWizard(models.TransientModel):
     month = fields.Selection(
         [(str(i), calendar.month_name[i]) for i in range(1, 13)],
         string='Month', required=True, default=lambda self: str(datetime.now().month))
-
-    def _generate_pie_chart(self, data, title):
-        """Generate a pie chart and return as base64 string"""
-        if not data:
-            return None
-        
-        plt.figure(figsize=(8, 6))
-        plt.pie(data.values(), labels=data.keys(), autopct='%1.1f%%', startangle=90)
-        plt.title(title)
-        plt.axis('equal')
-        
-        # Save to bytes buffer
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png', bbox_inches='tight', dpi=100)
-        buffer.seek(0)
-        plt.close()
-        
-        return base64.b64encode(buffer.getvalue()).decode()
-
-    def _generate_bar_chart(self, data, title, xlabel='', ylabel=''):
-        """Generate a bar chart and return as base64 string"""
-        if not data:
-            return None
-        
-        plt.figure(figsize=(10, 6))
-        plt.bar(range(len(data)), list(data.values()))
-        plt.title(title)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
-        plt.xticks(range(len(data)), list(data.keys()), rotation=45, ha='right')
-        plt.tight_layout()
-        
-        # Save to bytes buffer
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png', bbox_inches='tight', dpi=100)
-        buffer.seek(0)
-        plt.close()
-        
-        return base64.b64encode(buffer.getvalue()).decode()
-
-    def _generate_line_chart(self, data, title, xlabel='', ylabel=''):
-        """Generate a line chart and return as base64 string"""
-        if not data:
-            return None
-        
-        plt.figure(figsize=(10, 6))
-        x = list(data.keys())
-        y = list(data.values())
-        plt.plot(x, y, marker='o')
-        plt.title(title)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
-        plt.grid(True, alpha=0.3)
-        plt.tight_layout()
-        
-        # Save to bytes buffer
-        buffer = io.BytesIO()
-        plt.savefig(buffer, format='png', bbox_inches='tight', dpi=100)
-        buffer.seek(0)
-        plt.close()
-        
-        return base64.b64encode(buffer.getvalue()).decode()
 
     def action_generate_pdf_report(self):
         year, month = int(self.year), int(self.month)
@@ -93,18 +28,15 @@ class MonthlyBuildingReportWizard(models.TransientModel):
         # Mappings for friendly names
         STATUS_LABELS = {
             'in_progress': 'In Progress',
-            'completed': 'Completed',
+            'done': 'Completed',
             'draft': 'Draft',
-            'cancelled': 'Cancelled',
-            'assigned': 'Assigned',
-            'on_hold': 'On Hold',
+            'cancel': 'Cancelled',
+            'new': 'New',
         }
         PRIORITY_LABELS = {
-            '0': 'Very Low',
-            '1': 'Low',
-            '2': 'Normal',
-            '3': 'High',
-            '4': 'Critical',
+            'high': 'High',
+            'medium': 'Medium',
+            'low': 'Low',
         }
         TYPE_LABELS = {
             'corrective': 'Corrective',
@@ -112,10 +44,9 @@ class MonthlyBuildingReportWizard(models.TransientModel):
             'inspection': 'Inspection',
         }
         SLA_LABELS = {
-            'on_time': 'On Time',
-            'at_risk': 'At Risk',
+            'compliant': 'Compliant',
             'breached': 'Breached',
-            'completed': 'Completed',
+            'not_applicable': 'Not Applicable',
         }
 
         # Map technical to friendly names for counts
@@ -166,25 +97,85 @@ class MonthlyBuildingReportWizard(models.TransientModel):
         top_parts = parts_counts.most_common(5)
         top_issues = issue_counts.most_common(5)
 
-        # Generate charts
-        chart_status = self._generate_pie_chart(status_counts_friendly, 'Work Orders by Status')
-        chart_type = self._generate_pie_chart(type_counts_friendly, 'Work Orders by Type')
-        chart_priority = self._generate_pie_chart(priority_counts_friendly, 'Work Orders by Priority')
-        chart_sla = self._generate_pie_chart(sla_status_counts_friendly, 'SLA Compliance')
-        
-        # Convert top assets/rooms/parts to dict for bar charts
-        top_assets_dict = dict(top_assets) if top_assets else {}
-        top_rooms_dict = dict(top_rooms) if top_rooms else {}
-        top_parts_dict = dict(top_parts) if top_parts else {}
-        
-        chart_assets = self._generate_bar_chart(top_assets_dict, 'Top 5 Assets', 'Asset', 'Work Orders')
-        chart_rooms = self._generate_bar_chart(top_rooms_dict, 'Top 5 Rooms', 'Room', 'Work Orders')
-        chart_parts = self._generate_bar_chart(top_parts_dict, 'Top 5 Parts Used', 'Part', 'Quantity')
-        chart_days = self._generate_line_chart(dict(day_counts), 'Work Orders by Day', 'Day of Month', 'Number of Work Orders')
-        
-        # Generate wordcloud chart (simplified as bar chart for now)
-        top_issues_dict = dict(top_issues) if top_issues else {}
-        chart_wordcloud = self._generate_bar_chart(top_issues_dict, 'Most Frequent Issues', 'Word', 'Count')
+        def fig2base64(fig):
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png', bbox_inches='tight')
+            plt.close(fig)
+            buf.seek(0)
+            return base64.b64encode(buf.read()).decode('utf-8')
+
+        # Chart 1: Status Distribution (Pie)
+        fig1, ax1 = plt.subplots()
+        if status_counts_friendly:
+            ax1.pie(list(status_counts_friendly.values()), labels=list(status_counts_friendly.keys()), autopct='%1.1f%%')
+        ax1.set_title("Work Order Status Distribution")
+        chart_status = fig2base64(fig1)
+
+        # Chart 2: Work Orders by Type (Bar)
+        fig2, ax2 = plt.subplots()
+        if type_counts_friendly:
+            ax2.bar(type_counts_friendly.keys(), type_counts_friendly.values(), color='skyblue')
+        ax2.set_title("Work Orders by Type")
+        chart_type = fig2base64(fig2)
+
+        # Chart 3: Work Orders by Priority (Bar)
+        fig3, ax3 = plt.subplots()
+        if priority_counts_friendly:
+            ax3.bar(priority_counts_friendly.keys(), priority_counts_friendly.values(), color='lightgreen')
+        ax3.set_title("Work Orders by Priority")
+        chart_priority = fig2base64(fig3)
+
+        # Chart 4: Top Assets (Barh)
+        fig4, ax4 = plt.subplots()
+        if top_assets:
+            ax4.barh([a[0] for a in top_assets], [a[1] for a in top_assets], color='orange')
+        ax4.set_title("Top 5 Assets with Most Work Orders")
+        chart_assets = fig2base64(fig4)
+
+        # Chart 5: Top Rooms (Barh)
+        fig5, ax5 = plt.subplots()
+        if top_rooms:
+            ax5.barh([r[0] for r in top_rooms], [r[1] for r in top_rooms], color='purple')
+        ax5.set_title("Top 5 Rooms with Most Work Orders")
+        chart_rooms = fig2base64(fig5)
+
+        # Chart 6: Top Parts (Barh)
+        fig6, ax6 = plt.subplots()
+        if top_parts:
+            ax6.barh([p[0] for p in top_parts], [p[1] for p in top_parts], color='teal')
+        ax6.set_title("Top 5 Parts Used")
+        chart_parts = fig2base64(fig6)
+
+        # Chart 7: Work Orders by Day (Line)
+        fig7, ax7 = plt.subplots()
+        days_sorted = sorted(day_counts.keys())
+        if days_sorted:
+            ax7.plot(days_sorted, [day_counts[d] for d in days_sorted], marker='o')
+        ax7.set_title("Work Orders by Day")
+        ax7.set_xlabel("Day of Month")
+        ax7.set_ylabel("Work Orders")
+        chart_days = fig2base64(fig7)
+
+        # Chart 8: SLA Compliance (Pie)
+        fig8, ax8 = plt.subplots()
+        if sla_status_counts_friendly:
+            ax8.pie(list(sla_status_counts_friendly.values()), labels=list(sla_status_counts_friendly.keys()), autopct='%1.1f%%')
+        ax8.set_title("SLA Compliance")
+        chart_sla = fig2base64(fig8)
+
+        # Chart 9: Wordcloud
+        try:
+            from wordcloud import WordCloud
+            if desc_words:
+                wc = WordCloud(width=400, height=200, background_color='white').generate(' '.join(desc_words))
+                fig9 = plt.figure(figsize=(6,3))
+                plt.imshow(wc, interpolation='bilinear')
+                plt.axis('off')
+                chart_wordcloud = fig2base64(fig9)
+            else:
+                chart_wordcloud = None
+        except ImportError:
+            chart_wordcloud = None
 
         # Pass all data to QWeb
         data = {
@@ -201,17 +192,15 @@ class MonthlyBuildingReportWizard(models.TransientModel):
             'top_issues': top_issues,
             'avg_completion_time': avg_completion_time,
             'sla_status_counts': sla_status_counts_friendly,
-            'day_counts': dict(day_counts),
-            'generated_on': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            # Chart images
             'chart_status': chart_status,
             'chart_type': chart_type,
             'chart_priority': chart_priority,
-            'chart_sla': chart_sla,
             'chart_assets': chart_assets,
             'chart_rooms': chart_rooms,
             'chart_parts': chart_parts,
             'chart_days': chart_days,
+            'chart_sla': chart_sla,
             'chart_wordcloud': chart_wordcloud,
+            'generated_on': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         }
         return self.env.ref('facilities_management.monthly_building_report_pdf_action').report_action(self, data={'doc': data})

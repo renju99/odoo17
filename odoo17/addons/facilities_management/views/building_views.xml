@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <data>
     <record id="view_facilities_building_tree" model="ir.ui.view">
         <field name="name">facilities.building.tree</field>
         <field name="model">facilities.building</field>
@@ -24,10 +23,10 @@
             <form string="Building">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" name="action_view_floors" type="object" icon="fa-th-large">
+                        <button class="oe_stat_button" name="%(action_facilities_floor)d" type="action" icon="fa-th-large">
                             <field name="floor_count" widget="statinfo" string="Floors"/>
                         </button>
-                    </div>
+                        </div>
                     <div class="oe_right">
                         <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
                     </div>
@@ -101,5 +100,15 @@
         </field>
     </record>
 
-    </data>
+    <record id="action_facilities_building" model="ir.actions.act_window">
+        <field name="name">Buildings</field>
+        <field name="res_model">facilities.building</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Building
+            </p>
+        </field>
+    </record>
+
 </odoo>
