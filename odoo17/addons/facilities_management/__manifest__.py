@@ -101,6 +101,7 @@ Features:
         'views/facility_asset_search.xml',
         'views/monthly_building_report_wizard_action.xml',
         'views/monthly_building_report_wizard_view.xml',
+        'wizard/sla_deactivation_wizard_views.xml',
         'views/technician_performance_dashboard_views.xml',
         'views/hr_employee_views.xml',
         'views/hr_employee_tree_technician.xml',

@@ -17,6 +17,13 @@ class FacilitiesSLA(models.Model):
     active = fields.Boolean(string='Active', default=True)
     priority = fields.Integer(string='Priority', default=10, help="Higher number = higher priority")
     
+    # Activation tracking
+    activated_by_id = fields.Many2one('res.users', string='Activated By', readonly=True)
+    activated_date = fields.Datetime(string='Activated Date', readonly=True)
+    deactivated_by_id = fields.Many2one('res.users', string='Deactivated By', readonly=True)
+    deactivated_date = fields.Datetime(string='Deactivated Date', readonly=True)
+    deactivation_reason = fields.Text(string='Deactivation Reason')
+    
     # SLA Timeframes
     response_time_hours = fields.Float(string='Response Time (Hours)', required=True, default=4.0)
     resolution_time_hours = fields.Float(string='Resolution Time (Hours)', required=True, default=24.0)
@@ -119,6 +126,113 @@ class FacilitiesSLA(models.Model):
             'target': 'new',
             'context': {'default_sla_id': self.id}
         }
+
+    def action_activate_sla(self):
+        """Activate the SLA and log the action"""
+        self.ensure_one()
+        if self.active:
+            raise UserError(_('SLA is already active.'))
+        
+        self.write({
+            'active': True,
+            'activated_by_id': self.env.user.id,
+            'activated_date': fields.Datetime.now(),
+            'deactivated_by_id': False,
+            'deactivated_date': False,
+            'deactivation_reason': False,
+        })
+        
+        # Log the activation
+        self.message_post(
+            body=_('SLA activated by %s') % self.env.user.name,
+            message_type='notification'
+        )
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('SLA Activated'),
+                'message': _('SLA "%s" has been activated successfully.') % self.name,
+                'type': 'success',
+            }
+        }
+
+    def action_deactivate_sla(self):
+        """Deactivate the SLA and log the action"""
+        self.ensure_one()
+        if not self.active:
+            raise UserError(_('SLA is already inactive.'))
+        
+        # Open wizard to get deactivation reason
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Deactivate SLA'),
+            'res_model': 'facilities.sla.deactivation.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_sla_id': self.id,
+            }
+        }
+
+    def _deactivate_sla_with_reason(self, reason):
+        """Internal method to deactivate SLA with reason"""
+        self.ensure_one()
+        self.write({
+            'active': False,
+            'deactivated_by_id': self.env.user.id,
+            'deactivated_date': fields.Datetime.now(),
+            'deactivation_reason': reason,
+        })
+        
+        # Log the deactivation
+        self.message_post(
+            body=_('SLA deactivated by %s. Reason: %s') % (self.env.user.name, reason),
+            message_type='notification'
+        )
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('SLA Deactivated'),
+                'message': _('SLA "%s" has been deactivated successfully.') % self.name,
+                'type': 'success',
+            }
+        }
+
+    def write(self, vals):
+        """Override write to handle activation/deactivation logging"""
+        result = super().write(vals)
+        
+        # Handle activation/deactivation logging
+        if 'active' in vals:
+            for record in self:
+                if vals['active']:
+                    # Activating
+                    if not record.activated_by_id:
+                        record.write({
+                            'activated_by_id': self.env.user.id,
+                            'activated_date': fields.Datetime.now(),
+                        })
+                        record.message_post(
+                            body=_('SLA activated by %s') % self.env.user.name,
+                            message_type='notification'
+                        )
+                else:
+                    # Deactivating - only log if not already deactivated
+                    if not record.deactivated_by_id:
+                        record.write({
+                            'deactivated_by_id': self.env.user.id,
+                            'deactivated_date': fields.Datetime.now(),
+                        })
+                        record.message_post(
+                            body=_('SLA deactivated by %s') % self.env.user.name,
+                            message_type='notification'
+                        )
+        
+        return result
 
     def _calculate_business_hours(self, start_time, end_time):
         """Calculate business hours between two timestamps"""
