@@ -235,9 +235,9 @@
         <!-- SLA Menu -->
         <menuitem id="menu_facilities_sla"
                   name="SLAs"
-                  parent="menu_facilities_maintenance"
+                  parent="menu_maintenance"
                   action="action_facilities_sla"
-                  sequence="20"/>
+                  sequence="25"/>
 
         <!-- Enhanced Work Order Form View -->
         <record id="view_maintenance_workorder_enhanced_form" model="ir.ui.view">
