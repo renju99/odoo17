@@ -96,7 +96,7 @@
                                         <field name="activated_by_id" readonly="1"/>
                                         <field name="activated_date" readonly="1"/>
                                     </group>
-                                    <group string="Deactivation Info" attrs="{'invisible': [('active', '=', True)]}">
+                                    <group string="Deactivation Info" invisible="active">
                                         <field name="deactivated_by_id" readonly="1"/>
                                         <field name="deactivated_date" readonly="1"/>
                                         <field name="deactivation_reason" readonly="1"/>
