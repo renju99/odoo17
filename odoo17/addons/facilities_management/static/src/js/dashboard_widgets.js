@@ -62,10 +62,16 @@ class FacilitiesDashboard extends Component {
         // Wait for DOM to be fully ready before any layout operations
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                this._performLayoutOperations();
+                // Additional delay to ensure stylesheets are loaded
+                setTimeout(() => {
+                    this._performLayoutOperations();
+                }, 100);
             });
         } else {
-            this._performLayoutOperations();
+            // If DOM is already loaded, wait a bit more for stylesheets
+            setTimeout(() => {
+                this._performLayoutOperations();
+            }, 100);
         }
     }
 
@@ -73,6 +79,15 @@ class FacilitiesDashboard extends Component {
         // Any layout operations should go here
         // This ensures they happen after the page is fully loaded
         console.log("Facilities dashboard layout ready");
+        
+        // Trigger any necessary layout updates
+        if (this.el) {
+            // Force a reflow to ensure proper layout
+            this.el.offsetHeight;
+            
+            // Add loaded class to show the dashboard
+            this.el.classList.add('loaded');
+        }
     }
 }
 

@@ -119,12 +119,16 @@ Features:
     ],
     'assets': {
         'web.assets_backend': [
+            # Include Chart.js library first
             ('include', 'web.chartjs_lib'),
+            # CSS files
             'facilities_management/static/src/css/facilities.css',
             'facilities_management/static/src/css/portal.css',
+            # JavaScript files in dependency order
             'facilities_management/static/src/js/dashboard_widgets.js',
             'facilities_management/static/src/js/iot_monitoring.js',
             'facilities_management/static/src/js/mobile_scanner.js',
+            # XML templates
             'facilities_management/static/src/xml/*.xml',
         ],
         'web.assets_frontend': [
