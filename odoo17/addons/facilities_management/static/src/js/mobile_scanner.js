@@ -176,26 +176,27 @@ class MobileScannerComponent extends Component {
         }
     }
 
-    _onBarcodeDetected(result) {
+    async _onBarcodeDetected(result) {
         if (this.state.isScanning) {
-            this._processScanResult(result.codeResult.code, 'barcode');
+            await this._processScanResult(result.codeResult.code, 'barcode');
         }
     }
 
-    _onQRCodeDetected(data) {
+    async _onQRCodeDetected(data) {
         if (this.state.isScanning) {
-            this._processScanResult(data, 'qr');
+            await this._processScanResult(data, 'qr');
         }
     }
 
-    _processScanResult(code, type) {
+    async _processScanResult(code, type) {
         this._stopScanning();
         
+        const location = await this._getCurrentLocation();
         const scanResult = {
             code: code,
             type: type,
             timestamp: new Date(),
-            location: this._getCurrentLocation()
+            location: location
         };
 
         this.state.scanResults.unshift(scanResult);
@@ -204,14 +205,18 @@ class MobileScannerComponent extends Component {
 
     _getCurrentLocation() {
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                return {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude
-                };
+            return new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                }, () => {
+                    resolve(null);
+                });
             });
         }
-        return null;
+        return Promise.resolve(null);
     }
 
     async _lookupAsset(code) {
