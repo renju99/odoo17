@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- IoT Monitoring Dashboard Template -->
+    <t t-name="facilities_management.IoTMonitoringWidget" owl="1">
+        <div class="iot-monitoring-dashboard">
+            <div class="o_control_panel">
+                <div class="o_cp_top">
+                    <div class="o_cp_top_left">
+                        <h2>IoT Monitoring Dashboard</h2>
+                    </div>
+                    <div class="o_cp_top_right">
+                        <div class="d-flex align-items-center">
+                            <span class="me-3">
+                                Status: <span t-att-class="connectionStatusClass" t-esc="connectionStatusText"/>
+                            </span>
+                            <button class="btn btn-primary refresh-sensors" t-on-click="onRefreshSensors">
+                                <i class="fa fa-refresh"/> Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <!-- Summary Cards -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Sensors</h5>
+                                <h2 class="card-text text-primary sensor-count">
+                                    <t t-esc="filteredSensors.length"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Active Alerts</h5>
+                                <h2 class="card-text text-danger alert-count">
+                                    <t t-esc="filteredAlerts.length"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Normal Status</h5>
+                                <h2 class="card-text text-success">
+                                    <t t-esc="filteredSensors.filter(s => s.status === 'normal').length"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">Critical Status</h5>
+                                <h2 class="card-text text-danger">
+                                    <t t-esc="filteredSensors.filter(s => s.status === 'critical').length"/>
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <select class="form-control sensor-filter" data-filter="status" t-on-change="onFilterChange">
+                            <option value="all">All Status</option>
+                            <option value="normal">Normal</option>
+                            <option value="warning">Warning</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-control sensor-filter" data-filter="sensor_type" t-on-change="onFilterChange">
+                            <option value="all">All Sensor Types</option>
+                            <option value="temperature">Temperature</option>
+                            <option value="humidity">Humidity</option>
+                            <option value="pressure">Pressure</option>
+                            <option value="motion">Motion</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sensor List -->
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Sensor Status</h5>
+                            </div>
+                            <div class="card-body sensor-list">
+                                <div class="row">
+                                    <t t-foreach="filteredSensors" t-as="sensor" t-key="sensor.id">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="card iot-sensor-card" t-att-data-sensor-id="sensor.id" t-on-click="onSensorClick">
+                                                <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <h6 class="card-title" t-esc="sensor.name"/>
+                                                        <span t-att-class="'badge badge-' + (sensor.status === 'normal' ? 'success' : sensor.status === 'warning' ? 'warning' : 'danger')" t-esc="sensor.status"/>
+                                                    </div>
+                                                    <p class="card-text">
+                                                        <strong t-esc="sensor.current_value"/> <t t-esc="sensor.unit"/>
+                                                    </p>
+                                                    <small class="text-muted">
+                                                        Type: <t t-esc="sensor.sensor_type"/><br/>
+                                                        Asset: <t t-esc="sensor.asset_id[1]"/>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Alerts Panel -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Active Alerts</h5>
+                            </div>
+                            <div class="card-body alert-list">
+                                <t t-foreach="filteredAlerts" t-as="alert" t-key="alert.id">
+                                    <div class="alert alert-danger iot-alert-card mb-2" t-att-data-sensor-id="alert.id" t-on-click="onAlertClick">
+                                        <div class="d-flex justify-content-between">
+                                            <strong t-esc="alert.name"/>
+                                            <span t-att-class="'badge badge-' + (alert.status === 'warning' ? 'warning' : 'danger')" t-esc="alert.status"/>
+                                        </div>
+                                        <p class="mb-1">
+                                            <strong t-esc="alert.current_value"/> <t t-esc="alert.unit"/>
+                                        </p>
+                                        <small>Asset: <t t-esc="alert.asset_id[1]"/></small>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Sensor Chart Widget Template -->
+    <t t-name="facilities_management.SensorChartWidget" owl="1">
+        <div class="sensor-chart-widget">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <h5>Sensor Data Chart</h5>
+                    <div class="chart-controls">
+                        <button class="btn btn-sm btn-secondary chart-control" data-control="refresh" t-on-click="onChartControlClick">
+                            <i class="fa fa-refresh"/> Refresh
+                        </button>
+                        <button class="btn btn-sm btn-secondary chart-control" data-control="chart-type" t-on-click="onChartControlClick">
+                            <i class="fa fa-bar-chart"/> Toggle Type
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas class="sensor-chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- IoT Alert Widget Template -->
+    <t t-name="facilities_management.IoTAlertWidget" owl="1">
+        <div class="iot-alert-widget">
+            <div class="alert-notifications">
+                <t t-foreach="state.alerts" t-as="alert" t-key="alert.id">
+                    <div class="alert alert-dismissible" t-att-class="'alert-' + (alert.status === 'warning' ? 'warning' : 'danger')" t-att-data-sensor-id="alert.id" t-on-click="onAlertClick">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="alert-content">
+                                <h6 class="alert-heading" t-esc="alert.name"/>
+                                <p class="mb-1">
+                                    Current Value: <strong t-esc="alert.current_value"/> <t t-esc="alert.unit"/>
+                                </p>
+                                <small>
+                                    Asset: <t t-esc="alert.asset_id[1]"/><br/>
+                                    Type: <t t-esc="alert.sensor_type"/><br/>
+                                    <t t-if="alert.last_alert_time">
+                                        Last Alert: <t t-esc="alert.last_alert_time"/>
+                                    </t>
+                                </small>
+                            </div>
+                            <button type="button" class="btn-close dismiss-alert" t-att-data-alert-id="alert.id" t-on-click="onDismissAlert" aria-label="Close">
+                                <i class="fa fa-times"/>
+                            </button>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="!state.alerts.length">
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"/> No active alerts
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

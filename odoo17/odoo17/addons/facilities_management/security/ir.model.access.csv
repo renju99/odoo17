@@ -1,0 +1,42 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_facilities_facility_user,facilities.facility.user,model_facilities_facility,base.group_user,1,1,1,1
+access_facilities_building_user,facilities.building.user,model_facilities_building,base.group_user,1,1,1,1
+access_facilities_floor_user,facilities.floor.user,model_facilities_floor,base.group_user,1,1,1,1
+access_facilities_room_user,facilities.room.user,model_facilities_room,base.group_user,1,1,1,1
+access_facilities_asset_user,facilities.asset.user,model_facilities_asset,base.group_user,1,1,1,1
+access_facilities_asset_category_user,facilities.asset.category.user,model_facilities_asset_category,base.group_user,1,1,1,1
+access_asset_maintenance_schedule_user,asset.maintenance.schedule.user,model_asset_maintenance_schedule,base.group_user,1,1,1,1
+access_facilities_asset_depreciation_user,facilities.asset.depreciation.user,model_facilities_asset_depreciation,base.group_user,1,1,1,1
+access_maintenance_workorder_user,maintenance.workorder.user,model_maintenance_workorder,base.group_user,1,1,1,1
+access_maintenance_workorder_task_user,maintenance.workorder.task.user,model_maintenance_workorder_task,base.group_user,1,1,1,1
+access_maintenance_workorder_part_line_user,maintenance.workorder.part_line.user,model_maintenance_workorder_part_line,base.group_user,1,1,1,1
+access_maintenance_workorder_assignment_user,maintenance.workorder.assignment.user,model_maintenance_workorder_assignment,base.group_user,1,1,1,1
+access_maintenance_job_plan_user,maintenance.job.plan.user,model_maintenance_job_plan,base.group_user,1,1,1,1
+access_maintenance_job_plan_task_user,maintenance.job.plan.task.user,model_maintenance_job_plan_task,base.group_user,1,1,1,1
+access_predictive_maintenance_user,predictive.maintenance.user,model_predictive_maintenance,base.group_user,1,1,1,1
+access_maintenance_workorder_sla_user,maintenance.workorder.sla.user,model_maintenance_workorder_sla,base.group_user,1,1,1,1
+access_maintenance_resource_utilization_user,maintenance.resource.utilization.user,model_maintenance_resource_utilization,base.group_user,1,1,1,1
+access_maintenance_sla_analytics_user,maintenance.sla.analytics.user,model_maintenance_sla_analytics,base.group_user,1,1,1,1
+access_facilities_asset_performance_user,facilities.asset.performance.user,model_facilities_asset_performance,base.group_user,1,1,1,1
+access_asset_downtime_reason_user,asset.downtime.reason.user,model_asset_downtime_reason,base.group_user,1,1,1,1
+access_maintenance_job_plan_section_user,maintenance.job.plan.section user,model_maintenance_job_plan_section,base.group_user,1,1,1,1
+access_maintenance_workorder_section_user,maintenance.workorder.section user,model_maintenance_workorder_section,base.group_user,1,1,1,1
+access_assign_technician_wizard_user,assign.technician.wizard.user,model_assign_technician_wizard,base.group_user,1,1,1,1
+access_maintenance_workorder_permit_user,maintenance.workorder.permit user,model_maintenance_workorder_permit,base.group_user,1,1,1,1
+access_maintenance_workorder_permit_manager,maintenance.workorder.permit manager,model_maintenance_workorder_permit,base.group_system,1,1,1,1
+access_monthly_building_report_wizard_user,monthly.building.report.wizard user,model_monthly_building_report_wizard,base.group_user,1,0,0,0
+access_monthly_building_report_wizard_manager,monthly.building.report.wizard manager,model_monthly_building_report_wizard,base.group_system,1,1,1,1
+access_maintenance_workorder_mobile_user,maintenance.workorder mobile user,model_maintenance_workorder,base.group_user,1,1,1,1
+access_maintenance_workorder_task_mobile_user,maintenance.workorder.task mobile user,model_maintenance_workorder_task,base.group_user,1,1,1,1
+access_facilities_space_booking_user,facilities.space.booking.user,model_facilities_space_booking,base.group_user,1,1,1,0
+access_facilities_space_booking_manager,facilities.space.booking.manager,model_facilities_space_booking,facilities_management.group_facilities_manager,1,1,1,1
+access_facilities_space_booking_system,facilities.space.booking.system,model_facilities_space_booking,base.group_system,1,1,1,1
+access_facilities_booking_template_user,facilities.booking.template.user,model_facilities_booking_template,base.group_user,1,1,1,0
+access_facilities_booking_template_manager,facilities.booking.template.manager,model_facilities_booking_template,facilities_management.group_facilities_manager,1,1,1,1
+access_facilities_booking_template_system,facilities.booking.template.system,model_facilities_booking_template,base.group_system,1,1,1,1
+access_facilities_room_equipment_user,facilities.room.equipment.user,model_facilities_room_equipment,base.group_user,1,0,0,0
+access_facilities_room_equipment_manager,facilities.room.equipment.manager,model_facilities_room_equipment,facilities_management.group_facilities_manager,1,1,1,1
+access_facilities_room_equipment_system,facilities.room.equipment.system,model_facilities_room_equipment,base.group_system,1,1,1,1
+access_facilities_booking_reject_wizard_user,facilities.booking.reject.wizard.user,model_facilities_booking_reject_wizard,base.group_user,1,1,1,1
+access_facilities_asset_disposal_wizard_user,facilities.asset.disposal.wizard.user,model_facilities_asset_disposal_wizard,base.group_user,1,1,1,1
+access_facilities_asset_disposal_user,facilities.asset.disposal.user,model_facilities_asset_disposal,base.group_user,1,1,1,1

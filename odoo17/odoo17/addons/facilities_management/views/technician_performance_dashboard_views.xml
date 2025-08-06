@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inherit the Employee Form to show 'Is Technician' checkbox (put it after work_email) -->
+    <record id="view_hr_employee_form_inherit_technician" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.technician</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="is_technician"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Technician Performance Kanban Dashboard -->
+    <record id="view_technician_performance_kanban" model="ir.ui.view">
+        <field name="name">technician.performance.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard">
+                <field name="image_1920"/>
+                <field name="name"/>
+                <field name="mttr_hours"/>
+                <field name="first_time_fix_rate"/>
+                <field name="workload_open"/>
+                <field name="workload_closed_30d"/>
+                <field name="current_workload"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('hr.employee', 'image_1920', record.id.raw_value)"
+                                     alt="Technician Avatar" class="o_image_64_cover"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong><field name="name"/></strong>
+                                <div class="mt-2">
+                                    <span class="badge badge-primary" t-att-title="'Mean Time to Repair'">
+                                        MTTR: <t t-esc="record.mttr_hours.raw_value"/> h
+                                    </span>
+                                    <span class="badge badge-success" t-att-title="'First-Time Fix Rate'">
+                                        First-Time Fix: <t t-esc="record.first_time_fix_rate.raw_value"/>%
+                                    </span>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge badge-info" t-att-title="'Open Work Orders'">
+                                        Open WOs: <t t-esc="record.workload_open.raw_value"/>
+                                    </span>
+                                    <span class="badge badge-warning" t-att-title="'Closed Work Orders in 30 days'">
+                                        Closed (30d): <t t-esc="record.workload_closed_30d.raw_value"/>
+                                    </span>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge badge-secondary" t-att-title="'Current Workload'">
+                                        Workload:
+                                        <t t-esc="record.current_workload.raw_value"/>%
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_technician_performance_dashboard" model="ir.actions.act_window">
+        <field name="name">Technician Performance Dashboard</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="view_technician_performance_kanban"/>
+        <field name="domain">[('is_technician','=',True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No technicians found!
+            </p>
+            <p>
+                Assign the "Is Technician" role in employee settings. KPIs auto-calculate from work orders.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_technician_performance_dashboard"
+              name="Technician Performance"
+              parent="menu_maintenance_analytics"
+              action="action_technician_performance_dashboard"
+              sequence="55"/>
+</odoo>

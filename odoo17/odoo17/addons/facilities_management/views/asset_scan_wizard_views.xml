@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Asset Scan Wizard Form View -->
+    <record id="asset_scan_wizard_form_view" model="ir.ui.view">
+        <field name="name">facilities.asset.scan.wizard.form</field>
+        <field name="model">facilities.asset.scan.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asset Scanner">
+                <header>
+                    <button name="action_scan_asset" string="Process Scan" type="object" class="btn-primary"/>
+                    <button name="action_search_by_code" string="Search Asset" type="object" class="btn-secondary"/>
+                    <button name="action_generate_qr_code" string="Generate QR Code" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Asset Scanner</h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Scan Configuration">
+                            <field name="scan_type"/>
+                            <field name="scanned_code" placeholder="Enter or scan asset code"/>
+                            <field name="scan_location" placeholder="Location where scan occurred"/>
+                            <field name="asset_id"/>
+                        </group>
+                        
+                        <group string="Asset Information" invisible="not asset_id">
+                            <field name="asset_name" readonly="1"/>
+                            <field name="asset_code" readonly="1"/>
+                            <field name="asset_location" readonly="1"/>
+                            <field name="asset_status" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Quick Actions" name="actions">
+                            <group>
+                                <group string="Action Type">
+                                    <field name="action_type"/>
+                                </group>
+                            </group>
+                            
+                            <!-- Location Update Section -->
+                            <div invisible="action_type != 'location_update'">
+                                <group string="New Location">
+                                    <field name="new_location"/>
+                                    <field name="new_building_id"/>
+                                    <field name="new_floor_id"/>
+                                    <field name="new_room_id"/>
+                                </group>
+                            </div>
+                            
+                            <!-- Status Update Section -->
+                            <div invisible="action_type != 'status_update'">
+                                <group string="New Status">
+                                    <field name="new_status"/>
+                                </group>
+                            </div>
+                            
+                            <!-- Sensor Reading Section -->
+                            <div invisible="action_type != 'sensor_reading'">
+                                <group string="Sensor Reading">
+                                    <field name="sensor_reading_value"/>
+                                    <field name="sensor_reading_unit"/>
+                                    <field name="sensor_reading_notes"/>
+                                </group>
+                            </div>
+                            
+                            <!-- Inspection Section -->
+                            <div invisible="action_type != 'inspection'">
+                                <group string="Inspection">
+                                    <field name="inspection_result"/>
+                                    <field name="inspection_notes"/>
+                                </group>
+                            </div>
+                        </page>
+                        
+                        <page string="Scan Notes" name="notes">
+                            <field name="scan_notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Scan Wizard Action -->
+    <record id="action_asset_scan_wizard" model="ir.actions.act_window">
+        <field name="name">Asset Scanner</field>
+        <field name="res_model">facilities.asset.scan.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Scan an asset to update its information!
+            </p>
+            <p>
+                Use barcode, QR code, RFID, or NFC to scan assets and perform quick actions.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

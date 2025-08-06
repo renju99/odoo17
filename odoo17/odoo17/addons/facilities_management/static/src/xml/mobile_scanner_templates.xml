@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="facilities_management.MobileScannerTemplate" owl="1">
+        <div class="mobile-scanner-container">
+            <div class="scanner-header">
+                <h3>Mobile Asset Scanner</h3>
+                <div class="scanner-controls">
+                    <select t-model="state.scanType" t-on-change="onScanTypeChange" class="form-select">
+                        <option value="barcode">Barcode</option>
+                        <option value="qr">QR Code</option>
+                        <option value="camera">Camera</option>
+                    </select>
+                    <button t-on-click="onScanClick" class="btn btn-primary scan-button">
+                        <t t-if="state.isScanning">Stop Scanning</t>
+                        <t t-else="">Start Scanning</t>
+                    </button>
+                    <button t-on-click="onManualEntry" class="btn btn-secondary">Manual Entry</button>
+                </div>
+            </div>
+
+            <div class="scanner-body" t-if="state.isScanning">
+                <div class="scanner-container" t-ref="scanner">
+                    <video t-ref="video" class="camera-video" autoplay="" muted=""></video>
+                    <div class="scan-overlay">
+                        <div class="scan-frame"></div>
+                    </div>
+                </div>
+                
+                <div class="scanner-actions">
+                    <button t-on-click="onCameraToggle" class="btn btn-outline-primary">
+                        <i class="fa fa-camera"></i> Toggle Camera
+                    </button>
+                    <button t-on-click="onFlashToggle" class="btn btn-outline-primary" t-att-class="{'active': state.flashEnabled}">
+                        <i class="fa fa-flash"></i> Flash
+                    </button>
+                </div>
+            </div>
+
+            <div class="scan-results" t-if="state.scanResults.length">
+                <h4>Recent Scans</h4>
+                <div class="results-list">
+                    <div t-foreach="state.scanResults.slice(0, 10)" t-as="result" t-key="result_index" 
+                         class="scan-result" t-on-click="onScanResultClick" t-att-data-code="result.code">
+                        <div class="result-info">
+                            <span class="result-code"><t t-esc="result.code"/></span>
+                            <span class="result-type badge" t-att-class="{'badge-primary': result.type === 'barcode', 'badge-secondary': result.type === 'qr'}">
+                                <t t-esc="result.type"/>
+                            </span>
+                        </div>
+                        <div class="result-timestamp">
+                            <t t-esc="result.timestamp"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="camera-not-supported alert alert-warning" t-if="!state.cameraSupported">
+                <i class="fa fa-exclamation-triangle"></i>
+                Camera not supported or access denied.
+            </div>
+        </div>
+    </t>
+
+    <t t-name="facilities_management.OfflineScannerTemplate" owl="1">
+        <div class="offline-scanner-container">
+            <div class="scanner-header">
+                <h3>Offline Scanner</h3>
+                <div class="online-status" t-att-class="{'online': state.isOnline, 'offline': !state.isOnline}">
+                    <t t-if="state.isOnline">Online</t>
+                    <t t-else="">Offline</t>
+                </div>
+            </div>
+
+            <div class="offline-controls">
+                <button t-on-click="onSyncClick" class="btn btn-primary" t-att-disabled="!state.isOnline">
+                    <i class="fa fa-sync"></i> Sync Data
+                </button>
+                <button t-on-click="onOfflineScan" class="btn btn-secondary">
+                    <i class="fa fa-qrcode"></i> Test Offline Scan
+                </button>
+            </div>
+
+            <div class="offline-scans" t-if="state.offlineScans.length">
+                <h4>Offline Scans (<t t-esc="state.offlineScans.length"/>)</h4>
+                <div class="scans-list">
+                    <div t-foreach="state.offlineScans" t-as="scan" t-key="scan_index" class="offline-scan">
+                        <div class="scan-info">
+                            <span class="scan-code"><t t-esc="scan.code"/></span>
+                            <span class="scan-status badge" t-att-class="{'badge-success': scan.synced, 'badge-warning': !scan.synced}">
+                                <t t-if="scan.synced">Synced</t>
+                                <t t-else="">Pending</t>
+                            </span>
+                        </div>
+                        <div class="scan-timestamp">
+                            <t t-esc="scan.timestamp"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

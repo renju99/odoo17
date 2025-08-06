@@ -1,0 +1,97 @@
+<odoo>
+    <!-- Tree View for Asset Maintenance Schedule -->
+    <record id="view_asset_maintenance_schedule_tree" model="ir.ui.view">
+        <field name="name">asset.maintenance.schedule.tree</field>
+        <field name="model">asset.maintenance.schedule</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="maintenance_type"/>
+                <field name="interval_number"/>
+                <field name="interval_type"/>
+                <field name="last_maintenance_date"/>
+                <field name="next_maintenance_date"/>
+                <field name="active"/>
+                <field name="job_plan_id"/>
+                <!-- Add Action Button -->
+                <button name="action_generate_work_order" type="object" string="Generate Work Order" class="btn-primary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for Asset Maintenance Schedule -->
+    <record id="view_asset_maintenance_schedule_form" model="ir.ui.view">
+        <field name="name">asset.maintenance.schedule.form</field>
+        <field name="model">asset.maintenance.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Asset Maintenance Schedule" readonly="active">
+                <header>
+                    <button name="toggle_active" type="object" string="Deactivate"
+                            invisible="not active"
+                            help="Deactivate the schedule. It will no longer appear in default lists."/>
+                    <button name="toggle_active" type="object" string="Activate"
+                            invisible="active"
+                            class="oe_highlight"
+                            help="Activate the schedule. It will appear in default lists."/>
+                    <!-- Add Button -->
+                    <button name="action_generate_work_order" type="object" string="Generate Work Order" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="asset_id"/>
+                            <field name="maintenance_type"/>
+                            <field name="job_plan_id"/>
+                        </group>
+                        <group>
+                            <field name="last_maintenance_date"/>
+                            <field name="next_maintenance_date"/>
+                            <field name="interval_number"/>
+                            <field name="interval_type"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                    <field name="active" invisible="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Calendar View for Asset Maintenance Schedule -->
+    <record id="view_asset_maintenance_schedule_calendar" model="ir.ui.view">
+        <field name="name">asset.maintenance.schedule.calendar</field>
+        <field name="model">asset.maintenance.schedule</field>
+        <field name="arch" type="xml">
+            <calendar string="Maintenance Schedule Calendar" date_start="next_maintenance_date" mode="month" color="asset_id">
+                <field name="name"/>
+                <field name="asset_id"/>
+                <field name="maintenance_type"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action for Asset Maintenance Schedule -->
+    <record id="action_asset_maintenance_schedule" model="ir.actions.act_window">
+        <field name="name">Maintenance Schedules</field>
+        <field name="res_model">asset.maintenance.schedule</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Asset Maintenance Schedule
+            </p><p>
+                Define recurring maintenance tasks for your assets based on intervals.
+            </p>
+        </field>
+    </record>
+</odoo>

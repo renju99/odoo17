@@ -1,0 +1,31 @@
+<odoo>
+    <record id="view_hr_employee_tree_technician" model="ir.ui.view">
+        <field name="name">hr.employee.tree.technician</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+                <field name="is_technician"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_hr_employee_technician_list" model="ir.actions.act_window">
+        <field name="name">Employees (Technician Toggle)</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_hr_employee_tree_technician"/>
+        <field name="help" type="html">
+            <p>
+                List of all employees. Toggle the "Is Technician" checkbox as needed.
+            </p>
+        </field>
+    </record>
+
+    <!-- Add this menu wherever you want, for example under Maintenance > Analytics -->
+    <menuitem id="menu_hr_employee_technician_list"
+              name="Employee Technician List"
+              parent="menu_asset_config"
+              action="action_hr_employee_technician_list"
+              sequence="99"/>
+</odoo>
