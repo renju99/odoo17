@@ -74,30 +74,55 @@ class FacilitiesSLA(models.Model):
     ], string='Business Days', default='monday,tuesday,wednesday,thursday,friday')
     
     # Performance Tracking
-    total_workorders = fields.Integer(string='Total Work Orders', compute='_compute_performance_metrics')
-    compliant_workorders = fields.Integer(string='Compliant Work Orders', compute='_compute_performance_metrics')
-    breached_workorders = fields.Integer(string='Breached Work Orders', compute='_compute_performance_metrics')
-    compliance_rate = fields.Float(string='Compliance Rate (%)', compute='_compute_performance_metrics')
-    avg_mttr = fields.Float(string='Average MTTR (Hours)', compute='_compute_performance_metrics')
+    total_workorders = fields.Integer(string='Total Work Orders', compute='_compute_performance_metrics', store=True)
+    compliant_workorders = fields.Integer(string='Compliant Work Orders', compute='_compute_performance_metrics', store=True)
+    breached_workorders = fields.Integer(string='Breached Work Orders', compute='_compute_performance_metrics', store=True)
+    compliance_rate = fields.Float(string='Compliance Rate (%)', compute='_compute_performance_metrics', store=True)
+    avg_mttr = fields.Float(string='Average MTTR (Hours)', compute='_compute_performance_metrics', store=True)
     
-    @api.depends('name')
+    @api.depends('name', 'active')
     def _compute_performance_metrics(self):
+        # This method will be triggered when the SLA record changes
+        # For reverse relationship updates, we need to handle it differently
+        # Note: Since this depends on work orders, we need to ensure proper updates
         for sla in self:
-            workorders = self.env['maintenance.workorder'].search([
-                ('sla_id', '=', sla.id),
-                ('state', '=', 'completed')
-            ])
-            
-            sla.total_workorders = len(workorders)
-            sla.compliant_workorders = len(workorders.filtered(lambda w: w.sla_status == 'completed'))
-            sla.breached_workorders = len(workorders.filtered(lambda w: w.sla_status == 'breached'))
-            
-            if sla.total_workorders > 0:
-                sla.compliance_rate = (sla.compliant_workorders / sla.total_workorders) * 100
-                sla.avg_mttr = sum(workorders.mapped('mttr')) / sla.total_workorders
-            else:
+            try:
+                # Get all work orders for this SLA (not just completed ones for total count)
+                all_workorders = self.env['maintenance.workorder'].search([
+                    ('sla_id', '=', sla.id)
+                ])
+                
+                completed_workorders = all_workorders.filtered(lambda w: w.state == 'completed')
+                
+                sla.total_workorders = len(all_workorders)
+                sla.compliant_workorders = len(completed_workorders.filtered(lambda w: w.sla_status == 'completed'))
+                sla.breached_workorders = len(completed_workorders.filtered(lambda w: w.sla_status == 'breached'))
+                
+                if sla.total_workorders > 0:
+                    sla.compliance_rate = (sla.compliant_workorders / sla.total_workorders) * 100
+                    if completed_workorders:
+                        mttr_values = completed_workorders.mapped('mttr')
+                        sla.avg_mttr = sum(mttr_values) / len(completed_workorders) if mttr_values else 0.0
+                    else:
+                        sla.avg_mttr = 0.0
+                else:
+                    sla.compliance_rate = 0.0
+                    sla.avg_mttr = 0.0
+            except Exception as e:
+                _logger.error(f"Error computing performance metrics for SLA {sla.name}: {str(e)}")
+                # Set default values in case of error
+                sla.total_workorders = 0
+                sla.compliant_workorders = 0
+                sla.breached_workorders = 0
                 sla.compliance_rate = 0.0
                 sla.avg_mttr = 0.0
+
+    def _invalidate_performance_metrics(self):
+        """Invalidate performance metrics when related work orders change"""
+        self.invalidate_recordset(['total_workorders', 'compliant_workorders', 
+                                 'breached_workorders', 'compliance_rate', 'avg_mttr'])
+
+
 
     @api.constrains('response_time_hours', 'resolution_time_hours')
     def _check_timeframes(self):
