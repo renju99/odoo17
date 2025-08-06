@@ -81,6 +81,7 @@ export class IoTMonitoringWidget extends Component {
 
     _removeBusListeners() {
         // Bus service handles cleanup automatically in Odoo 17
+        // No manual cleanup needed
     }
 
     _handleSensorUpdate(data) {
@@ -169,6 +170,7 @@ export class IoTMonitoringWidget extends Component {
             this.alertSound.volume = 0.5; // Set volume to 50%
         }
         
+        // Play alert sound with error handling
         this.alertSound.play().catch(error => {
             console.log('Could not play alert sound:', error);
         });
