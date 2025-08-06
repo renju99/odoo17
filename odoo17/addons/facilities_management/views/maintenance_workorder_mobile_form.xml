@@ -37,9 +37,6 @@
                             class="btn-info"
                             icon="fa-tasks"
                             invisible="not show_tasks_to_complete_btn"/>
-                    <group>
-                        <field name="signature" widget="signature"/>
-                    </group>
                     <footer>
                         <button name="action_mark_done" string="Mark as Done" type="object" class="btn-primary"
                                 invisible="status == 'done'"/>

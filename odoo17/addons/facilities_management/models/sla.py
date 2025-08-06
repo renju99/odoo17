@@ -8,6 +8,7 @@ _logger = logging.getLogger(__name__)
 
 class FacilitiesSLA(models.Model):
     _name = 'facilities.sla'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Service Level Agreement'
     _order = 'priority desc, name'
 
