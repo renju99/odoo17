@@ -95,4 +95,5 @@
               parent="menu_facilities_config"
               action="action_facilities_import_wizard"
               sequence="100"/>
+    </data>
 </odoo>

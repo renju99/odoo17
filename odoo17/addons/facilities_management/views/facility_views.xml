@@ -344,4 +344,5 @@
               parent="menu_facility_records"
               action="action_facility"
               sequence="10"/>
+    </data>
 </odoo>
