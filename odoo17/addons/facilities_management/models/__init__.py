@@ -13,7 +13,8 @@ _logger = logging.getLogger(__name__)
 from . import hr_employee
 from . import product
 from . import maintenance_team
-# maintenance_job_plan_task is defined in maintenance_job_plan.py, so don't import separately
+from . import maintenance_job_plan_section
+from . import maintenance_job_plan_task
 from . import maintenance_job_plan    # Loads both job plan and its tasks
 
 # 2. Core Infrastructure & Assets (Hierarchical, depends on basic Odoo models)
@@ -34,13 +35,11 @@ from . import asset_performance
 
 # 4. Transactional Models (Depend on many of the above)
 from . import maintenance_workorder
+from . import maintenance_workorder_inheritance
 from . import maintenance_workorder_assignment
 from . import maintenance_workorder_part_line
-from . import maintenance_workorder_task
-from . import maintenance_job_plan_section
-from . import maintenance_job_plan_task
-from . import maintenance_job_plan
 from . import maintenance_workorder_section
+from . import maintenance_workorder_task
 from . import stock_picking
 
 # 5. Scheduled/Predictive Maintenance (Often depend on assets and work orders)
