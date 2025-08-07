@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Fix Maintenance Work Order Action -->
+        <record id="action_maintenance_workorder" model="ir.actions.act_window">
+            <field name="name">Maintenance Work Orders</field>
+            <field name="res_model">maintenance.workorder</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'kanban', 'view_id': ref('facilities_management.view_maintenance_workorder_kanban')}),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('facilities_management.view_maintenance_workorder_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('facilities_management.view_workorder_form')})]"/>
+            <field name="search_view_id" ref="facilities_management.view_maintenance_workorder_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first work order!
+                </p>
+                <p>
+                    Manage maintenance work orders with SLA tracking and enhanced features.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>
