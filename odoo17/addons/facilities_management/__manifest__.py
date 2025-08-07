@@ -79,6 +79,7 @@ Features:
 
         # Views - Maintenance
         'views/maintenance_team_views.xml',
+        'views/maintenance_workorder_views.xml',
         'views/maintenance_workorder_part_line_views.xml',
         'views/maintenance_workorder_permit_views.xml',
         'views/maintenance_workorder_kanban.xml',
