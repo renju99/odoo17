@@ -3,6 +3,7 @@
     <record id="view_workorder_form" model="ir.ui.view">
         <field name="name">maintenance.workorder.form</field>
         <field name="model">maintenance.workorder</field>
+        <field name="priority" eval="25"/>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -170,6 +171,7 @@
     <record id="view_maintenance_workorder_tree" model="ir.ui.view">
         <field name="name">maintenance.workorder.tree</field>
         <field name="model">maintenance.workorder</field>
+        <field name="priority" eval="25"/>
         <field name="arch" type="xml">
             <tree decoration-success="status=='done'"
                   decoration-danger="status=='cancelled'"
