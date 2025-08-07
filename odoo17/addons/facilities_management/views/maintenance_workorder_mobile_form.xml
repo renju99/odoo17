@@ -21,6 +21,19 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <form string="Work Order (Minimal Mobile)" class="o_mobile_form">
+                <header>
+                    <field name="status" invisible="1"/>
+                    <field name="approval_state" invisible="1"/>
+                    <!-- Start Workorder Button for Mobile -->
+                    <button name="action_start_progress" type="object" string="Start Work" class="btn-primary"
+                        invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft')"/>
+                    <!-- Quick Start Button for Mobile -->
+                    <button name="action_quick_start" type="object" string="Quick Start" class="btn-success"
+                        invisible="status != 'draft' or approval_state != 'draft'"/>
+                    <!-- Resume Work Button for Mobile -->
+                    <button name="action_resume_work" type="object" string="Resume" class="btn-warning"
+                        invisible="status != 'on_hold'"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="name" readonly="1"/>

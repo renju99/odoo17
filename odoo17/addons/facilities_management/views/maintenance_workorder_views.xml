@@ -29,8 +29,17 @@
                         confirm="Are you sure you want to reset this work order to draft state? This action cannot be undone easily."/>
                     <button name="action_escalate" type="object" string="Escalate"
                         invisible="not (approval_state in ('submitted','supervisor') and escalation_deadline and escalation_deadline &lt;= context_today())"/>
+                    <!-- Enhanced Start Workorder Button with better visibility -->
                     <button name="action_start_progress" type="object" string="Start Workorder" class="oe_highlight"
-                        invisible="status != 'draft' or approval_state != 'approved'"/>
+                        invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft')"
+                        confirm="Are you sure you want to start this work order? This will mark it as in progress."/>
+                    <!-- Quick Start Button for Draft Workorders -->
+                    <button name="action_quick_start" type="object" string="Quick Start" class="btn-primary"
+                        invisible="status != 'draft' or approval_state != 'draft'"
+                        confirm="Start work order immediately (bypass approval if needed)?"/>
+                    <!-- Resume Work Button for On-Hold Workorders -->
+                    <button name="action_resume_work" type="object" string="Resume Work" class="oe_highlight"
+                        invisible="status != 'on_hold'"/>
                     <button name="action_complete" type="object" string="Mark as Completed" class="oe_highlight"
                         invisible="status != 'in_progress'"
                         confirm="Are you sure you want to mark this Work Order as completed? All tasks will be set as completed."/>

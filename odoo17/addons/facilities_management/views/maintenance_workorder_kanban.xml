@@ -6,17 +6,37 @@
             <kanban>
                 <field name="name"/>
                 <field name="status"/>
+                <field name="approval_state"/>
                 <field name="technician_id"/>
+                <field name="priority"/>
+                <field name="asset_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card">
                             <strong><field name="name"/></strong>
                             <div>Status: <field name="status"/></div>
+                            <div>Approval: <field name="approval_state"/></div>
+                            <div>Asset: <field name="asset_id"/></div>
+                            <div>Priority: <field name="priority"/></div>
                             <div>Technician: <field name="technician_id"/></div>
-                            <div>
+                            <div class="mt-2">
+                                <!-- Enhanced Start Workorder Button -->
                                 <button type="object" name="action_start_progress"
-                                        class="btn btn-primary btn-sm">
+                                        class="btn btn-primary btn-sm"
+                                        t-attf-invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft')">
                                     Start Work
+                                </button>
+                                <!-- Quick Start Button -->
+                                <button type="object" name="action_quick_start"
+                                        class="btn btn-success btn-sm"
+                                        t-attf-invisible="status != 'draft' or approval_state != 'draft'">
+                                    Quick Start
+                                </button>
+                                <!-- Resume Work Button -->
+                                <button type="object" name="action_resume_work"
+                                        class="btn btn-warning btn-sm"
+                                        t-attf-invisible="status != 'on_hold'">
+                                    Resume
                                 </button>
                                 <button type="object" name="action_assign_technician"
                                         class="btn btn-info btn-sm">
