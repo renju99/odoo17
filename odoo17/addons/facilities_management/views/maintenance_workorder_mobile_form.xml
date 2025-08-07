@@ -104,21 +104,21 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">Asset:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">Asset:</label>
                                     <p class="text-dark"><field name="asset_id" readonly="1"/></p>
                                 </div>
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">Building:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">Building:</label>
                                     <p class="text-dark"><field name="building_id" readonly="1"/></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">Facility:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">Facility:</label>
                                     <p class="text-dark"><field name="facility_id" readonly="1"/></p>
                                 </div>
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">Room:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">Room:</label>
                                     <p class="text-dark"><field name="room_id" readonly="1"/></p>
                                 </div>
                             </div>
@@ -133,21 +133,21 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">Description:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">Description:</label>
                                     <p class="text-dark"><field name="description" readonly="1"/></p>
                                 </div>
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">Technician:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">Technician:</label>
                                     <p class="text-dark"><field name="technician_id" readonly="1"/></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">Start Date:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">Start Date:</label>
                                     <p class="text-dark"><field name="start_date" readonly="1"/></p>
                                 </div>
                                 <div class="col-6">
-                                    <label class="text-dark font-weight-bold">End Date:</label>
+                                    <label class="o_form_label text-dark font-weight-bold">End Date:</label>
                                     <p class="text-dark"><field name="end_date" readonly="1"/></p>
                                 </div>
                             </div>
