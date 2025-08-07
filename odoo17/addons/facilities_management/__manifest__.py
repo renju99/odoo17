@@ -63,7 +63,6 @@ Features:
 
         # Views - Assets
         'views/asset_calendar_views.xml',
-        'views/facility_asset_menus.xml',
         'views/facility_asset_views.xml',
         'views/asset_category_views.xml',
         'views/asset_dashboard_views.xml',
@@ -88,6 +87,9 @@ Features:
         'views/maintenance_job_plan_views.xml',
         'views/maintenance_report_views.xml',
         'views/maintenance_workorder_calendar_views.xml',
+
+        # Views - Menus (moved after all other views are loaded)
+        'views/facility_asset_menus.xml',
 
         # Views - Other
         'views/sla_views.xml',
