@@ -28,18 +28,16 @@
                     <field name="status" invisible="1"/>
                     <field name="approval_state" invisible="1"/>
                     <field name="work_order_type" invisible="1"/>
-                    
-                    <!-- Status Badge -->
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="badge badge-lg" t-attf-class="badge-#{status == 'draft' and 'info' or status == 'in_progress' and 'warning' or status == 'completed' and 'success' or 'danger'}">
-                            <field name="status" readonly="1"/>
-                        </div>
-                        <div class="badge badge-lg" t-attf-class="badge-#{priority == '0' and 'info' or priority == '3' and 'warning' or priority == '4' and 'danger' or 'secondary'}">
-                            <field name="priority" readonly="1"/>
-                        </div>
-                    </div>
 
-                    <!-- Action Buttons -->
+                    <group>
+                        <group>
+                            <field name="status" widget="badge" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="priority" widget="badge" readonly="1"/>
+                        </group>
+                    </group>
+
                     <div class="d-flex flex-wrap gap-2 mb-3">
                         <button name="action_start_progress" type="object" string="Start Work" class="btn btn-primary btn-lg"
                             invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')"
@@ -58,103 +56,60 @@
                             icon="fa-stop"/>
                     </div>
                 </header>
-                
+
                 <sheet>
-                    <!-- Work Order Header -->
                     <div class="oe_title text-center mb-4">
                         <h1 class="text-primary"><field name="name" readonly="1"/></h1>
                         <p class="text-muted"><field name="work_order_type" readonly="1"/></p>
                     </div>
 
-                    <!-- SLA Status Cards -->
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <h6 class="card-title text-dark">Response SLA</h6>
-                                    <div class="badge badge-lg" t-attf-class="badge-#{sla_response_status == 'on_time' and 'success' or sla_response_status == 'at_risk' and 'warning' or 'danger'}">
-                                        <field name="sla_response_status" readonly="1"/>
-                                    </div>
-                                    <small class="text-dark d-block mt-1">
-                                        <field name="sla_response_deadline" readonly="1"/>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-body text-center">
-                                    <h6 class="card-title text-dark">Resolution SLA</h6>
-                                    <div class="badge badge-lg" t-attf-class="badge-#{sla_resolution_status == 'on_time' and 'success' or sla_resolution_status == 'at_risk' and 'warning' or 'danger'}">
-                                        <field name="sla_resolution_status" readonly="1"/>
-                                    </div>
-                                    <small class="text-dark d-block mt-1">
-                                        <field name="sla_resolution_deadline" readonly="1"/>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <group string="SLA Status" colspan="2">
+                        <group>
+                            <field name="sla_response_status" widget="badge" readonly="1"/>
+                            <field name="sla_response_deadline" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="sla_resolution_status" widget="badge" readonly="1"/>
+                            <field name="sla_resolution_deadline" readonly="1"/>
+                        </group>
+                    </group>
 
-                    <!-- Asset Information -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-primary text-white">
                             <h5 class="mb-0"><i class="fa fa-cog me-2"></i>Asset Information</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">Asset:</span>
-                                    <p class="text-dark"><field name="asset_id" readonly="1"/></p>
-                                </div>
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">Building:</span>
-                                    <p class="text-dark"><field name="building_id" readonly="1"/></p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">Facility:</span>
-                                    <p class="text-dark"><field name="facility_id" readonly="1"/></p>
-                                </div>
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">Room:</span>
-                                    <p class="text-dark"><field name="room_id" readonly="1"/></p>
-                                </div>
-                            </div>
+                            <group>
+                                <group>
+                                    <field name="asset_id" readonly="1"/>
+                                    <field name="facility_id" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="building_id" readonly="1"/>
+                                    <field name="room_id" readonly="1"/>
+                                </group>
+                            </group>
                         </div>
                     </div>
 
-                    <!-- Work Order Details -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-info text-white">
                             <h5 class="mb-0"><i class="fa fa-info-circle me-2"></i>Work Order Details</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">Description:</span>
-                                    <p class="text-dark"><field name="description" readonly="1"/></p>
-                                </div>
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">Technician:</span>
-                                    <p class="text-dark"><field name="technician_id" readonly="1"/></p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">Start Date:</span>
-                                    <p class="text-dark"><field name="start_date" readonly="1"/></p>
-                                </div>
-                                <div class="col-6">
-                                    <span class="text-dark font-weight-bold">End Date:</span>
-                                    <p class="text-dark"><field name="end_date" readonly="1"/></p>
-                                </div>
-                            </div>
+                            <group>
+                                <group>
+                                    <field name="description" readonly="1"/>
+                                    <field name="technician_id" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="start_date" readonly="1"/>
+                                    <field name="end_date" readonly="1"/>
+                                </group>
+                            </group>
                         </div>
                     </div>
 
-                    <!-- Tasks Section - Only for Planned Work Orders -->
                     <div class="card border-0 shadow-sm mb-4" invisible="work_order_type != 'preventive'">
                         <div class="card-header bg-success text-white">
                             <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>Maintenance Tasks</h5>
@@ -164,99 +119,44 @@
                                 <i class="fa fa-info-circle me-2"></i>
                                 <strong>Tasks are auto-generated from the job plan linked to this maintenance schedule.</strong>
                             </div>
-                            
-                            <!-- Tasks List -->
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th class="text-white">Task</th>
-                                            <th class="text-white">Section</th>
-                                            <th class="text-white">Status</th>
-                                            <th class="text-white">Duration</th>
-                                            <th class="text-white">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr t-foreach="workorder_task_ids" t-as="task">
-                                            <td class="text-dark">
-                                                <strong><t t-esc="task.name"/></strong>
-                                                <br/>
-                                                <small class="text-muted"><t t-esc="task.description"/></small>
-                                            </td>
-                                            <td class="text-dark"><t t-esc="task.section_id.name"/></td>
-                                            <td>
-                                                <span class="badge" t-attf-class="badge-#{task.is_done and 'success' or 'warning'}">
-                                                    <t t-esc="task.is_done and 'Completed' or 'Pending'"/>
-                                                </span>
-                                            </td>
-                                            <td class="text-dark"><t t-esc="task.duration"/> hours</td>
-                                            <td>
-                                                <button type="object" name="action_toggle_task_completion" 
-                                                        class="btn btn-sm" 
-                                                        t-attf-class="btn-#{task.is_done and 'outline-success' or 'success'}"
-                                                        t-att-args="(task.id,)"
-                                                        t-att-data-task-id="task.id">
-                                                    <i class="fa" t-attf-class="fa-#{task.is_done and 'check' or 'play'}"></i>
-                                                    <t t-esc="task.is_done and 'Completed' or 'Mark Done'"/>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
-                            <!-- Task Progress -->
-                            <div class="mt-3">
-                                <div class="progress">
-                                    <div class="progress-bar bg-success" role="progressbar" 
-                                         t-attf-style="width: #{len([t for t in workorder_task_ids if t.is_done]) / len(workorder_task_ids) * 100}%">
-                                        <span class="text-white">
-                                            <t t-esc="len([t for t in workorder_task_ids if t.is_done])"/> / <t t-esc="len(workorder_task_ids)"/> Tasks Completed
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <field name="workorder_task_ids" create="false">
+                                <tree editable="bottom">
+                                    <field name="section_id"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="description" readonly="1"/>
+                                    <field name="is_done" widget="boolean_toggle"/>
+                                    <field name="duration"/>
+                                    <button name="toggle_task_completion" type="object" string="Toggle" class="btn btn-secondary btn-sm"/>
+                                </tree>
+                                <form string="Task">
+                                    <group>
+                                        <group>
+                                            <field name="section_id" readonly="1"/>
+                                            <field name="name" readonly="1"/>
+                                        </group>
+                                        <field name="description" readonly="1"/>
+                                        <field name="is_done" widget="boolean_toggle"/>
+                                        <group>
+                                            <field name="duration" readonly="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="before_image" widget="image"/>
+                                            <field name="after_image" widget="image"/>
+                                        </group>
+                                        <field name="notes"/>
+                                    </group>
+                                </form>
+                            </field>
                         </div>
                     </div>
 
-                    <!-- Before Image -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0"><i class="fa fa-camera me-2"></i>Before Image</h5>
-                        </div>
-                        <div class="card-body text-center">
-                            <field name="before_image" widget="image" class="img-fluid" style="max-width: 100%; height: auto;"/>
-                            <div class="mt-3">
-                                <button type="object" name="action_upload_before_image" class="btn btn-outline-warning">
-                                    <i class="fa fa-upload me-2"></i>Upload Before Image
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- After Image -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="fa fa-camera me-2"></i>After Image</h5>
-                        </div>
-                        <div class="card-body text-center">
-                            <field name="after_image" widget="image" class="img-fluid" style="max-width: 100%; height: auto;"/>
-                            <div class="mt-3">
-                                <button type="object" name="action_upload_after_image" class="btn btn-outline-success">
-                                    <i class="fa fa-upload me-2"></i>Upload After Image
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Technician Notes -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-info text-white">
-                            <h5 class="mb-0"><i class="fa fa-sticky-note me-2"></i>Technician Notes</h5>
+                            <h5 class="mb-0"><i class="fa fa-sticky-note me-2"></i>Work Done</h5>
                         </div>
                         <div class="card-body">
-                            <field name="notes" placeholder="Add your notes about this task..."/>
+                            <field name="work_done" placeholder="Add your notes about this task..."/>
                         </div>
                     </div>
                 </sheet>
