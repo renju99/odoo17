@@ -43,3 +43,4 @@ access_facilities_asset_disposal_user,facilities.asset.disposal.user,model_facil
 access_facilities_sla_user,facilities.sla.user,model_facilities_sla,base.group_user,1,1,1,1
 access_facilities_sla_dashboard_user,facilities.sla.dashboard.user,model_facilities_sla_dashboard,base.group_user,1,1,1,1
 access_maintenance_kpi_dashboard_user,maintenance.kpi.dashboard.user,model_maintenance_kpi_dashboard,base.group_user,1,1,1,1
+access_facilities_sla_deactivation_wizard_user,facilities.sla.deactivation.wizard.user,model_facilities_sla_deactivation_wizard,base.group_user,1,1,1,1
