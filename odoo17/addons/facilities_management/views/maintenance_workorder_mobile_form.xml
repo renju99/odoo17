@@ -28,6 +28,8 @@
                     <field name="status" invisible="1"/>
                     <field name="approval_state" invisible="1"/>
                     <field name="work_order_type" invisible="1"/>
+                    <field name="schedule_id" invisible="1"/>
+                    <field name="job_plan_id" invisible="1"/>
 
                     <group>
                         <group>
@@ -61,6 +63,9 @@
                     <div class="oe_title text-center mb-4">
                         <h1 class="text-primary"><field name="name" readonly="1"/></h1>
                         <p class="text-muted"><field name="work_order_type" readonly="1"/></p>
+                        <t t-if="work_order_type == 'preventive' and not job_plan_id">
+                            <div class="alert alert-warning mt-2">No job plan linked. Tasks are not available.</div>
+                        </t>
                     </div>
 
                     <group string="SLA Status" colspan="2">
@@ -110,7 +115,7 @@
                         </div>
                     </div>
 
-                    <div class="card border-0 shadow-sm mb-4" invisible="work_order_type != 'preventive'">
+                    <div class="card border-0 shadow-sm mb-4" invisible="not (work_order_type == 'preventive' and schedule_id and job_plan_id)">
                         <div class="card-header bg-success text-white">
                             <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>Maintenance Tasks</h5>
                         </div>
@@ -164,12 +169,10 @@
         </field>
     </record>
 
-    <!-- Action for Mobile Work Orders -->
-    <record id="action_maintenance_workorder_mobile_enhanced" model="ir.actions.act_window">
+    <!-- Replace server action with client action for two-section list -->
+    <record id="action_maintenance_workorder_mobile_enhanced" model="ir.actions.client">
         <field name="name">Work Orders (Mobile Enhanced)</field>
-        <field name="res_model">maintenance.workorder</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_workorder_mobile_enhanced_form"/>
+        <field name="tag">mobile_workorders_enhanced</field>
         <field name="context">{}</field>
     </record>
 
