@@ -543,8 +543,16 @@ class MaintenanceWorkOrder(models.Model):
 
     def action_start_progress(self):
         self.ensure_one()
+        if self.approval_state not in ['approved', 'draft', 'submitted', 'supervisor', 'manager']:
+            raise UserError(_("Work order must be in an approvable state before starting progress."))
+        
+        # Auto-approve if not already approved
         if self.approval_state != 'approved':
-            raise UserError(_("Work order must be approved before starting progress."))
+            self.write({
+                'approval_state': 'approved',
+                'approved_by_id': self.env.user.id
+            })
+        
         self.write({
             'approval_state': 'in_progress',
             'state': 'in_progress',

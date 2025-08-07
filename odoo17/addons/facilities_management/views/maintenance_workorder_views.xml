@@ -31,7 +31,7 @@
                         invisible="not (approval_state in ('submitted','supervisor') and escalation_deadline and escalation_deadline &lt;= context_today())"/>
                     <!-- Enhanced Start Workorder Button with better visibility -->
                     <button name="action_start_progress" type="object" string="Start Workorder" class="oe_highlight"
-                        invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft')"
+                        invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')"
                         confirm="Are you sure you want to start this work order? This will mark it as in progress."/>
                     <!-- Quick Start Button for Draft Workorders -->
                     <button name="action_quick_start" type="object" string="Quick Start" class="btn-primary"

@@ -23,7 +23,7 @@
                                 <!-- Enhanced Start Workorder Button -->
                                 <button type="object" name="action_start_progress"
                                         class="btn btn-primary btn-sm"
-                                        t-attf-invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft')">
+                                        t-attf-invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')">
                                     Start Work
                                 </button>
                                 <!-- Quick Start Button -->
