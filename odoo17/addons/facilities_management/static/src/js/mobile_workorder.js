@@ -1,13 +1,13 @@
-odoo.define('facilities_management.mobile_workorder', function (require) {
+odoo.define('facilities_management.mobile_workorder', [
+    'web.core',
+    'web.Widget',
+    'web.public.widget',
+    'web.FormView',
+    'web.FormController'
+], function (core, Widget, publicWidget, FormView, FormController) {
     'use strict';
 
-    var core = require('web.core');
-    var Widget = require('web.Widget');
-    var publicWidget = require('web.public.widget');
-    var FormView = require('web.FormView');
-    var FormController = require('web.FormController');
     var _t = core._t;
-
     var QWeb = core.qweb;
 
     // Enhanced Mobile Workorder Form Controller
