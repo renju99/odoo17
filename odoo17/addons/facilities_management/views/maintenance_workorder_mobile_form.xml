@@ -104,15 +104,15 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label class="form-label text-muted">Asset</label>
+                                    <label class="form-label text-muted" for="asset_id">Asset</label>
                                     <div class="form-control-plaintext"><field name="asset_id" readonly="1"/></div>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">Building</label>
+                                    <label class="form-label text-muted" for="building_id">Building</label>
                                     <div class="form-control-plaintext"><field name="building_id" readonly="1"/></div>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">Room</label>
+                                    <label class="form-label text-muted" for="room_id">Room</label>
                                     <div class="form-control-plaintext"><field name="room_id" readonly="1"/></div>
                                 </div>
                             </div>
@@ -127,23 +127,23 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">Start Date</label>
+                                    <label class="form-label text-muted" for="start_date">Start Date</label>
                                     <div class="form-control-plaintext"><field name="start_date" readonly="1"/></div>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">End Date</label>
+                                    <label class="form-label text-muted" for="end_date">End Date</label>
                                     <div class="form-control-plaintext"><field name="end_date" readonly="1"/></div>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">Actual Start</label>
+                                    <label class="form-label text-muted" for="actual_start_date">Actual Start</label>
                                     <div class="form-control-plaintext"><field name="actual_start_date" readonly="1"/></div>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">Actual End</label>
+                                    <label class="form-label text-muted" for="actual_end_date">Actual End</label>
                                     <div class="form-control-plaintext"><field name="actual_end_date" readonly="1"/></div>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label text-muted">Duration</label>
+                                    <label class="form-label text-muted" for="actual_duration">Duration</label>
                                     <div class="form-control-plaintext"><field name="actual_duration" readonly="1"/> hours</div>
                                 </div>
                             </div>
@@ -158,11 +158,11 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label class="form-label text-muted">Technician</label>
+                                    <label class="form-label text-muted" for="technician_id">Technician</label>
                                     <div class="form-control-plaintext"><field name="technician_id" readonly="1"/></div>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label class="form-label text-muted">Team</label>
+                                    <label class="form-label text-muted" for="maintenance_team_id">Team</label>
                                     <div class="form-control-plaintext"><field name="maintenance_team_id" readonly="1"/></div>
                                 </div>
                             </div>
@@ -248,19 +248,19 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 mb-3">
-                                    <label class="form-label text-muted">Description</label>
+                                    <label class="form-label text-muted" for="description">Description</label>
                                     <div class="form-control-plaintext"><field name="description" readonly="1"/></div>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">Section</label>
+                                    <label class="form-label text-muted" for="section_id">Section</label>
                                     <div class="form-control-plaintext"><field name="section_id" readonly="1"/></div>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label text-muted">Duration</label>
+                                    <label class="form-label text-muted" for="duration">Duration</label>
                                     <div class="form-control-plaintext"><field name="duration" readonly="1"/> hours</div>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label class="form-label text-muted">Tools/Materials</label>
+                                    <label class="form-label text-muted" for="tools_materials">Tools/Materials</label>
                                     <div class="form-control-plaintext"><field name="tools_materials" readonly="1"/></div>
                                 </div>
                             </div>
