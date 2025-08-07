@@ -84,3 +84,12 @@ class MaintenanceWorkorderTask(models.Model):
             if rec.workorder_id.state != 'draft':
                 raise UserError(_("You cannot remove tasks from a work order that is not in draft."))
         return super().unlink()
+
+    def toggle_task_completion(self):
+        """Toggle the completion status of a task"""
+        self.ensure_one()
+        self.is_done = not self.is_done
+        if self.is_done:
+            self.message_post(body=_("Task marked as completed by %s") % self.env.user.name)
+        else:
+            self.message_post(body=_("Task marked as incomplete by %s") % self.env.user.name)
