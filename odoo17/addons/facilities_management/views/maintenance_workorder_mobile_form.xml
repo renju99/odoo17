@@ -8,22 +8,25 @@
             <tree string="Work Orders (Mobile Minimal)" class="o_mobile_list">
                 <field name="name"/>
                 <field name="building_id"/>
+                <field name="status"/>
+                <field name="priority"/>
                 <field name="sla_response_status"/>
                 <field name="sla_resolution_status"/>
             </tree>
         </field>
     </record>
 
-    <!-- Minimal Mobile Form View for Technicians -->
+    <!-- Enhanced Mobile Form View for Technicians -->
     <record id="view_workorder_mobile_minimal_form" model="ir.ui.view">
         <field name="name">maintenance.workorder.mobile.minimal.form</field>
         <field name="model">maintenance.workorder</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
-            <form string="Work Order (Minimal Mobile)" class="o_mobile_form">
+            <form string="Work Order (Mobile)" class="o_mobile_form">
                 <header>
                     <field name="status" invisible="1"/>
                     <field name="approval_state" invisible="1"/>
+                    <field name="work_order_type" invisible="1"/>
                     <!-- Start Workorder Button for Mobile -->
                     <button name="action_start_progress" type="object" string="Start Work" class="btn-primary"
                         invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')"/>
@@ -33,23 +36,47 @@
                     <!-- Resume Work Button for Mobile -->
                     <button name="action_resume_work" type="object" string="Resume" class="btn-warning"
                         invisible="status != 'on_hold'"/>
+                    <!-- Complete Work Button for Mobile -->
+                    <button name="action_complete" type="object" string="Complete" class="btn-success"
+                        invisible="status != 'in_progress'"/>
                 </header>
                 <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
                     <group>
-                        <field name="name" readonly="1"/>
-                        <field name="building_id" readonly="1"/>
-                        <field name="sla_response_status" readonly="1"/>
-                        <field name="sla_resolution_status" readonly="1"/>
-                        <field name="status" invisible="1"/>
-                        <field name="work_order_type" invisible="1"/>
-                        <field name="show_tasks_to_complete_btn" invisible="1"/>
+                        <group string="Basic Information">
+                            <field name="asset_id" readonly="1"/>
+                            <field name="building_id" readonly="1"/>
+                            <field name="room_id" readonly="1"/>
+                            <field name="work_order_type" readonly="1"/>
+                            <field name="priority" readonly="1"/>
+                            <field name="status" readonly="1"/>
+                            <field name="approval_state" readonly="1"/>
+                        </group>
+                        <group string="SLA Information">
+                            <field name="sla_response_status" readonly="1"/>
+                            <field name="sla_resolution_status" readonly="1"/>
+                            <field name="sla_response_deadline" readonly="1"/>
+                            <field name="sla_resolution_deadline" readonly="1"/>
+                        </group>
                     </group>
+                    <group string="Assignment">
+                        <field name="technician_id" readonly="1"/>
+                        <field name="maintenance_team_id" readonly="1"/>
+                        <field name="start_date" readonly="1"/>
+                        <field name="end_date" readonly="1"/>
+                    </group>
+                    <group string="Description" colspan="2">
+                        <field name="description" readonly="1"/>
+                    </group>
+                    <!-- Tasks Button - Only show for preventive maintenance -->
                     <button name="action_open_job_plan_tasks_mobile"
                             string="Tasks to Complete"
                             type="object"
                             class="btn-info"
                             icon="fa-tasks"
-                            invisible="not show_tasks_to_complete_btn"/>
+                            invisible="work_order_type != 'preventive'"/>
                     <footer>
                         <button name="action_mark_done" string="Mark as Done" type="object" class="btn-primary"
                                 invisible="status == 'done'"/>
@@ -61,23 +88,23 @@
         </field>
     </record>
 
-    <!-- Tree View for Maintenance Work Order Task -->
+    <!-- Enhanced Tree View for Maintenance Work Order Task -->
     <record id="view_workorder_task_tree_custom" model="ir.ui.view">
         <field name="name">maintenance.workorder.task.tree.custom</field>
         <field name="model">maintenance.workorder.task</field>
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
-            <tree>
+            <tree editable="bottom">
                 <field name="name"/>         <!-- Task Description -->
                 <field name="section_id"/>
-                <field name="is_done"/>
-                <field name="notes"/>
+                <field name="is_done" widget="boolean_toggle"/>
                 <field name="description"/>
+                <field name="notes"/>
             </tree>
         </field>
     </record>
 
-    <!-- Custom Form View for Maintenance Work Order Task (for subtasks) -->
+    <!-- Enhanced Form View for Maintenance Work Order Task (for subtasks) -->
     <record id="view_workorder_task_form_custom" model="ir.ui.view">
         <field name="name">maintenance.workorder.task.form.custom</field>
         <field name="model">maintenance.workorder.task</field>
@@ -89,7 +116,7 @@
                         <field name="name" readonly="1"/>
                         <field name="description"/>
                         <field name="section_id"/>
-                        <field name="is_done"/>
+                        <field name="is_done" widget="boolean_toggle"/>
                         <field name="notes"/>
                     </group>
                     <group string="Images">
