@@ -1,147 +1,364 @@
 <odoo>
-    <!-- Minimal Mobile List View for Technicians -->
+    <!-- Enhanced Mobile List View for Technicians -->
     <record id="view_workorder_mobile_list" model="ir.ui.view">
         <field name="name">maintenance.workorder.mobile.list</field>
         <field name="model">maintenance.workorder</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
-            <tree string="Work Orders (Mobile Minimal)" class="o_mobile_list">
+            <tree string="Work Orders (Mobile)" class="o_mobile_list">
                 <field name="name"/>
+                <field name="asset_id"/>
                 <field name="building_id"/>
-                <field name="status"/>
-                <field name="priority"/>
-                <field name="sla_response_status"/>
-                <field name="sla_resolution_status"/>
+                <field name="status" widget="badge" decoration-info="status == 'draft'" decoration-warning="status == 'in_progress'" decoration-success="status == 'completed'" decoration-danger="status == 'cancelled'"/>
+                <field name="priority" widget="badge" decoration-info="priority == '0'" decoration-warning="priority == '3'" decoration-danger="priority == '4'"/>
+                <field name="sla_response_status" widget="badge" decoration-info="sla_response_status == 'on_time'" decoration-warning="sla_response_status == 'at_risk'" decoration-danger="sla_response_status == 'breached'"/>
+                <field name="sla_resolution_status" widget="badge" decoration-info="sla_resolution_status == 'on_time'" decoration-warning="sla_resolution_status == 'at_risk'" decoration-danger="sla_resolution_status == 'breached'"/>
             </tree>
         </field>
     </record>
 
     <!-- Enhanced Mobile Form View for Technicians -->
-    <record id="view_workorder_mobile_minimal_form" model="ir.ui.view">
-        <field name="name">maintenance.workorder.mobile.minimal.form</field>
+    <record id="view_workorder_mobile_enhanced_form" model="ir.ui.view">
+        <field name="name">maintenance.workorder.mobile.enhanced.form</field>
         <field name="model">maintenance.workorder</field>
-        <field name="priority" eval="20"/>
+        <field name="priority" eval="25"/>
         <field name="arch" type="xml">
             <form string="Work Order (Mobile)" class="o_mobile_form">
                 <header>
                     <field name="status" invisible="1"/>
                     <field name="approval_state" invisible="1"/>
                     <field name="work_order_type" invisible="1"/>
-                    <!-- Start Workorder Button for Mobile -->
-                    <button name="action_start_progress" type="object" string="Start Work" class="btn-primary"
-                        invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')"/>
-                    <!-- Quick Start Button for Mobile -->
-                    <button name="action_quick_start" type="object" string="Quick Start" class="btn-success"
-                        invisible="status != 'draft' or approval_state != 'draft'"/>
-                    <!-- Resume Work Button for Mobile -->
-                    <button name="action_resume_work" type="object" string="Resume" class="btn-warning"
-                        invisible="status != 'on_hold'"/>
-                    <!-- Complete Work Button for Mobile -->
-                    <button name="action_complete" type="object" string="Complete" class="btn-success"
-                        invisible="status != 'in_progress'"/>
-                </header>
-                <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name" readonly="1"/></h1>
-                    </div>
-                    <group>
-                        <group string="Basic Information">
-                            <field name="asset_id" readonly="1"/>
-                            <field name="building_id" readonly="1"/>
-                            <field name="room_id" readonly="1"/>
-                            <field name="work_order_type" readonly="1"/>
-                            <field name="priority" readonly="1"/>
+                    
+                    <!-- Status Badge -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="badge badge-lg" t-attf-class="badge-#{status == 'draft' and 'info' or status == 'in_progress' and 'warning' or status == 'completed' and 'success' or 'danger'}">
                             <field name="status" readonly="1"/>
-                            <field name="approval_state" readonly="1"/>
-                        </group>
-                        <group string="SLA Information">
-                            <field name="sla_response_status" readonly="1"/>
-                            <field name="sla_resolution_status" readonly="1"/>
-                            <field name="sla_response_deadline" readonly="1"/>
-                            <field name="sla_resolution_deadline" readonly="1"/>
-                        </group>
-                    </group>
-                    <group string="Assignment">
-                        <field name="technician_id" readonly="1"/>
-                        <field name="maintenance_team_id" readonly="1"/>
-                        <field name="start_date" readonly="1"/>
-                        <field name="end_date" readonly="1"/>
-                    </group>
-                    <group string="Description" colspan="2">
-                        <field name="description" readonly="1"/>
-                    </group>
-                    <!-- Tasks Button - Only show for preventive maintenance -->
-                    <button name="action_open_job_plan_tasks_mobile"
-                            string="Tasks to Complete"
-                            type="object"
-                            class="btn-info"
-                            icon="fa-tasks"
-                            invisible="work_order_type != 'preventive'"/>
-                    <footer>
-                        <button name="action_mark_done" string="Mark as Done" type="object" class="btn-primary"
-                                invisible="status == 'done'"/>
-                        <button name="action_cancel" string="Cancel" type="object" class="btn-secondary"
-                                invisible="status == 'cancelled'"/>
+                        </div>
+                        <div class="badge badge-lg" t-attf-class="badge-#{priority == '0' and 'info' or priority == '3' and 'warning' or priority == '4' and 'danger' or 'secondary'}">
+                            <field name="priority" readonly="1"/>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button name="action_start_progress" type="object" string="Start Work" class="btn btn-primary btn-lg"
+                            invisible="status not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')"
+                            icon="fa-play"/>
+                        <button name="action_quick_start" type="object" string="Quick Start" class="btn btn-success btn-lg"
+                            invisible="status != 'draft' or approval_state != 'draft'"
+                            icon="fa-bolt"/>
+                        <button name="action_resume_work" type="object" string="Resume" class="btn btn-warning btn-lg"
+                            invisible="status != 'on_hold'"
+                            icon="fa-refresh"/>
+                        <button name="action_complete" type="object" string="Complete" class="btn btn-success btn-lg"
+                            invisible="status != 'in_progress'"
+                            icon="fa-check"/>
+                        <button name="action_stop_work" type="object" string="Stop Work" class="btn btn-danger btn-lg"
+                            invisible="status != 'in_progress'"
+                            icon="fa-stop"/>
+                    </div>
+                </header>
+                
+                <sheet>
+                    <!-- Work Order Header -->
+                    <div class="oe_title text-center mb-4">
+                        <h1 class="text-primary"><field name="name" readonly="1"/></h1>
+                        <p class="text-muted"><field name="work_order_type" readonly="1"/></p>
+                    </div>
+
+                    <!-- SLA Status Cards -->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-muted">Response SLA</h6>
+                                    <div class="badge badge-lg" t-attf-class="badge-#{sla_response_status == 'on_time' and 'success' or sla_response_status == 'at_risk' and 'warning' or 'danger'}">
+                                        <field name="sla_response_status" readonly="1"/>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">
+                                        <field name="sla_response_deadline" readonly="1"/>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-muted">Resolution SLA</h6>
+                                    <div class="badge badge-lg" t-attf-class="badge-#{sla_resolution_status == 'on_time' and 'success' or sla_resolution_status == 'at_risk' and 'warning' or 'danger'}">
+                                        <field name="sla_resolution_status" readonly="1"/>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">
+                                        <field name="sla_resolution_deadline" readonly="1"/>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asset Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fa fa-cog me-2"></i>Asset Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label class="form-label text-muted">Asset</label>
+                                    <div class="form-control-plaintext"><field name="asset_id" readonly="1"/></div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">Building</label>
+                                    <div class="form-control-plaintext"><field name="building_id" readonly="1"/></div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">Room</label>
+                                    <div class="form-control-plaintext"><field name="room_id" readonly="1"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Work Timing -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fa fa-clock-o me-2"></i>Work Timing</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">Start Date</label>
+                                    <div class="form-control-plaintext"><field name="start_date" readonly="1"/></div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">End Date</label>
+                                    <div class="form-control-plaintext"><field name="end_date" readonly="1"/></div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">Actual Start</label>
+                                    <div class="form-control-plaintext"><field name="actual_start_date" readonly="1"/></div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">Actual End</label>
+                                    <div class="form-control-plaintext"><field name="actual_end_date" readonly="1"/></div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted">Duration</label>
+                                    <div class="form-control-plaintext"><field name="actual_duration" readonly="1"/> hours</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assignment Information -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fa fa-users me-2"></i>Assignment</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label class="form-label text-muted">Technician</label>
+                                    <div class="form-control-plaintext"><field name="technician_id" readonly="1"/></div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label text-muted">Team</label>
+                                    <div class="form-control-plaintext"><field name="maintenance_team_id" readonly="1"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="fa fa-file-text me-2"></i>Description</h5>
+                        </div>
+                        <div class="card-body">
+                            <field name="description" readonly="1"/>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <div class="card border-0 shadow-sm mb-4" invisible="work_order_type != 'preventive'">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>Tasks to Complete</h5>
+                        </div>
+                        <div class="card-body">
+                            <button name="action_open_job_plan_tasks_mobile"
+                                    string="View Tasks"
+                                    type="object"
+                                    class="btn btn-outline-secondary btn-lg w-100"
+                                    icon="fa-tasks"/>
+                        </div>
+                    </div>
+
+                    <!-- Work Done Section -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fa fa-edit me-2"></i>Work Done</h5>
+                        </div>
+                        <div class="card-body">
+                            <field name="work_done" placeholder="Describe the work completed..."/>
+                        </div>
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <footer class="d-flex flex-wrap gap-2 justify-content-center">
+                        <button name="action_mark_done" string="Mark as Done" type="object" class="btn btn-success btn-lg"
+                                invisible="status == 'done'"
+                                icon="fa-check-circle"/>
+                        <button name="action_cancel" string="Cancel" type="object" class="btn btn-danger btn-lg"
+                                invisible="status == 'cancelled'"
+                                icon="fa-times"/>
                     </footer>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <!-- Enhanced Tree View for Maintenance Work Order Task -->
-    <record id="view_workorder_task_tree_custom" model="ir.ui.view">
-        <field name="name">maintenance.workorder.task.tree.custom</field>
+    <!-- Enhanced Task Form with Before/After Images -->
+    <record id="view_workorder_task_mobile_form" model="ir.ui.view">
+        <field name="name">maintenance.workorder.task.mobile.form</field>
         <field name="model">maintenance.workorder.task</field>
-        <field name="priority" eval="10"/>
+        <field name="priority" eval="15"/>
         <field name="arch" type="xml">
-            <tree editable="bottom">
-                <field name="name"/>         <!-- Task Description -->
-                <field name="section_id"/>
-                <field name="is_done" widget="boolean_toggle"/>
-                <field name="description"/>
-                <field name="notes"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- Enhanced Form View for Maintenance Work Order Task (for subtasks) -->
-    <record id="view_workorder_task_form_custom" model="ir.ui.view">
-        <field name="name">maintenance.workorder.task.form.custom</field>
-        <field name="model">maintenance.workorder.task</field>
-        <field name="priority" eval="10"/>
-        <field name="arch" type="xml">
-            <form string="Task Details">
+            <form string="Task Details (Mobile)" class="o_mobile_form">
+                <header>
+                    <button name="toggle_task_completion" type="object" string="Mark Complete" class="btn btn-success"
+                            invisible="is_done"
+                            icon="fa-check"/>
+                    <button name="toggle_task_completion" type="object" string="Mark Incomplete" class="btn btn-warning"
+                            invisible="not is_done"
+                            icon="fa-times"/>
+                </header>
                 <sheet>
-                    <group>
-                        <field name="name" readonly="1"/>
-                        <field name="description"/>
-                        <field name="section_id"/>
-                        <field name="is_done" widget="boolean_toggle"/>
-                        <field name="notes"/>
-                    </group>
-                    <group string="Images">
-                        <field name="before_image" widget="image"/>
-                        <field name="after_image" widget="image"/>
-                    </group>
+                    <div class="oe_title text-center mb-4">
+                        <h2 class="text-primary"><field name="name" readonly="1"/></h2>
+                        <div class="badge badge-lg" t-attf-class="badge-#{is_done and 'success' or 'warning'}">
+                            <field name="is_done" widget="boolean_toggle"/>
+                        </div>
+                    </div>
+
+                    <!-- Task Details -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fa fa-info-circle me-2"></i>Task Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label class="form-label text-muted">Description</label>
+                                    <div class="form-control-plaintext"><field name="description" readonly="1"/></div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">Section</label>
+                                    <div class="form-control-plaintext"><field name="section_id" readonly="1"/></div>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label text-muted">Duration</label>
+                                    <div class="form-control-plaintext"><field name="duration" readonly="1"/> hours</div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label text-muted">Tools/Materials</label>
+                                    <div class="form-control-plaintext"><field name="tools_materials" readonly="1"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Before Image -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="fa fa-camera me-2"></i>Before Image</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <field name="before_image" widget="image" class="img-fluid" style="max-width: 100%; height: auto;"/>
+                            <div class="mt-3">
+                                <button type="action" name="%(action_upload_before_image)d" class="btn btn-outline-warning">
+                                    <i class="fa fa-upload me-2"></i>Upload Before Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- After Image -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fa fa-camera me-2"></i>After Image</h5>
+                        </div>
+                        <div class="card-body text-center">
+                            <field name="after_image" widget="image" class="img-fluid" style="max-width: 100%; height: auto;"/>
+                            <div class="mt-3">
+                                <button type="action" name="%(action_upload_after_image)d" class="btn btn-outline-success">
+                                    <i class="fa fa-upload me-2"></i>Upload After Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Technician Notes -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fa fa-sticky-note me-2"></i>Technician Notes</h5>
+                        </div>
+                        <div class="card-body">
+                            <field name="notes" placeholder="Add your notes about this task..."/>
+                        </div>
+                    </div>
                 </sheet>
             </form>
         </field>
     </record>
 
+    <!-- Enhanced Task Tree View for Mobile -->
+    <record id="view_workorder_task_mobile_tree" model="ir.ui.view">
+        <field name="name">maintenance.workorder.task.mobile.tree</field>
+        <field name="model">maintenance.workorder.task</field>
+        <field name="priority" eval="15"/>
+        <field name="arch" type="xml">
+            <tree string="Tasks (Mobile)" class="o_mobile_list">
+                <field name="name"/>
+                <field name="section_id"/>
+                <field name="is_done" widget="boolean_toggle"/>
+                <field name="duration"/>
+                <field name="before_image" widget="image" class="oe_avatar"/>
+                <field name="after_image" widget="image" class="oe_avatar"/>
+            </tree>
+        </field>
+    </record>
+
     <!-- Action for Mobile Work Orders -->
-    <record id="action_maintenance_workorder_mobile_list" model="ir.actions.act_window">
-        <field name="name">Work Orders (Mobile List)</field>
+    <record id="action_maintenance_workorder_mobile_enhanced" model="ir.actions.act_window">
+        <field name="name">Work Orders (Mobile Enhanced)</field>
         <field name="res_model">maintenance.workorder</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_workorder_mobile_list"/>
+        <field name="view_id" ref="view_workorder_mobile_enhanced_form"/>
         <field name="context">{}</field>
     </record>
 
-    <!-- Menu item referencing the mobile list action -->
-    <menuitem id="menu_maintenance_workorder_mobile"
-              name="Work Orders (Mobile)"
+    <!-- Action for Mobile Tasks -->
+    <record id="action_maintenance_workorder_task_mobile" model="ir.actions.act_window">
+        <field name="name">Tasks (Mobile)</field>
+        <field name="res_model">maintenance.workorder.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_workorder_task_mobile_tree"/>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu item for enhanced mobile work orders -->
+    <menuitem id="menu_maintenance_workorder_mobile_enhanced"
+              name="Work Orders (Mobile Enhanced)"
               parent="menu_maintenance_operations"
-              action="action_maintenance_workorder_mobile_list"
-              sequence="20"
+              action="action_maintenance_workorder_mobile_enhanced"
+              sequence="15"
+              groups="base.group_user"/>
+
+    <!-- Menu item for mobile tasks -->
+    <menuitem id="menu_maintenance_workorder_task_mobile"
+              name="Tasks (Mobile)"
+              parent="menu_maintenance_operations"
+              action="action_maintenance_workorder_task_mobile"
+              sequence="16"
               groups="base.group_user"/>
 </odoo>

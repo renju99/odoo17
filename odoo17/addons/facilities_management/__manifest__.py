@@ -84,6 +84,7 @@ Features:
         'views/maintenance_workorder_permit_views.xml',
         'views/maintenance_workorder_kanban.xml',
         'views/maintenance_workorder_mobile_form.xml',
+        'views/maintenance_workorder_task_actions.xml',
         'views/maintenance_job_plan_views.xml',
         'views/maintenance_report_views.xml',
         'views/maintenance_workorder_calendar_views.xml',
@@ -116,9 +117,11 @@ Features:
         'web.assets_backend': [
             'facilities_management/static/src/css/facilities.css',
             'facilities_management/static/src/css/portal.css',
+            'facilities_management/static/src/css/mobile_workorder.css',
             'facilities_management/static/src/js/dashboard_widgets.js',
             'facilities_management/static/src/js/iot_monitoring.js',
             'facilities_management/static/src/js/mobile_scanner.js',
+            'facilities_management/static/src/js/mobile_workorder.js',
             'facilities_management/static/src/xml/*.xml',
         ],
         'web.assets_frontend': [

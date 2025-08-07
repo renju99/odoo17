@@ -603,6 +603,18 @@ class MaintenanceWorkOrder(models.Model):
         })
         self.message_post(body=_("Work order completed by %s") % self.env.user.name)
 
+    def action_stop_work(self):
+        """Stop work and record the stop time"""
+        self.ensure_one()
+        if self.state != 'in_progress':
+            raise UserError(_("Only work orders in progress can be stopped."))
+        
+        self.write({
+            'state': 'on_hold',
+            'actual_end_date': fields.Datetime.now()
+        })
+        self.message_post(body=_("Work stopped by %s") % self.env.user.name)
+
     def action_cancel(self):
         self.ensure_one()
         self.write({
