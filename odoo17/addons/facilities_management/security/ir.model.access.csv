@@ -43,3 +43,9 @@ access_facilities_asset_disposal_user,facilities.asset.disposal.user,model_facil
 access_facilities_sla_user,facilities.sla.user,model_facilities_sla,base.group_user,1,1,1,1
 access_facilities_sla_dashboard_user,facilities.sla.dashboard.user,model_facilities_sla_dashboard,base.group_user,1,1,1,1
 access_maintenance_kpi_dashboard_user,maintenance.kpi.dashboard.user,model_maintenance_kpi_dashboard,base.group_user,1,1,1,1
+access_maintenance_escalation_log_user,maintenance.escalation.log.user,model_maintenance_escalation_log,base.group_user,1,1,1,1
+access_facilities_asset_sensor_user,facilities.asset.sensor.user,model_facilities_asset_sensor,base.group_user,1,1,1,1
+access_facilities_asset_sensor_data_user,facilities.asset.sensor.data.user,model_facilities_asset_sensor_data,base.group_user,1,1,1,1
+access_facilities_asset_threshold_user,facilities.asset.threshold.user,model_facilities_asset_threshold,base.group_user,1,1,1,1
+access_facilities_asset_scan_wizard_user,facilities.asset.scan.wizard.user,model_facilities_asset_scan_wizard,base.group_user,1,1,1,1
+access_facilities_import_wizard_user,facilities.import.wizard.user,model_facilities_import_wizard,base.group_user,1,1,1,1
