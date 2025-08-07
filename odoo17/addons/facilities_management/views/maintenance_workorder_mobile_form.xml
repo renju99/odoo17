@@ -71,11 +71,11 @@
                         <div class="col-6">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body text-center">
-                                    <h6 class="card-title text-muted">Response SLA</h6>
+                                    <h6 class="card-title text-dark">Response SLA</h6>
                                     <div class="badge badge-lg" t-attf-class="badge-#{sla_response_status == 'on_time' and 'success' or sla_response_status == 'at_risk' and 'warning' or 'danger'}">
                                         <field name="sla_response_status" readonly="1"/>
                                     </div>
-                                    <small class="text-muted d-block mt-1">
+                                    <small class="text-dark d-block mt-1">
                                         <field name="sla_response_deadline" readonly="1"/>
                                     </small>
                                 </div>
@@ -84,11 +84,11 @@
                         <div class="col-6">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-body text-center">
-                                    <h6 class="card-title text-muted">Resolution SLA</h6>
+                                    <h6 class="card-title text-dark">Resolution SLA</h6>
                                     <div class="badge badge-lg" t-attf-class="badge-#{sla_resolution_status == 'on_time' and 'success' or sla_resolution_status == 'at_risk' and 'warning' or 'danger'}">
                                         <field name="sla_resolution_status" readonly="1"/>
                                     </div>
-                                    <small class="text-muted d-block mt-1">
+                                    <small class="text-dark d-block mt-1">
                                         <field name="sla_resolution_deadline" readonly="1"/>
                                     </small>
                                 </div>
@@ -103,165 +103,118 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-12 mb-3">
-                                    <label class="form-label text-muted" for="asset_id">Asset</label>
-                                    <div class="form-control-plaintext"><field name="asset_id" readonly="1"/></div>
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">Asset:</label>
+                                    <p class="text-dark"><field name="asset_id" readonly="1"/></p>
                                 </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="building_id">Building</label>
-                                    <div class="form-control-plaintext"><field name="building_id" readonly="1"/></div>
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">Building:</label>
+                                    <p class="text-dark"><field name="building_id" readonly="1"/></p>
                                 </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="room_id">Room</label>
-                                    <div class="form-control-plaintext"><field name="room_id" readonly="1"/></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">Facility:</label>
+                                    <p class="text-dark"><field name="facility_id" readonly="1"/></p>
+                                </div>
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">Room:</label>
+                                    <p class="text-dark"><field name="room_id" readonly="1"/></p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Work Timing -->
+                    <!-- Work Order Details -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-info text-white">
-                            <h5 class="mb-0"><i class="fa fa-clock-o me-2"></i>Work Timing</h5>
+                            <h5 class="mb-0"><i class="fa fa-info-circle me-2"></i>Work Order Details</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="start_date">Start Date</label>
-                                    <div class="form-control-plaintext"><field name="start_date" readonly="1"/></div>
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">Description:</label>
+                                    <p class="text-dark"><field name="description" readonly="1"/></p>
                                 </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="end_date">End Date</label>
-                                    <div class="form-control-plaintext"><field name="end_date" readonly="1"/></div>
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">Technician:</label>
+                                    <p class="text-dark"><field name="technician_id" readonly="1"/></p>
                                 </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="actual_start_date">Actual Start</label>
-                                    <div class="form-control-plaintext"><field name="actual_start_date" readonly="1"/></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">Start Date:</label>
+                                    <p class="text-dark"><field name="start_date" readonly="1"/></p>
                                 </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="actual_end_date">Actual End</label>
-                                    <div class="form-control-plaintext"><field name="actual_end_date" readonly="1"/></div>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label text-muted" for="actual_duration">Duration</label>
-                                    <div class="form-control-plaintext"><field name="actual_duration" readonly="1"/> hours</div>
+                                <div class="col-6">
+                                    <label class="text-dark font-weight-bold">End Date:</label>
+                                    <p class="text-dark"><field name="end_date" readonly="1"/></p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Assignment Information -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-success text-white">
-                            <h5 class="mb-0"><i class="fa fa-users me-2"></i>Assignment</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <label class="form-label text-muted" for="technician_id">Technician</label>
-                                    <div class="form-control-plaintext"><field name="technician_id" readonly="1"/></div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label text-muted" for="maintenance_team_id">Team</label>
-                                    <div class="form-control-plaintext"><field name="maintenance_team_id" readonly="1"/></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Description -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0"><i class="fa fa-file-text me-2"></i>Description</h5>
-                        </div>
-                        <div class="card-body">
-                            <field name="description" readonly="1"/>
-                        </div>
-                    </div>
-
-                    <!-- Tasks Section -->
+                    <!-- Tasks Section - Only for Planned Work Orders -->
                     <div class="card border-0 shadow-sm mb-4" invisible="work_order_type != 'preventive'">
-                        <div class="card-header bg-secondary text-white">
-                            <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>Tasks to Complete</h5>
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>Maintenance Tasks</h5>
                         </div>
                         <div class="card-body">
-                            <button name="action_open_job_plan_tasks_mobile"
-                                    string="View Tasks"
-                                    type="object"
-                                    class="btn btn-outline-secondary btn-lg w-100"
-                                    icon="fa-tasks"/>
-                        </div>
-                    </div>
-
-                    <!-- Work Done Section -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-dark text-white">
-                            <h5 class="mb-0"><i class="fa fa-edit me-2"></i>Work Done</h5>
-                        </div>
-                        <div class="card-body">
-                            <field name="work_done" placeholder="Describe the work completed..."/>
-                        </div>
-                    </div>
-
-                    <!-- Footer Actions -->
-                    <footer class="d-flex flex-wrap gap-2 justify-content-center">
-                        <button name="action_mark_done" string="Mark as Done" type="object" class="btn btn-success btn-lg"
-                                invisible="status == 'done'"
-                                icon="fa-check-circle"/>
-                        <button name="action_cancel" string="Cancel" type="object" class="btn btn-danger btn-lg"
-                                invisible="status == 'cancelled'"
-                                icon="fa-times"/>
-                    </footer>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Enhanced Task Form with Before/After Images -->
-    <record id="view_workorder_task_mobile_form" model="ir.ui.view">
-        <field name="name">maintenance.workorder.task.mobile.form</field>
-        <field name="model">maintenance.workorder.task</field>
-        <field name="priority" eval="15"/>
-        <field name="arch" type="xml">
-            <form string="Task Details (Mobile)" class="o_mobile_form">
-                <header>
-                    <button name="toggle_task_completion" type="object" string="Mark Complete" class="btn btn-success"
-                            invisible="is_done"
-                            icon="fa-check"/>
-                    <button name="toggle_task_completion" type="object" string="Mark Incomplete" class="btn btn-warning"
-                            invisible="not is_done"
-                            icon="fa-times"/>
-                </header>
-                <sheet>
-                    <div class="oe_title text-center mb-4">
-                        <h2 class="text-primary"><field name="name" readonly="1"/></h2>
-                        <div class="badge badge-lg" t-attf-class="badge-#{is_done and 'success' or 'warning'}">
-                            <field name="is_done" widget="boolean_toggle"/>
-                        </div>
-                    </div>
-
-                    <!-- Task Details -->
-                    <div class="card border-0 shadow-sm mb-4">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="fa fa-info-circle me-2"></i>Task Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 mb-3">
-                                    <label class="form-label text-muted" for="description">Description</label>
-                                    <div class="form-control-plaintext"><field name="description" readonly="1"/></div>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="section_id">Section</label>
-                                    <div class="form-control-plaintext"><field name="section_id" readonly="1"/></div>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label text-muted" for="duration">Duration</label>
-                                    <div class="form-control-plaintext"><field name="duration" readonly="1"/> hours</div>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label text-muted" for="tools_materials">Tools/Materials</label>
-                                    <div class="form-control-plaintext"><field name="tools_materials" readonly="1"/></div>
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle me-2"></i>
+                                <strong>Tasks are auto-generated from the job plan linked to this maintenance schedule.</strong>
+                            </div>
+                            
+                            <!-- Tasks List -->
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th class="text-white">Task</th>
+                                            <th class="text-white">Section</th>
+                                            <th class="text-white">Status</th>
+                                            <th class="text-white">Duration</th>
+                                            <th class="text-white">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="workorder_task_ids" t-as="task">
+                                            <td class="text-dark">
+                                                <strong><t t-esc="task.name"/></strong>
+                                                <br/>
+                                                <small class="text-muted"><t t-esc="task.description"/></small>
+                                            </td>
+                                            <td class="text-dark"><t t-esc="task.section_id.name"/></td>
+                                            <td>
+                                                <span class="badge" t-attf-class="badge-#{task.is_done and 'success' or 'warning'}">
+                                                    <t t-esc="task.is_done and 'Completed' or 'Pending'"/>
+                                                </span>
+                                            </td>
+                                            <td class="text-dark"><t t-esc="task.duration"/> hours</td>
+                                            <td>
+                                                <button type="object" name="action_toggle_task_completion" 
+                                                        class="btn btn-sm" 
+                                                        t-attf-class="btn-#{task.is_done and 'outline-success' or 'success'}"
+                                                        t-att-args="(task.id,)"
+                                                        t-att-data-task-id="task.id">
+                                                    <i class="fa" t-attf-class="fa-#{task.is_done and 'check' or 'play'}"></i>
+                                                    <t t-esc="task.is_done and 'Completed' or 'Mark Done'"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Task Progress -->
+                            <div class="mt-3">
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" 
+                                         t-attf-style="width: #{len([t for t in workorder_task_ids if t.is_done]) / len(workorder_task_ids) * 100}%">
+                                        <span class="text-white">
+                                            <t t-esc="len([t for t in workorder_task_ids if t.is_done])"/> / <t t-esc="len(workorder_task_ids)"/> Tasks Completed
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -311,23 +264,6 @@
         </field>
     </record>
 
-    <!-- Enhanced Task Tree View for Mobile -->
-    <record id="view_workorder_task_mobile_tree" model="ir.ui.view">
-        <field name="name">maintenance.workorder.task.mobile.tree</field>
-        <field name="model">maintenance.workorder.task</field>
-        <field name="priority" eval="15"/>
-        <field name="arch" type="xml">
-            <tree string="Tasks (Mobile)" class="o_mobile_list">
-                <field name="name"/>
-                <field name="section_id"/>
-                <field name="is_done" widget="boolean_toggle"/>
-                <field name="duration"/>
-                <field name="before_image" widget="image" class="oe_avatar"/>
-                <field name="after_image" widget="image" class="oe_avatar"/>
-            </tree>
-        </field>
-    </record>
-
     <!-- Action for Mobile Work Orders -->
     <record id="action_maintenance_workorder_mobile_enhanced" model="ir.actions.act_window">
         <field name="name">Work Orders (Mobile Enhanced)</field>
@@ -337,28 +273,11 @@
         <field name="context">{}</field>
     </record>
 
-    <!-- Action for Mobile Tasks -->
-    <record id="action_maintenance_workorder_task_mobile" model="ir.actions.act_window">
-        <field name="name">Tasks (Mobile)</field>
-        <field name="res_model">maintenance.workorder.task</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_workorder_task_mobile_tree"/>
-        <field name="context">{}</field>
-    </record>
-
     <!-- Menu item for enhanced mobile work orders -->
     <menuitem id="menu_maintenance_workorder_mobile_enhanced"
               name="Work Orders (Mobile Enhanced)"
               parent="menu_maintenance_operations"
               action="action_maintenance_workorder_mobile_enhanced"
               sequence="15"
-              groups="base.group_user"/>
-
-    <!-- Menu item for mobile tasks -->
-    <menuitem id="menu_maintenance_workorder_task_mobile"
-              name="Tasks (Mobile)"
-              parent="menu_maintenance_operations"
-              action="action_maintenance_workorder_task_mobile"
-              sequence="16"
               groups="base.group_user"/>
 </odoo>
