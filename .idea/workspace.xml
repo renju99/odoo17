@@ -4,114 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0762dc39-cf7d-49d9-98b6-92028962759f" name="Changes" comment="&#10;commit">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ASSET_TYPE_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_ASSETS_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_FIELD_FIX_INSTRUCTIONS.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_MODEL_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_MODULE_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_REPORT_ACTION_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_REPORT_BLANK_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_REPORT_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_REPORT_GUIDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_TEMPLATE_NONETYPE_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_TEMPLATE_SECURITY_FIX.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ESG_WIZARD_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FINAL_ESG_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/FIX_INSTRUCTIONS.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MODULE_SEPARATION_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PARENT_ID_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SLA_COMPREHENSIVE_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SLA_DASHBOARD_BLANK_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SLA_FIXES_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SLA_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SLA_REPORT_FIX_SUMMARY.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/asset_disposal_wizard_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deploy_esg_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/facility_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/fix_action_maintenance_workorder.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/.tx/config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/Function:11:24" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/Function:18:12" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/Function:24:12" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/Function:41:12" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/Function:41:26" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/__manifest__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/data/esg_data.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/data/esg_demo.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/enhanced_esg_dashboard.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_analytics.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_asset.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_emission.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_employee_community.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_framework.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_gender_parity.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_initiative.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_offset.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_pay_gap.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/esg_target.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/models/purchase_order.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/report/esg_report_templates.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/report/esg_reports.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/security/esg_security.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/security/ir.model.access.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/static/description/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/static/src/css/esg_dashboard.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/static/src/js/esg_advanced_dashboard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/static/src/js/esg_dashboard.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/static/src/xml/esg_advanced_dashboard.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/static/src/xml/esg_dashboard.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/enhanced_esg_wizard_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_analytics_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_asset_menus.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_asset_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_dashboard_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_emission_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_employee_community_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_framework_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_gender_parity_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_initiative_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_menu_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_offset_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_pay_gap_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_report_menus.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/views/esg_target_views.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/wizard/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/esg_reporting/wizard/esg_report_wizard.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/point_of_sale/tools/posbox/overwrite_before_init/home/pi/.inputrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/point_of_sale/tools/posbox/overwrite_before_init/home/pi/.vimrc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/point_of_sale/tools/posbox/overwrite_before_init/home/pi/.xsession" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/odoo.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/requirements_fixed.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/simple_test.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/simple_validation.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test 2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_report.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_report_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_report_debug.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_report_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_report_types.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_template_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_esg_wizard_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_manifest_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_model_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_parent_id_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_sla_comprehensive_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_sla_dashboard_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_sla_fields.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_sla_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_sla_fix_specific.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_sla_report_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_sla_syntax.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_template_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/validate_esg_fix.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/validate_qweb.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/validate_xml.py" beforeDir="false" />
+    <list default="true" id="0762dc39-cf7d-49d9-98b6-92028962759f" name="Changes" comment="initial commit">
+      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/__manifest__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/models/maintenance_workorder_task.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/security/ir.model.access.csv" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/security/ir.model.access.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/maintenance_workorder_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/maintenance_workorder_views.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -319,9 +216,9 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/odoo17" />
     </ignored-roots>
-    <MESSAGE value="initial commit" />
     <MESSAGE value="commit" />
     <MESSAGE value="&#10;commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="&#10;commit" />
+    <MESSAGE value="initial commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
   </component>
 </project>
