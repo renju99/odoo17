@@ -368,7 +368,33 @@ export class WebsocketWorker {
      * @param {MessageEvent} messageEv
      */
     _onWebsocketMessage(messageEv) {
-        const notifications = JSON.parse(messageEv.data);
+        // Check for empty or null messages
+        if (!messageEv.data || messageEv.data === '') {
+            if (this.isDebug) {
+                console.warn(
+                    `%c${new Date().toLocaleString()} - [onMessage] Empty message received`,
+                    "color: #f90; font-weight: bold;"
+                );
+            }
+            return; // Skip processing empty messages
+        }
+
+        let notifications;
+        try {
+            notifications = JSON.parse(messageEv.data);
+        } catch (error) {
+            if (this.isDebug) {
+                console.error(
+                    `%c${new Date().toLocaleString()} - [onMessage] JSON parse error:`,
+                    "color: #f00; font-weight: bold;",
+                    error,
+                    "Raw data:",
+                    messageEv.data
+                );
+            }
+            return; // Skip processing invalid JSON
+        }
+
         if (this.isDebug) {
             console.debug(
                 `%c${new Date().toLocaleString()} - [onMessage]`,
@@ -376,6 +402,19 @@ export class WebsocketWorker {
                 notifications
             );
         }
+
+        // Validate notifications structure
+        if (!Array.isArray(notifications) || notifications.length === 0) {
+            if (this.isDebug) {
+                console.warn(
+                    `%c${new Date().toLocaleString()} - [onMessage] Invalid notifications format:`,
+                    "color: #f90; font-weight: bold;",
+                    notifications
+                );
+            }
+            return;
+        }
+
         this.lastNotificationId = notifications[notifications.length - 1].id;
         this.broadcast("notification", notifications);
     }

@@ -316,6 +316,10 @@ class Websocket:
                 if self.__socket in readables:
                     message = self._process_next_message()
                     if message is not None:
+                        # Additional validation for empty messages
+                        if isinstance(message, str) and message.strip() == '':
+                            _logger.warning("Received empty message from WebSocket, skipping")
+                            continue
                         yield message
             except Exception as exc:
                 self._handle_transport_error(exc)
@@ -803,14 +807,21 @@ class WebsocketRequest:
         _wsrequest_stack.pop()
 
     def serve_websocket_message(self, message):
+        # Validate message is not empty or None
+        if not message or message.strip() == '':
+            _logger.warning("Received empty WebSocket message, skipping processing")
+            return
+            
         try:
             jsonrequest = json.loads(message)
             event_name = jsonrequest['event_name']  # mandatory
         except KeyError as exc:
+            _logger.error(f"Missing key {exc.args[0]!r} in WebSocket request: {message}")
             raise InvalidWebsocketRequest(
                 f'Key {exc.args[0]!r} is missing from request'
             ) from exc
         except ValueError as exc:
+            _logger.error(f"Invalid JSON in WebSocket message: {message}, error: {exc}")
             raise InvalidWebsocketRequest(
                 f'Invalid JSON data, {exc.args[0]}'
             ) from exc
