@@ -623,6 +623,23 @@ class MaintenanceWorkOrder(models.Model):
         })
         self.message_post(body=_("Work order cancelled by %s") % self.env.user.name)
 
+    def action_toggle_task_completion(self, task_id):
+        """Toggle task completion from mobile view"""
+        self.ensure_one()
+        task = self.env['maintenance.workorder.task'].browse(task_id)
+        if task and task.workorder_id == self:
+            task.toggle_task_completion()
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Task Updated'),
+                    'message': _('Task "%s" marked as %s') % (task.name, task.is_done and 'completed' or 'pending'),
+                    'type': 'success',
+                }
+            }
+        return False
+
     @api.depends('section_ids.task_ids.is_done', 'workorder_task_ids.is_done')
     def _compute_all_tasks_completed(self):
         for workorder in self:
