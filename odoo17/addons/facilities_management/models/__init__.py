@@ -87,19 +87,3 @@ def post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     env['facilities.sla'].create_default_sla_records()
     _logger.info("Ensured default SLA records exist after install/upgrade.")
-    
-    # Fix maintenance work order action if it exists
-    try:
-        action = env.ref('facilities_management.action_maintenance_workorder', raise_if_not_found=False)
-        if action:
-            # Update the action to reference the correct views
-            action.write({
-                'view_ids': [(5, 0, 0),
-                            (0, 0, {'view_mode': 'kanban', 'view_id': env.ref('facilities_management.view_maintenance_workorder_kanban').id}),
-                            (0, 0, {'view_mode': 'tree', 'view_id': env.ref('facilities_management.view_maintenance_workorder_tree').id}),
-                            (0, 0, {'view_mode': 'form', 'view_id': env.ref('facilities_management.view_workorder_form').id})],
-                'search_view_id': env.ref('facilities_management.view_maintenance_workorder_search').id,
-            })
-            _logger.info("Fixed maintenance work order action to reference correct views.")
-    except Exception as e:
-        _logger.warning(f"Failed to fix maintenance work order action: {e}")

@@ -45,7 +45,6 @@ Features:
         'data/space_booking_enhanced_data.xml',
         'data/iot_sensor_cron.xml',
         'data/asset_threshold_cron.xml',
-        'data/fix_maintenance_workorder_action.xml',
 
         # Reports
         'reports/maintenance_report.xml',
