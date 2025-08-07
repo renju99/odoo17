@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
+from datetime import datetime, date
 
 class AssetMaintenanceSchedule(models.Model):
     _name = 'asset.maintenance.schedule'
@@ -76,31 +77,109 @@ class AssetMaintenanceSchedule(models.Model):
         for rec in self:
             rec.workorder_count = len(rec.workorder_ids)
 
-    def action_generate_work_order(self):
-        """Generates a work order for the maintenance schedule."""
-        for schedule in self:
-            if not schedule.active:
-                raise UserError(_("Cannot generate a work order for an inactive schedule."))
-            if not schedule.next_maintenance_date:
-                raise UserError(_("Next maintenance date is not set for the schedule: %s.") % schedule.name)
+    def _generate_preventive_workorders(self):
+        """
+        Cron job method to automatically generate preventive maintenance work orders
+        for schedules that are due.
+        """
+        today = date.today()
+        
+        # Find all active preventive maintenance schedules that are due
+        due_schedules = self.search([
+            ('active', '=', True),
+            ('maintenance_type', '=', 'preventive'),
+            ('next_maintenance_date', '<=', today),
+            ('status', 'in', ['planned', 'done'])
+        ])
+        
+        generated_count = 0
+        for schedule in due_schedules:
+            try:
+                # Generate work order with tasks from job plan
+                work_order = self._create_workorder_with_tasks(schedule)
+                if work_order:
+                    generated_count += 1
+                    schedule.message_post(
+                        body=_("Automatically generated work order %s with %s tasks from job plan.") % 
+                        (work_order.name, len(work_order.workorder_task_ids))
+                    )
+            except Exception as e:
+                schedule.message_post(
+                    body=_("Failed to generate work order: %s") % str(e)
+                )
+        
+        return generated_count
 
-            # Create the work order
-            work_order_vals = {
-                'name': _('New'),
-                'asset_id': schedule.asset_id.id,
-                'schedule_id': schedule.id,
-                'work_order_type': schedule.maintenance_type,
-                'start_date': schedule.next_maintenance_date,
-                'job_plan_id': schedule.job_plan_id.id if schedule.job_plan_id else False,
+    def _create_workorder_with_tasks(self, schedule):
+        """
+        Create a work order and copy tasks from the associated job plan.
+        """
+        if not schedule.active:
+            raise UserError(_("Cannot generate a work order for an inactive schedule."))
+        if not schedule.next_maintenance_date:
+            raise UserError(_("Next maintenance date is not set for the schedule: %s.") % schedule.name)
+
+        # Create the work order
+        work_order_vals = {
+            'name': _('New'),
+            'asset_id': schedule.asset_id.id,
+            'schedule_id': schedule.id,
+            'work_order_type': schedule.maintenance_type,
+            'maintenance_type': schedule.maintenance_type,
+            'start_date': schedule.next_maintenance_date,
+            'job_plan_id': schedule.job_plan_id.id if schedule.job_plan_id else False,
+            'description': _('Preventive maintenance work order generated from schedule: %s') % schedule.name,
+        }
+        work_order = self.env['maintenance.workorder'].create(work_order_vals)
+
+        # Copy tasks from job plan if available
+        if schedule.job_plan_id:
+            self._copy_job_plan_tasks_to_workorder(schedule.job_plan_id, work_order)
+
+        # Update the last maintenance date and compute the next maintenance date
+        schedule.last_maintenance_date = schedule.next_maintenance_date
+        schedule._compute_next_maintenance_date()
+
+        return work_order
+
+    def _copy_job_plan_tasks_to_workorder(self, job_plan, work_order):
+        """
+        Copy tasks from job plan sections to work order sections and tasks.
+        """
+        for job_section in job_plan.section_ids:
+            # Create work order section
+            work_section_vals = {
+                'name': job_section.name,
+                'sequence': job_section.sequence,
+                'workorder_id': work_order.id,
             }
-            work_order = self.env['maintenance.workorder'].create(work_order_vals)
+            work_section = self.env['maintenance.workorder.section'].create(work_section_vals)
+            
+            # Copy tasks from job plan section to work order section
+            for job_task in job_section.task_ids:
+                work_task_vals = {
+                    'workorder_id': work_order.id,
+                    'section_id': work_section.id,
+                    'name': job_task.name,
+                    'sequence': job_task.sequence,
+                    'description': job_task.description,
+                    'is_checklist_item': job_task.is_checklist_item,
+                    'duration': job_task.duration,
+                    'tools_materials': job_task.tools_materials,
+                    'responsible_id': job_task.responsible_id.id if job_task.responsible_id else False,
+                    'product_id': job_task.product_id.id if job_task.product_id else False,
+                    'quantity': job_task.quantity,
+                    'uom_id': job_task.uom_id.id if job_task.uom_id else False,
+                    'frequency_type': job_task.frequency_type,
+                }
+                self.env['maintenance.workorder.task'].create(work_task_vals)
 
-            # Update the last maintenance date and compute the next maintenance date
-            schedule.last_maintenance_date = schedule.next_maintenance_date
-            schedule._compute_next_maintenance_date()
-
-            # Log the creation
-            schedule.message_post(body=_("Work order %s has been generated.") % work_order.name)
+    def action_generate_work_order(self):
+        """Generates a work order for the maintenance schedule with tasks from job plan."""
+        for schedule in self:
+            work_order = self._create_workorder_with_tasks(schedule)
+            schedule.message_post(body=_("Work order %s has been generated with %s tasks.") % 
+                               (work_order.name, len(work_order.workorder_task_ids)))
 
     def toggle_active(self):
         """Toggle the active state of the maintenance schedule"""
