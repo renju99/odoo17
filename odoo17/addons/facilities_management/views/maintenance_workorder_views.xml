@@ -41,6 +41,9 @@
                             invisible="picking_count == 0">
                             <field name="picking_count" widget="statinfo" string="Parts Transfers"/>
                         </button>
+                        <button class="oe_stat_button" name="action_view_kpi_dashboard" type="object" icon="fa-dashboard">
+                            <field name="total_cost" widget="statinfo" string="Total Cost"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
@@ -54,7 +57,9 @@
                             <field name="building_id" readonly="1"/>
                             <field name="floor_id" readonly="1"/>
                             <field name="work_order_type"/>
+                            <field name="maintenance_type"/>
                             <field name="priority"/>
+                            <field name="asset_criticality"/>
                             <field name="schedule_id"
                                 domain="[('active','=',True), ('asset_id','=',asset_id)]"
                                 context="{'default_asset_id': asset_id}"/>
@@ -64,14 +69,31 @@
                                 help="Select a Job Plan to automatically populate tasks for this work order."/>
                             <field name="service_type"/>
                             <field name="maintenance_team_id"/>
+                            <field name="team_id"/>
                         </group>
                         <group string="Personnel &amp; Scheduled Dates">
                             <field name="technician_id"/>
+                            <field name="technician_ids" widget="many2many_tags"/>
                             <field name="supervisor_id" readonly="1"/>
                             <field name="manager_id" readonly="1"/>
                             <field name="start_date"/>
+                            <field name="start_time"/>
                             <field name="end_date"/>
+                            <field name="end_time"/>
+                            <field name="estimated_duration"/>
                         </group>
+                    </group>
+                    <group string="SLA &amp; Performance" colspan="2">
+                        <field name="sla_id"/>
+                        <field name="sla_deadline" readonly="1"/>
+                        <field name="sla_status" widget="badge"/>
+                        <field name="sla_response_deadline" readonly="1"/>
+                        <field name="sla_resolution_deadline" readonly="1"/>
+                        <field name="sla_response_status" widget="badge"/>
+                        <field name="sla_resolution_status" widget="badge"/>
+                        <field name="mttr"/>
+                        <field name="first_time_fix"/>
+                        <field name="downtime_hours"/>
                     </group>
                     <group string="Approval Details" colspan="2">
                         <field name="submitted_by_id" readonly="1"/>
@@ -80,17 +102,27 @@
                         <field name="escalation_deadline" readonly="1"/>
                         <field name="escalation_to_id" readonly="1"/>
                         <field name="escalation_count" readonly="1"/>
+                        <field name="escalation_triggered"/>
+                        <field name="sla_escalation_level"/>
+                        <field name="next_escalation_time" readonly="1"/>
                     </group>
                     <group string="Actual Work Dates">
                         <field name="actual_start_date"/>
                         <field name="actual_end_date"/>
+                        <field name="actual_duration"/>
                     </group>
-                    <group string="SLA Information" colspan="2">
-                        <field name="sla_id"/>
-                        <field name="sla_response_deadline" readonly="1"/>
-                        <field name="sla_resolution_deadline" readonly="1"/>
-                        <field name="sla_response_status" widget="badge"/>
-                        <field name="sla_resolution_status" widget="badge"/>
+                    <group string="Cost Tracking">
+                        <field name="labor_cost"/>
+                        <field name="parts_cost"/>
+                        <field name="total_cost"/>
+                        <field name="cost_per_workorder"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group string="Skills &amp; Assignment">
+                        <field name="skill_requirements" widget="many2many_tags"/>
+                        <field name="skill_match_score" widget="percentage"/>
+                        <field name="auto_sla_assignment"/>
+                        <field name="sla_assignment_rule"/>
                     </group>
                     <notebook>
                         <page string="Description">
@@ -117,6 +149,13 @@
                                             <field name="before_image" widget="image"/>
                                             <field name="after_image" widget="image"/>
                                             <field name="notes"/>
+                                            <field name="duration"/>
+                                            <field name="tools_materials"/>
+                                            <field name="responsible_id"/>
+                                            <field name="product_id"/>
+                                            <field name="quantity"/>
+                                            <field name="uom_id"/>
+                                            <field name="frequency_type"/>
                                         </tree>
                                     </field>
                                 </form>
@@ -153,6 +192,20 @@
                                     <field name="status"/>
                                     <field name="issued_date"/>
                                     <field name="expiry_date"/>
+                                    <field name="requested_by_id"/>
+                                    <field name="approved_by_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Escalation History">
+                            <field name="escalation_history" readonly="1">
+                                <tree>
+                                    <field name="escalation_level"/>
+                                    <field name="trigger_time"/>
+                                    <field name="reason"/>
+                                    <field name="action_taken"/>
+                                    <field name="resolved_by_id"/>
+                                    <field name="resolution_time"/>
                                 </tree>
                             </field>
                         </page>
@@ -342,6 +395,180 @@
                     <filter string="Asset Criticality" name="group_criticality" context="{'group_by': 'asset_criticality'}"/>
                 </group>
             </search>
+        </field>
+    </record>
+
+    <!-- Work Order Assignment Views -->
+    <record id="view_maintenance_workorder_assignment_tree" model="ir.ui.view">
+        <field name="name">maintenance.workorder.assignment.tree</field>
+        <field name="model">maintenance.workorder.assignment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="workorder_id"/>
+                <field name="technician_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_maintenance_workorder_assignment_form" model="ir.ui.view">
+        <field name="name">maintenance.workorder.assignment.form</field>
+        <field name="model">maintenance.workorder.assignment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="workorder_id"/>
+                        <field name="technician_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Work Order Section Views -->
+    <record id="view_maintenance_workorder_section_tree" model="ir.ui.view">
+        <field name="name">maintenance.workorder.section.tree</field>
+        <field name="model">maintenance.workorder.section</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="workorder_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_maintenance_workorder_section_form" model="ir.ui.view">
+        <field name="name">maintenance.workorder.section.form</field>
+        <field name="model">maintenance.workorder.section</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                        <field name="workorder_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Tasks">
+                            <field name="task_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="is_done" widget="boolean_toggle"/>
+                                    <field name="duration"/>
+                                    <field name="responsible_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Work Order Task Views -->
+    <record id="view_maintenance_workorder_task_tree" model="ir.ui.view">
+        <field name="name">maintenance.workorder.task.tree</field>
+        <field name="model">maintenance.workorder.task</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="workorder_id"/>
+                <field name="section_id"/>
+                <field name="is_done" widget="boolean_toggle"/>
+                <field name="duration"/>
+                <field name="responsible_id"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_maintenance_workorder_task_form" model="ir.ui.view">
+        <field name="name">maintenance.workorder.task.form</field>
+        <field name="model">maintenance.workorder.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Task Information">
+                            <field name="workorder_id"/>
+                            <field name="section_id"/>
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="is_done" widget="boolean_toggle"/>
+                            <field name="is_checklist_item"/>
+                        </group>
+                        <group string="Execution Details">
+                            <field name="duration"/>
+                            <field name="tools_materials"/>
+                            <field name="responsible_id"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="frequency_type"/>
+                        </group>
+                    </group>
+                    <group string="Images &amp; Notes">
+                        <field name="before_image" widget="image"/>
+                        <field name="before_image_filename"/>
+                        <field name="after_image" widget="image"/>
+                        <field name="after_image_filename"/>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions for Related Models -->
+    <record id="action_maintenance_workorder_assignment" model="ir.actions.act_window">
+        <field name="name">Work Order Assignments</field>
+        <field name="res_model">maintenance.workorder.assignment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first work order assignment!
+            </p>
+            <p>
+                Manage technician assignments for work orders.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_maintenance_workorder_section" model="ir.actions.act_window">
+        <field name="name">Work Order Sections</field>
+        <field name="res_model">maintenance.workorder.section</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first work order section!
+            </p>
+            <p>
+                Organize work order tasks into sections.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_maintenance_workorder_task" model="ir.actions.act_window">
+        <field name="name">Work Order Tasks</field>
+        <field name="res_model">maintenance.workorder.task</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first work order task!
+            </p>
+            <p>
+                Manage individual tasks within work orders.
+            </p>
         </field>
     </record>
 </odoo>
