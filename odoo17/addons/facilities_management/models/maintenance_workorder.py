@@ -552,6 +552,38 @@ class MaintenanceWorkOrder(models.Model):
         })
         self.message_post(body=_("Work order started by %s") % self.env.user.name)
 
+    def action_quick_start(self):
+        """Quick start work order - bypass approval if needed"""
+        self.ensure_one()
+        if self.state not in ['draft', 'assigned']:
+            raise UserError(_("Work order must be in draft or assigned state to quick start."))
+        
+        # Auto-approve if in draft approval state
+        if self.approval_state == 'draft':
+            self.write({
+                'approval_state': 'approved',
+                'approved_by_id': self.env.user.id
+            })
+        
+        self.write({
+            'approval_state': 'in_progress',
+            'state': 'in_progress',
+            'actual_start_date': fields.Datetime.now()
+        })
+        self.message_post(body=_("Work order quick started by %s (bypassing approval)") % self.env.user.name)
+
+    def action_resume_work(self):
+        """Resume work order from on-hold state"""
+        self.ensure_one()
+        if self.state != 'on_hold':
+            raise UserError(_("Work order must be on hold to resume."))
+        
+        self.write({
+            'state': 'in_progress',
+            'approval_state': 'in_progress'
+        })
+        self.message_post(body=_("Work order resumed by %s") % self.env.user.name)
+
     def action_complete(self):
         self.ensure_one()
         if self.approval_state != 'in_progress':
