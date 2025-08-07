@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0762dc39-cf7d-49d9-98b6-92028962759f" name="Changes" comment="">
+    <list default="true" id="0762dc39-cf7d-49d9-98b6-92028962759f" name="Changes" comment="initial commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/__manifest__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/facility_asset_menus.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/facility_asset_menus.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

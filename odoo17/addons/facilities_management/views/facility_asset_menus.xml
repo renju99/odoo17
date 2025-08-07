@@ -528,8 +528,6 @@
               action="action_maintenance_workorder"
               sequence="10"/>
 
-
-
     <menuitem id="menu_maintenance_schedule"
               name="Schedules"
               parent="menu_maintenance_operations"
