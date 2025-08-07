@@ -143,5 +143,143 @@ for asset in non_compliant_assets:
         )
             </field>
         </record>
+
+        <!-- Work Order Security Rules -->
+        <record id="workorder_rule_user" model="ir.rule">
+            <field name="name">Work Orders: User Access</field>
+            <field name="model_id" ref="model_maintenance_workorder"/>
+            <field name="domain_force">['|', ('technician_id', '=', user.id), ('technician_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="workorder_rule_manager" model="ir.rule">
+            <field name="name">Work Orders: Manager Access</field>
+            <field name="model_id" ref="model_maintenance_workorder"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Work Order Task Security Rules -->
+        <record id="workorder_task_rule_user" model="ir.rule">
+            <field name="name">Work Order Tasks: User Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_task"/>
+            <field name="domain_force">['|', ('workorder_id.technician_id', '=', user.id), ('workorder_id.technician_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="workorder_task_rule_manager" model="ir.rule">
+            <field name="name">Work Order Tasks: Manager Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_task"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Work Order Assignment Security Rules -->
+        <record id="workorder_assignment_rule_user" model="ir.rule">
+            <field name="name">Work Order Assignments: User Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_assignment"/>
+            <field name="domain_force">['|', ('technician_id.user_id', '=', user.id), ('technician_id.user_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="workorder_assignment_rule_manager" model="ir.rule">
+            <field name="name">Work Order Assignments: Manager Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_assignment"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Work Order Section Security Rules -->
+        <record id="workorder_section_rule_user" model="ir.rule">
+            <field name="name">Work Order Sections: User Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_section"/>
+            <field name="domain_force">['|', ('workorder_id.technician_id', '=', user.id), ('workorder_id.technician_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="workorder_section_rule_manager" model="ir.rule">
+            <field name="name">Work Order Sections: Manager Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_section"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Work Order Part Line Security Rules -->
+        <record id="workorder_part_line_rule_user" model="ir.rule">
+            <field name="name">Work Order Part Lines: User Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_part_line"/>
+            <field name="domain_force">['|', ('workorder_id.technician_id', '=', user.id), ('workorder_id.technician_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="workorder_part_line_rule_manager" model="ir.rule">
+            <field name="name">Work Order Part Lines: Manager Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_part_line"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!-- Work Order Permit Security Rules -->
+        <record id="workorder_permit_rule_user" model="ir.rule">
+            <field name="name">Work Order Permits: User Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_permit"/>
+            <field name="domain_force">['|', ('workorder_id.technician_id', '=', user.id), ('workorder_id.technician_id', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="workorder_permit_rule_manager" model="ir.rule">
+            <field name="name">Work Order Permits: Manager Access</field>
+            <field name="model_id" ref="model_maintenance_workorder_permit"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_asset_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
     </data>
 </odoo>
