@@ -93,3 +93,29 @@ class MaintenanceWorkorderTask(models.Model):
             self.message_post(body=_("Task marked as completed by %s") % self.env.user.name)
         else:
             self.message_post(body=_("Task marked as incomplete by %s") % self.env.user.name)
+
+    def action_upload_before_image(self):
+        """Action to upload before image"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Upload Before Image'),
+            'res_model': 'maintenance.workorder.task',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'new',
+            'context': {'default_before_image': True},
+        }
+
+    def action_upload_after_image(self):
+        """Action to upload after image"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Upload After Image'),
+            'res_model': 'maintenance.workorder.task',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'new',
+            'context': {'default_after_image': True},
+        }

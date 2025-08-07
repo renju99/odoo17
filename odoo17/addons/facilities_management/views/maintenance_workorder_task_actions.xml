@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <!-- Action for uploading before image -->
+    <!-- Action for uploading before image - Commented out as we're using object methods instead -->
+    <!--
     <record id="action_upload_before_image" model="ir.actions.act_window">
         <field name="name">Upload Before Image</field>
         <field name="res_model">maintenance.workorder.task</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'default_before_image': True}</field>
+        <field name="binding_model_id" ref="model_maintenance_workorder_task"/>
     </record>
+    -->
 
-    <!-- Action for uploading after image -->
+    <!-- Action for uploading after image - Commented out as we're using object methods instead -->
+    <!--
     <record id="action_upload_after_image" model="ir.actions.act_window">
         <field name="name">Upload After Image</field>
         <field name="res_model">maintenance.workorder.task</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'default_after_image': True}</field>
+        <field name="binding_model_id" ref="model_maintenance_workorder_task"/>
     </record>
+    -->
 </odoo>
