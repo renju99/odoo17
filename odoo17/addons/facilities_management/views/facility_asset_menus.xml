@@ -484,23 +484,7 @@
               action="action_maintenance_workorder"
               sequence="10"/>
 
-    <menuitem id="menu_maintenance_workorder_tasks"
-              name="Work Order Tasks"
-              parent="menu_maintenance_operations"
-              action="action_maintenance_workorder_task"
-              sequence="15"/>
 
-    <menuitem id="menu_maintenance_workorder_assignments"
-              name="Work Order Assignments"
-              parent="menu_maintenance_operations"
-              action="action_maintenance_workorder_assignment"
-              sequence="17"/>
-
-    <menuitem id="menu_maintenance_workorder_sections"
-              name="Work Order Sections"
-              parent="menu_maintenance_operations"
-              action="action_maintenance_workorder_section"
-              sequence="19"/>
 
     <menuitem id="menu_maintenance_schedule"
               name="Schedules"
