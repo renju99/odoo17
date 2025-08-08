@@ -113,17 +113,23 @@
                         </div>
                     </div>
 
-                    <div class="card border-0 shadow-sm mb-4" invisible="not (work_order_type == 'preventive' and schedule_id and job_plan_id)">
+                    <div class="card border-0 shadow-sm mb-4" invisible="work_order_type != 'preventive'">
                         <div class="card-header bg-success text-white">
                             <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>Maintenance Tasks</h5>
                         </div>
                         <div class="card-body">
-                            <div class="alert alert-info" role="alert">
+                            <div class="alert alert-info" role="alert" invisible="schedule_id and job_plan_id">
                                 <i class="fa fa-info-circle me-2" title="Information"></i>
                                 <strong>Tasks are auto-generated from the job plan linked to this maintenance schedule.</strong>
                             </div>
+                            
+                            <div class="alert alert-warning" role="alert" invisible="schedule_id and job_plan_id">
+                                <i class="fa fa-exclamation-triangle me-2" title="Warning"></i>
+                                <strong>No job plan linked to this preventive workorder. Tasks are not available.</strong>
+                                <p class="mb-0">Please ensure the workorder has a linked maintenance schedule with a job plan to see tasks.</p>
+                            </div>
 
-                            <field name="workorder_task_ids" create="false">
+                            <field name="workorder_task_ids" create="false" invisible="not (schedule_id and job_plan_id)">
                                 <tree editable="bottom">
                                     <field name="section_id"/>
                                     <field name="name" readonly="1"/>

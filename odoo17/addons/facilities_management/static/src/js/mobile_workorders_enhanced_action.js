@@ -20,13 +20,13 @@ class MobileWorkordersEnhancedAction extends Component {
             const myWoPromise = this.orm.searchRead(
                 "maintenance.workorder",
                 ['|', ['technician_id.user_id', '=', this.user.userId], ['technician_ids.user_id', '=', this.user.userId]],
-                ["name", "asset_id", "building_id", "priority", "sla_response_status", "sla_resolution_status"]
+                ["name", "asset_id", "building_id", "priority", "sla_response_status", "sla_resolution_status", "status", "work_order_type"]
             );
 
             const allWoPromise = this.orm.searchRead(
                 "maintenance.workorder",
                 [],
-                ["name", "asset_id", "building_id", "priority", "sla_response_status", "sla_resolution_status"],
+                ["name", "asset_id", "building_id", "priority", "sla_response_status", "sla_resolution_status", "status", "work_order_type"],
                 { limit: 50 }
             );
 
@@ -42,7 +42,7 @@ class MobileWorkordersEnhancedAction extends Component {
             type: 'ir.actions.act_window',
             res_model: 'maintenance.workorder',
             res_id: workorderId,
-            views: [[false, 'form']],
+            views: [['facilities_management.view_workorder_mobile_enhanced_form', 'form']],
             target: 'current',
         });
     }

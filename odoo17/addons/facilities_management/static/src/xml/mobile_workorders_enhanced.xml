@@ -13,6 +13,12 @@
                   <t t-esc="wo.asset_id ? wo.asset_id[1] : ''"/>
                   <t t-if="wo.building_id"> • <t t-esc="wo.building_id[1]"/></t>
                 </small>
+                <div class="mt-1">
+                  <span class="badge" t-attf-class="badge bg-{{ wo.status === 'completed' ? 'success' : (wo.status === 'in_progress' ? 'warning' : (wo.status === 'cancelled' ? 'danger' : 'secondary')) }}" t-esc="wo.status"/>
+                  <t t-if="wo.work_order_type === 'preventive'">
+                    <span class="badge bg-info ms-1">Preventive</span>
+                  </t>
+                </div>
               </div>
               <div class="text-end">
                 <span class="badge bg-secondary me-1" t-esc="wo.priority"/>
@@ -40,6 +46,12 @@
                   <t t-esc="wo.asset_id ? wo.asset_id[1] : ''"/>
                   <t t-if="wo.building_id"> • <t t-esc="wo.building_id[1]"/></t>
                 </small>
+                <div class="mt-1">
+                  <span class="badge" t-attf-class="badge bg-{{ wo.status === 'completed' ? 'success' : (wo.status === 'in_progress' ? 'warning' : (wo.status === 'cancelled' ? 'danger' : 'secondary')) }}" t-esc="wo.status"/>
+                  <t t-if="wo.work_order_type === 'preventive'">
+                    <span class="badge bg-info ms-1">Preventive</span>
+                  </t>
+                </div>
               </div>
               <div class="text-end">
                 <span class="badge bg-secondary me-1" t-esc="wo.priority"/>
