@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0762dc39-cf7d-49d9-98b6-92028962759f" name="Changes" comment="workorder setup is done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/__manifest__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/facilities_management_export.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/static/src/js/mobile_workorders_enhanced_action.js" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/static/src/js/mobile_workorders_enhanced_action.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/static/src/xml/mobile_workorders_enhanced.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/static/src/xml/mobile_workorders_enhanced.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/facility_asset_menus.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/facility_asset_menus.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/maintenance_workorder_mobile_form.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo17/addons/facilities_management/views/maintenance_workorder_mobile_form.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,7 +220,15 @@
       <option name="project" value="LOCAL" />
       <updated>1754640786528</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="workorder setup is done">
+      <option name="closed" value="true" />
+      <created>1754666800817</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1754666800817</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

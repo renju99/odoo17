@@ -148,9 +148,6 @@
                                 <tree editable="bottom">
                                     <field name="product_id"/>
                                     <field name="quantity"/>
-                                    <field name="product_qty_in_hand" readonly="1"/>
-                                    <field name="uom_id" readonly="1"/>
-                                    <field name="notes"/>
                                 </tree>
                             </field>
                         </div>
@@ -174,12 +171,10 @@
 
                             <field name="workorder_task_ids" create="false" invisible="not (schedule_id and job_plan_id)">
                                 <tree editable="bottom">
-                                    <field name="workorder_status" invisible="1"/>
                                     <field name="section_id"/>
                                     <field name="name" readonly="1"/>
                                     <field name="description" readonly="1"/>
                                     <field name="is_done" widget="boolean_toggle" readonly="workorder_status != 'in_progress'"/>
-                                    <field name="duration"/>
                                     <field name="before_image" widget="image" optional="show" string="Before"/>
                                     <field name="after_image" widget="image" optional="show" string="After"/>
                                     <button name="toggle_task_completion" type="object" string="Toggle" class="btn btn-secondary btn-sm" invisible="workorder_status != 'in_progress'"/>
