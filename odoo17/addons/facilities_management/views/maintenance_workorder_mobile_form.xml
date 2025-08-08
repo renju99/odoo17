@@ -33,9 +33,6 @@
 
                     <group>
                         <group>
-                            <field name="status" widget="badge" readonly="1"/>
-                        </group>
-                        <group>
                             <field name="priority" widget="badge" readonly="1"/>
                         </group>
                     </group>
@@ -194,9 +191,6 @@
                                         </group>
                                         <field name="description" readonly="1"/>
                                         <field name="is_done" widget="boolean_toggle" readonly="workorder_status != 'in_progress'"/>
-                                        <group>
-                                            <field name="duration" readonly="1"/>
-                                        </group>
                                         <group string="Before/After Images" invisible="workorder_status != 'in_progress'">
                                             <field name="before_image" widget="image" string="Before Image" help="Upload image before starting the task"/>
                                             <field name="after_image" widget="image" string="After Image" help="Upload image after completing the task"/>
