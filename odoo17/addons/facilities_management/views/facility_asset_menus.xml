@@ -529,9 +529,9 @@
               sequence="10"/>
 
     <menuitem id="menu_maintenance_workorder_mobile_enhanced"
-              name="Work Orders (Mobile Enhanced)"
+              name="Work Orders (Mobile)"
               parent="menu_maintenance_operations"
-              action="action_maintenance_workorder_mobile_enhanced_client"
+              action="facilities_management.action_maintenance_workorder_mobile"
               sequence="11"/>
 
     <menuitem id="menu_maintenance_schedule"
