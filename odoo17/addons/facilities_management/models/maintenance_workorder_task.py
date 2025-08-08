@@ -32,6 +32,7 @@ class MaintenanceWorkorderTask(models.Model):
     _order = 'section_id, sequence, id'
 
     workorder_id = fields.Many2one('maintenance.workorder', string='Work Order', required=True, ondelete='cascade')
+    workorder_status = fields.Selection(related='workorder_id.state', string='Work Order Status', store=True, readonly=True)
     section_id = fields.Many2one('maintenance.workorder.section', string='Section', ondelete='cascade')
     name = fields.Char(string='Task Description', required=True, readonly=True)
     sequence = fields.Integer(string='Sequence', default=10, readonly=True)
@@ -66,6 +67,20 @@ class MaintenanceWorkorderTask(models.Model):
         for rec in self:
             if rec.is_done and rec.workorder_id.state != 'in_progress':
                 raise ValidationError(_("Tasks can only be marked as completed when the Work Order is 'In Progress'."))
+
+    @api.constrains('before_image', 'after_image')
+    def _check_workorder_status_for_image_upload(self):
+        for rec in self:
+            if (rec.before_image or rec.after_image) and rec.workorder_id.state != 'in_progress':
+                raise ValidationError(_("Images can only be uploaded when the Work Order is 'In Progress'."))
+
+    def write(self, vals):
+        # Additional check for image uploads during write operations
+        if ('before_image' in vals and vals['before_image']) or ('after_image' in vals and vals['after_image']):
+            for rec in self:
+                if rec.workorder_id.state != 'in_progress':
+                    raise ValidationError(_("Images can only be uploaded when the Work Order is 'In Progress'."))
+        return super().write(vals)
 
     @api.model_create_multi
     def create(self, vals_list):
