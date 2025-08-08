@@ -174,29 +174,43 @@
 
                             <field name="workorder_task_ids" create="false" invisible="not (schedule_id and job_plan_id)">
                                 <tree editable="bottom">
+                                    <field name="workorder_status" invisible="1"/>
                                     <field name="section_id"/>
                                     <field name="name" readonly="1"/>
                                     <field name="description" readonly="1"/>
-                                    <field name="is_done" widget="boolean_toggle"/>
+                                    <field name="is_done" widget="boolean_toggle" readonly="workorder_status != 'in_progress'"/>
                                     <field name="duration"/>
-                                    <button name="toggle_task_completion" type="object" string="Toggle" class="btn btn-secondary btn-sm"/>
+                                    <field name="before_image" widget="image" optional="show" string="Before"/>
+                                    <field name="after_image" widget="image" optional="show" string="After"/>
+                                    <button name="toggle_task_completion" type="object" string="Toggle" class="btn btn-secondary btn-sm" invisible="workorder_status != 'in_progress'"/>
                                 </tree>
                                 <form string="Task">
+                                    <header>
+                                        <field name="workorder_status" invisible="1"/>
+                                        <div class="alert alert-info" role="alert" invisible="workorder_status == 'in_progress'">
+                                            <i class="fa fa-info-circle me-2"></i>
+                                            <strong>Work Order must be "In Progress" to complete tasks and upload images.</strong>
+                                        </div>
+                                    </header>
                                     <group>
                                         <group>
                                             <field name="section_id" readonly="1"/>
                                             <field name="name" readonly="1"/>
                                         </group>
                                         <field name="description" readonly="1"/>
-                                        <field name="is_done" widget="boolean_toggle"/>
+                                        <field name="is_done" widget="boolean_toggle" readonly="workorder_status != 'in_progress'"/>
                                         <group>
                                             <field name="duration" readonly="1"/>
                                         </group>
-                                        <group>
-                                            <field name="before_image" widget="image"/>
-                                            <field name="after_image" widget="image"/>
+                                        <group string="Before/After Images" invisible="workorder_status != 'in_progress'">
+                                            <field name="before_image" widget="image" string="Before Image" help="Upload image before starting the task"/>
+                                            <field name="after_image" widget="image" string="After Image" help="Upload image after completing the task"/>
                                         </group>
-                                        <field name="notes"/>
+                                        <group string="Images (Read-only)" invisible="workorder_status == 'in_progress'">
+                                            <field name="before_image" widget="image" string="Before Image" readonly="1"/>
+                                            <field name="after_image" widget="image" string="After Image" readonly="1"/>
+                                        </group>
+                                        <field name="notes" placeholder="Add notes about the task execution..." readonly="workorder_status not in ('in_progress',)"/>
                                     </group>
                                 </form>
                             </field>
