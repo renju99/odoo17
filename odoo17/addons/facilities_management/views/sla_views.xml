@@ -34,6 +34,10 @@
                                 <field name="warning_threshold_hours"/>
                                 <field name="escalation_delay_hours"/>
                             </group>
+                            <group string="Status Thresholds (%)">
+                                <field name="warning_threshold"/>
+                                <field name="critical_threshold"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Assignment Rules" name="assignment_rules">
@@ -126,6 +130,8 @@
                     <field name="priority"/>
                     <field name="response_time_hours"/>
                     <field name="resolution_time_hours"/>
+                    <field name="warning_threshold" widget="percentage"/>
+                    <field name="critical_threshold" widget="percentage"/>
                     <field name="asset_criticality"/>
                     <field name="maintenance_type"/>
                     <field name="compliance_rate" widget="percentage"/>

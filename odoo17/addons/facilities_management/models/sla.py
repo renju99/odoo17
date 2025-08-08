@@ -32,6 +32,12 @@ class FacilitiesSLA(models.Model):
     escalation_delay_hours = fields.Float(string='Escalation Delay (Hours)', default=2.0,
                                         help="Hours after breach to trigger escalation")
     
+    # SLA Percentage Thresholds for Status Computation
+    warning_threshold = fields.Float(string='Warning Threshold (%)', default=80.0,
+                                   help="Percentage of time elapsed to trigger warning status")
+    critical_threshold = fields.Float(string='Critical Threshold (%)', default=95.0,
+                                    help="Percentage of time elapsed to trigger critical status")
+    
     # Assignment Rules
     asset_criticality = fields.Selection([
         ('low', 'Low'), ('medium', 'Medium'), ('high', 'High'), ('critical', 'Critical')
@@ -129,6 +135,16 @@ class FacilitiesSLA(models.Model):
         for sla in self:
             if sla.response_time_hours >= sla.resolution_time_hours:
                 raise ValidationError(_('Response time must be less than resolution time.'))
+
+    @api.constrains('warning_threshold', 'critical_threshold')
+    def _check_percentage_thresholds(self):
+        for sla in self:
+            if not (0 <= sla.warning_threshold <= 100):
+                raise ValidationError(_('Warning threshold must be between 0 and 100 percent.'))
+            if not (0 <= sla.critical_threshold <= 100):
+                raise ValidationError(_('Critical threshold must be between 0 and 100 percent.'))
+            if sla.warning_threshold >= sla.critical_threshold:
+                raise ValidationError(_('Warning threshold must be less than critical threshold.'))
 
     def action_view_workorders(self):
         """View work orders assigned to this SLA"""
@@ -317,6 +333,8 @@ class FacilitiesSLA(models.Model):
             'resolution_time_hours': 24.0,
             'warning_threshold_hours': 2.0,
             'escalation_delay_hours': 2.0,
+            'warning_threshold': 80.0,
+            'critical_threshold': 95.0,
             'active': True,
             'priority': 10,
         })
@@ -329,6 +347,8 @@ class FacilitiesSLA(models.Model):
             'resolution_time_hours': 8.0,
             'warning_threshold_hours': 0.5,
             'escalation_delay_hours': 1.0,
+            'warning_threshold': 70.0,
+            'critical_threshold': 90.0,
             'active': True,
             'priority': 40,
             'asset_criticality': 'critical',
@@ -342,6 +362,8 @@ class FacilitiesSLA(models.Model):
             'resolution_time_hours': 12.0,
             'warning_threshold_hours': 1.0,
             'escalation_delay_hours': 2.0,
+            'warning_threshold': 75.0,
+            'critical_threshold': 90.0,
             'active': True,
             'priority': 30,
             'asset_criticality': 'high',
@@ -355,6 +377,8 @@ class FacilitiesSLA(models.Model):
             'resolution_time_hours': 24.0,
             'warning_threshold_hours': 2.0,
             'escalation_delay_hours': 4.0,
+            'warning_threshold': 80.0,
+            'critical_threshold': 95.0,
             'active': True,
             'priority': 20,
             'asset_criticality': 'medium',
@@ -368,6 +392,8 @@ class FacilitiesSLA(models.Model):
             'resolution_time_hours': 48.0,
             'warning_threshold_hours': 4.0,
             'escalation_delay_hours': 8.0,
+            'warning_threshold': 85.0,
+            'critical_threshold': 95.0,
             'active': True,
             'priority': 10,
             'asset_criticality': 'low',
