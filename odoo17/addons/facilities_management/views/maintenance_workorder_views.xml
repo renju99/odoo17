@@ -71,6 +71,10 @@
                                 invisible="workorder_task_ids != False"
                                 readonly="status != 'draft'"
                                 help="Select a Job Plan to automatically populate tasks for this work order."/>
+                            <div class="alert alert-warning mt-2"
+                                 attrs="{'invisible': [('work_order_type', '!=', 'preventive'), ('job_plan_id', '!=', False)]}">
+                                No job plan linked. Tasks are not available.
+                            </div>
                             <field name="service_type"/>
                             <field name="maintenance_team_id"/>
                         </group>
