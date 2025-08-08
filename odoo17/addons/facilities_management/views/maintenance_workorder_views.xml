@@ -71,7 +71,7 @@
                                 invisible="workorder_task_ids != False"
                                 readonly="status != 'draft'"
                                 help="Select a Job Plan to automatically populate tasks for this work order."/>
-                            <div attrs="{'invisible': [('show_job_plan_warning', '=', False)]}" class="o_form_label alert alert-warning mt-2">
+                            <div modifiers="{'invisible': [('show_job_plan_warning', '=', False)]}" class="o_form_label alert alert-warning mt-2">
                                 No job plan linked. Tasks are not available.
                             </div>
                             <field name="service_type"/>
