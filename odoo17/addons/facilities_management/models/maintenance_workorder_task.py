@@ -103,11 +103,24 @@ class MaintenanceWorkorderTask(models.Model):
     def toggle_task_completion(self):
         """Toggle the completion status of a task"""
         self.ensure_one()
+        if self.workorder_id.state != 'in_progress':
+            raise UserError(_("Tasks can only be marked as completed when the Work Order is 'In Progress'."))
+        
         self.is_done = not self.is_done
         if self.is_done:
             self.message_post(body=_("Task marked as completed by %s") % self.env.user.name)
         else:
             self.message_post(body=_("Task marked as incomplete by %s") % self.env.user.name)
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Task Updated'),
+                'message': _('Task "%s" has been marked as %s') % (self.name, _('completed') if self.is_done else _('incomplete')),
+                'type': 'success',
+            }
+        }
 
     def action_upload_before_image(self):
         """Action to upload before image"""
@@ -134,3 +147,25 @@ class MaintenanceWorkorderTask(models.Model):
             'target': 'new',
             'context': {'default_after_image': True},
         }
+
+    def action_open_mobile_task_form(self):
+        """Open mobile task form for editing"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Task Details'),
+            'res_model': 'maintenance.workorder.task',
+            'view_mode': 'form',
+            'res_id': self.id,
+            'target': 'current',
+            'view_id': self.env.ref('facilities_management.view_maintenance_workorder_task_mobile_form').id,
+            'context': {'mobile_view': True},
+        }
+
+    def action_view_task_mobile(self):
+        """Default action when clicking on task in mobile view"""
+        return self.action_open_mobile_task_form()
+
+    def action_row_click_mobile(self):
+        """Action when clicking on the task row in mobile view"""
+        return self.action_open_mobile_task_form()

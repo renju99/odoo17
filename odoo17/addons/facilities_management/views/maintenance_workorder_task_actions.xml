@@ -1,5 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Mobile Form View for Maintenance Workorder Tasks -->
+    <record id="view_maintenance_workorder_task_mobile_form" model="ir.ui.view">
+        <field name="name">maintenance.workorder.task.mobile.form</field>
+        <field name="model">maintenance.workorder.task</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <form string="Task (Mobile)" class="o_mobile_form">
+                <header>
+                    <field name="workorder_id" invisible="1"/>
+                    <div class="alert alert-info" role="alert" invisible="workorder_id.state == 'in_progress'">
+                        <i class="fa fa-info-circle me-2"></i>
+                        <strong>Work Order must be "In Progress" to complete tasks and upload images.</strong>
+                    </div>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title text-center mb-4">
+                        <h2 class="text-primary"><field name="name" readonly="1"/></h2>
+                        <p class="text-muted"><field name="section_id" readonly="1"/></p>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fa fa-info-circle me-2"></i>Task Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <field name="description" readonly="1"/>
+                            <field name="is_done" widget="boolean_toggle" readonly="workorder_id.state != 'in_progress'" string="Mark as Complete"/>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4" invisible="workorder_id.state != 'in_progress'">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0"><i class="fa fa-camera me-2"></i>Before/After Images</h5>
+                        </div>
+                        <div class="card-body">
+                            <group>
+                                <field name="before_image" widget="image" string="Before Image" help="Upload image before starting the task"/>
+                                <field name="after_image" widget="image" string="After Image" help="Upload image after completing the task"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4" invisible="workorder_id.state == 'in_progress'">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0"><i class="fa fa-camera me-2"></i>Images (Read-only)</h5>
+                        </div>
+                        <div class="card-body">
+                            <group>
+                                <field name="before_image" widget="image" string="Before Image" readonly="1"/>
+                                <field name="after_image" widget="image" string="After Image" readonly="1"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="fa fa-sticky-note me-2"></i>Notes</h5>
+                        </div>
+                        <div class="card-body">
+                            <field name="notes" placeholder="Add notes about the task execution..." readonly="workorder_id.state not in ('in_progress',)"/>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Mobile Action for Tasks -->
+    <record id="action_maintenance_workorder_task_mobile" model="ir.actions.act_window">
+        <field name="name">Task (Mobile)</field>
+        <field name="res_model">maintenance.workorder.task</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="facilities_management.view_maintenance_workorder_task_mobile_form"/>
+        <field name="target">current</field>
+        <field name="context">{'mobile_view': True}</field>
+    </record>
+
     <!-- Action for uploading before image - Commented out as we're using object methods instead -->
     <!--
     <record id="action_upload_before_image" model="ir.actions.act_window">
