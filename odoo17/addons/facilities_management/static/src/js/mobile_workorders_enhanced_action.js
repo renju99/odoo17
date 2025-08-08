@@ -42,7 +42,7 @@ class MobileWorkordersEnhancedAction extends Component {
             type: 'ir.actions.act_window',
             res_model: 'maintenance.workorder',
             res_id: workorderId,
-            views: [['facilities_management.view_workorder_mobile_enhanced_form', 'form']],
+            views: [[false, 'form']],
             target: 'current',
         });
     }
