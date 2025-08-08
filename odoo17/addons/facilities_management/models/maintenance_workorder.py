@@ -181,6 +181,12 @@ class MaintenanceWorkOrder(models.Model):
     # Status field for view compatibility
     status = fields.Selection(related='state', string='Status', store=True)
 
+    show_job_plan_warning = fields.Boolean(
+        string='Show Job Plan Warning',
+        compute='_compute_show_job_plan_warning',
+        store=False
+    )
+
     @api.model_create_multi
     def create(self, vals_list):
         if isinstance(vals_list, dict):
@@ -725,6 +731,13 @@ class MaintenanceWorkOrder(models.Model):
                     workorder.sla_resolution_status = 'on_time'
             except MissingError:
                 workorder.sla_resolution_status = 'on_time'
+
+    @api.depends('work_order_type', 'job_plan_id')
+    def _compute_show_job_plan_warning(self):
+        for rec in self:
+            rec.show_job_plan_warning = (
+                rec.work_order_type == 'preventive' and not rec.job_plan_id
+            )
 
 
 class MaintenanceEscalationLog(models.Model):
