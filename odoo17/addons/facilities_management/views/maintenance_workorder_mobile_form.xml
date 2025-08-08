@@ -26,6 +26,7 @@
             <form string="Work Order (Mobile)" class="o_mobile_form">
                 <header>
                     <field name="status" invisible="1"/>
+                    <field name="state" invisible="1"/>
                     <field name="approval_state" invisible="1"/>
                     <field name="work_order_type" invisible="1"/>
                     <field name="schedule_id" invisible="1"/>
