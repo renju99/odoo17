@@ -162,7 +162,7 @@
         <field name="res_model">facilities.room</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocentent_smiling_face">
                 Create your first room!
             </p>
             <p>
@@ -527,6 +527,12 @@
               parent="menu_maintenance_operations"
               action="action_maintenance_workorder"
               sequence="10"/>
+
+    <menuitem id="menu_maintenance_workorder_mobile_enhanced"
+              name="Work Orders (Mobile Enhanced)"
+              parent="menu_maintenance_operations"
+              action="action_maintenance_workorder_mobile_enhanced_client"
+              sequence="11"/>
 
     <menuitem id="menu_maintenance_schedule"
               name="Schedules"

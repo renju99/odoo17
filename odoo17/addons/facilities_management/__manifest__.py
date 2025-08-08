@@ -1,6 +1,6 @@
 {
     'name': 'Facilities Management',
-    'version': '1.0.0',
+    'version': '1.0.1',
     'summary': 'Comprehensive Facility and Asset Management including Maintenance, Bookings, and Analytics',
     'description': """
 Facility and Asset Management System
@@ -117,11 +117,9 @@ Features:
         'web.assets_backend': [
             'facilities_management/static/src/css/facilities.css',
             'facilities_management/static/src/css/portal.css',
-            'facilities_management/static/src/css/mobile_workorder.css',
             'facilities_management/static/src/js/dashboard_widgets.js',
             'facilities_management/static/src/js/iot_monitoring.js',
             'facilities_management/static/src/js/mobile_scanner.js',
-            'facilities_management/static/src/js/mobile_workorder.js',
             'facilities_management/static/src/js/mobile_workorders_enhanced_action.js',
             'facilities_management/static/src/xml/mobile_workorders_enhanced.xml',
             'facilities_management/static/src/xml/*.xml',

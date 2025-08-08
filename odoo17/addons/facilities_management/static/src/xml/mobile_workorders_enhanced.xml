@@ -3,10 +3,10 @@
   <div class="o_mobile_workorders_enhanced p-3">
     <div class="mb-3">
       <h4 class="text-primary">Assigned to Me</h4>
-      <t t-if="myWorkorders.length">
+      <t t-if="state.myWorkorders.length">
         <div class="list-group">
-          <t t-foreach="myWorkorders" t-as="wo">
-            <a t-att-data-id="wo.id" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center js-workorder-item">
+          <t t-foreach="state.myWorkorders" t-as="wo" t-key="wo.id">
+            <a t-att-data-id="wo.id" t-on-click="openWorkorder" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center js-workorder-item">
               <div>
                 <div class="fw-bold" t-esc="wo.name"/>
                 <small class="text-muted">
@@ -30,10 +30,10 @@
 
     <div>
       <h4 class="text-dark">All Work Orders</h4>
-      <t t-if="allWorkorders.length">
+      <t t-if="state.allWorkorders.length">
         <div class="list-group">
-          <t t-foreach="allWorkorders" t-as="wo">
-            <a t-att-data-id="wo.id" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center js-workorder-item">
+          <t t-foreach="state.allWorkorders" t-as="wo" t-key="wo.id">
+            <a t-att-data-id="wo.id" t-on-click="openWorkorder" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center js-workorder-item">
               <div>
                 <div class="fw-bold" t-esc="wo.name"/>
                 <small class="text-muted">
