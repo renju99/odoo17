@@ -10,7 +10,7 @@
               <div>
                 <div class="fw-bold" t-esc="wo.name"/>
                 <small class="text-muted">
-                  <t t-esc="wo.asset_id && wo.asset_id[1] || ''"/>
+                  <t t-esc="wo.asset_id ? wo.asset_id[1] : ''"/>
                   <t t-if="wo.building_id"> • <t t-esc="wo.building_id[1]"/></t>
                 </small>
               </div>
@@ -37,7 +37,7 @@
               <div>
                 <div class="fw-bold" t-esc="wo.name"/>
                 <small class="text-muted">
-                  <t t-esc="wo.asset_id && wo.asset_id[1] || ''"/>
+                  <t t-esc="wo.asset_id ? wo.asset_id[1] : ''"/>
                   <t t-if="wo.building_id"> • <t t-esc="wo.building_id[1]"/></t>
                 </small>
               </div>
