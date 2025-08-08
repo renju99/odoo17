@@ -126,6 +126,10 @@ Features:
             'facilities_management/static/src/xml/mobile_workorders_enhanced.xml',
             'facilities_management/static/src/xml/*.xml',
         ],
+        'web.assets_web': [
+            'facilities_management/static/src/js/mobile_workorders_enhanced_action.js',
+            'facilities_management/static/src/xml/mobile_workorders_enhanced.xml',
+        ],
         'web.assets_frontend': [
             # Add portal/frontend assets here if needed
         ],
