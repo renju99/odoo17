@@ -25,85 +25,76 @@
         <field name="arch" type="xml">
             <form string="Work Order (Mobile)" class="o_mobile_form">
                 <header>
-                    <!-- Work Order Name - Prominently displayed -->
-                    <div class="row mb-3">
+                    <!-- Work Order Name - Prominently displayed with better spacing -->
+                    <div class="row mb-4">
                         <div class="col-12">
-                            <h3 class="text-primary mb-2"><field name="name" readonly="1"/></h3>
+                            <h2 class="text-primary mb-0 text-center"><field name="name" readonly="1"/></h2>
                         </div>
                     </div>
                     
-                    <!-- Work Order Status Overview - Key Information Display -->
-                    <div class="row mb-3">
+                    <!-- Work Order Status Overview - Simplified and better spaced -->
+                    <div class="row mb-4">
                         <div class="col-12">
-                            <!-- Help text for technicians -->
-                            <div class="alert alert-info mb-3" role="alert">
-                                <i class="fa fa-info-circle me-2"></i>
-                                <strong>Work Order Status:</strong> Review the current status, approval state, work type, and priority level of this work order.
-                            </div>
-                            <!-- Status overview container with clear visual grouping -->
-                            <div class="row">
+                            <!-- Status overview container with improved spacing -->
+                            <div class="row g-3">
                                 <!-- Primary Status: Current work order state -->
-                                <div class="col-6 mb-2">
-                                    <div class="card border-0 shadow-sm">
+                                <div class="col-6">
+                                    <div class="card border-0 shadow-sm h-100">
                                         <div class="card-header bg-primary text-white py-2">
-                                            <small><i class="fa fa-tasks me-1"></i>Current Status</small>
+                                            <small><i class="fa fa-tasks me-1"></i>Status</small>
                                         </div>
-                                        <div class="card-body py-2">
+                                        <div class="card-body py-3">
                                             <field name="state" widget="selection" readonly="1"
                                                    decoration-info="state == 'draft'" 
                                                    decoration-warning="state == 'in_progress'" 
                                                    decoration-success="state == 'completed'" 
-                                                   decoration-danger="state == 'cancelled'"
-                                                   help="Current status of the work order: Draft (not started), In Progress (being worked on), Completed (finished), or Cancelled (stopped)"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Approval Status: Work order approval workflow state -->
-                                <div class="col-6 mb-2">
-                                    <div class="card border-0 shadow-sm">
-                                        <div class="card-header bg-warning text-white py-2">
-                                            <small><i class="fa fa-check-circle me-1"></i>Approval Status</small>
-                                        </div>
-                                        <div class="card-body py-2">
-                                            <field name="approval_state" widget="selection" readonly="1"
-                                                   decoration-info="approval_state == 'draft'" 
-                                                   decoration-warning="approval_state in ('submitted', 'supervisor')" 
-                                                   decoration-success="approval_state == 'approved'" 
-                                                   decoration-danger="approval_state == 'rejected'"
-                                                   help="Approval workflow status: Draft (not submitted), Submitted/Supervisor (pending approval), Approved (ready to work), or Rejected (needs changes)"/>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Work Order Type: Preventive, corrective, emergency, etc. -->
-                                <div class="col-6 mb-2">
-                                    <div class="card border-0 shadow-sm">
-                                        <div class="card-header bg-info text-white py-2">
-                                            <small><i class="fa fa-wrench me-1"></i>Work Type</small>
-                                        </div>
-                                        <div class="card-body py-2">
-                                            <field name="work_order_type" widget="selection" readonly="1"
-                                                   decoration-info="work_order_type == 'preventive'" 
-                                                   decoration-warning="work_order_type == 'corrective'" 
-                                                   decoration-danger="work_order_type == 'emergency'"
-                                                   help="Type of maintenance: Preventive (scheduled maintenance), Corrective (fixing issues), or Emergency (urgent repairs)"/>
+                                                   decoration-danger="state == 'cancelled'"/>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Priority Level: Read-only priority indicator -->
-                                <div class="col-6 mb-2">
-                                    <div class="card border-0 shadow-sm">
+                                <div class="col-6">
+                                    <div class="card border-0 shadow-sm h-100">
                                         <div class="card-header bg-danger text-white py-2">
-                                            <small><i class="fa fa-exclamation-triangle me-1"></i>Priority Level</small>
+                                            <small><i class="fa fa-exclamation-triangle me-1"></i>Priority</small>
                                         </div>
-                                        <div class="card-body py-2">
+                                        <div class="card-body py-3">
                                             <field name="priority" widget="selection" readonly="1" 
                                                    decoration-info="priority == '0'" 
                                                    decoration-warning="priority == '3'" 
-                                                   decoration-danger="priority == '4'"
-                                                   help="Priority level: 0 (Low), 3 (High), 4 (Critical) - Higher numbers mean more urgent"/>
+                                                   decoration-danger="priority == '4'"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Work Order Type: Preventive, corrective, emergency, etc. -->
+                                <div class="col-6">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-header bg-info text-white py-2">
+                                            <small><i class="fa fa-wrench me-1"></i>Type</small>
+                                        </div>
+                                        <div class="card-body py-3">
+                                            <field name="work_order_type" widget="selection" readonly="1"
+                                                   decoration-info="work_order_type == 'preventive'" 
+                                                   decoration-warning="work_order_type == 'corrective'" 
+                                                   decoration-danger="work_order_type == 'emergency'"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Approval Status: Work order approval workflow state -->
+                                <div class="col-6">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-header bg-warning text-white py-2">
+                                            <small><i class="fa fa-check-circle me-1"></i>Approval</small>
+                                        </div>
+                                        <div class="card-body py-3">
+                                            <field name="approval_state" widget="selection" readonly="1"
+                                                   decoration-info="approval_state == 'draft'" 
+                                                   decoration-warning="approval_state in ('submitted', 'supervisor')" 
+                                                   decoration-success="approval_state == 'approved'" 
+                                                   decoration-danger="approval_state == 'rejected'"/>
                                         </div>
                                     </div>
                                 </div>
@@ -111,34 +102,35 @@
                         </div>
                     </div>
                     
-                    <!-- Schedule and Job Plan Information -->
-                    <div class="row mb-3" invisible="not schedule_id">
+                    <!-- Schedule and Job Plan Information - Better spacing -->
+                    <div class="row mb-4" invisible="not schedule_id">
                         <div class="col-12">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-success text-white py-2">
                                     <small><i class="fa fa-calendar me-1"></i>Maintenance Schedule</small>
                                 </div>
-                                <div class="card-body py-2">
+                                <div class="card-body py-3">
                                     <field name="schedule_id" readonly="1"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="row mb-3" invisible="not job_plan_id">
+                    <div class="row mb-4" invisible="not job_plan_id">
                         <div class="col-12">
                             <div class="card border-0 shadow-sm">
                                 <div class="card-header bg-info text-white py-2">
                                     <small><i class="fa fa-tasks me-1"></i>Job Plan</small>
                                 </div>
-                                <div class="card-body py-2">
+                                <div class="card-body py-3">
                                     <field name="job_plan_id" readonly="1"/>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="d-flex flex-wrap gap-2 mb-3">
+                    <!-- Action Buttons - Better spacing and organization -->
+                    <div class="d-flex flex-wrap gap-3 mb-4 justify-content-center">
                         <button name="action_start_progress" type="object" string="Start Work" class="btn btn-primary btn-lg"
                             invisible="state not in ('draft', 'assigned') or approval_state not in ('approved', 'draft', 'submitted', 'supervisor', 'manager')"
                             icon="fa-play"/>
@@ -158,89 +150,96 @@
                 </header>
 
                 <sheet>
-                    <div class="oe_title text-center mb-4">
-                        <p class="text-muted"><field name="work_order_type" readonly="1"/></p>
-                        <div class="alert alert-warning mt-2" invisible="work_order_type != 'preventive' or job_plan_id" role="alert">No job plan linked. Tasks are not available.</div>
+                    <!-- SLA Status Section - Better spacing -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0"><i class="fa fa-clock me-2"></i>SLA Status</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <field name="sla_response_status" widget="badge" readonly="1"/>
+                                    <field name="sla_response_deadline" readonly="1"/>
+                                </div>
+                                <div class="col-6">
+                                    <field name="sla_resolution_status" widget="badge" readonly="1"/>
+                                    <field name="sla_resolution_deadline" readonly="1"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <group string="SLA Status" colspan="2">
-                        <group>
-                            <field name="sla_response_status" widget="badge" readonly="1"/>
-                            <field name="sla_response_deadline" readonly="1"/>
-                        </group>
-                        <group>
-                            <field name="sla_resolution_status" widget="badge" readonly="1"/>
-                            <field name="sla_resolution_deadline" readonly="1"/>
-                        </group>
-                    </group>
-
+                    <!-- Asset Information Section -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-primary text-white">
                             <h5 class="mb-0"><i class="fa fa-cog me-2"></i>Asset Information</h5>
                         </div>
                         <div class="card-body">
-                            <group>
-                                <group>
+                            <div class="row">
+                                <div class="col-6">
                                     <field name="asset_id" readonly="1"/>
                                     <field name="facility_id" readonly="1"/>
-                                </group>
-                                <group>
+                                </div>
+                                <div class="col-6">
                                     <field name="building_id" readonly="1"/>
                                     <field name="room_id" readonly="1"/>
-                                </group>
-                            </group>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Work Order Details Section -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-info text-white">
                             <h5 class="mb-0"><i class="fa fa-info-circle me-2"></i>Work Order Details</h5>
                         </div>
                         <div class="card-body">
-                            <group>
-                                <group>
+                            <div class="row">
+                                <div class="col-6">
                                     <field name="description" readonly="1"/>
                                     <field name="technician_id" readonly="1"/>
-                                </group>
-                                <group>
+                                </div>
+                                <div class="col-6">
                                     <field name="start_date" readonly="1"/>
                                     <field name="end_date" readonly="1"/>
-                                </group>
-                            </group>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Time Tracking Section -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-warning text-white">
                             <h5 class="mb-0"><i class="fa fa-clock-o me-2"></i>Time Tracking</h5>
                         </div>
                         <div class="card-body">
-                            <group>
-                                <group>
+                            <div class="row">
+                                <div class="col-6">
                                     <field name="actual_start_date" readonly="state in ('completed', 'cancelled')"/>
                                     <field name="estimated_duration" readonly="1"/>
-                                </group>
-                                <group>
+                                </div>
+                                <div class="col-6">
                                     <field name="actual_end_date" readonly="state in ('draft', 'assigned', 'cancelled')"/>
                                     <field name="actual_duration" readonly="1"/>
-                                </group>
-                            </group>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Parts & Labor Section -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-secondary text-white">
                             <h5 class="mb-0"><i class="fa fa-wrench me-2"></i>Parts &amp; Labor</h5>
                         </div>
                         <div class="card-body">
-                            <group>
-                                <group>
+                            <div class="row mb-3">
+                                <div class="col-6">
                                     <field name="labor_cost" readonly="state in ('completed', 'cancelled')"/>
-                                </group>
-                                <group>
+                                </div>
+                                <div class="col-6">
                                     <field name="parts_cost" readonly="1"/>
-                                </group>
-                            </group>
+                                </div>
+                            </div>
                             <field name="parts_used_ids" readonly="state != 'in_progress'" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="product_id"/>
@@ -250,20 +249,21 @@
                         </div>
                     </div>
 
+                    <!-- Maintenance Tasks Section - Better spacing -->
                     <div class="card border-0 shadow-sm mb-4" invisible="work_order_type != 'preventive'">
                         <div class="card-header bg-success text-white">
                             <h5 class="mb-0"><i class="fa fa-tasks me-2"></i>Maintenance Tasks</h5>
                         </div>
                         <div class="card-body">
-                            <div class="alert alert-info" role="alert" invisible="schedule_id and job_plan_id">
-                                <i class="fa fa-info-circle me-2" title="Information"></i>
+                            <div class="alert alert-info mb-3" role="alert" invisible="schedule_id and job_plan_id">
+                                <i class="fa fa-info-circle me-2"></i>
                                 <strong>Tasks are auto-generated from the job plan linked to this maintenance schedule.</strong>
                             </div>
                             
-                            <div class="alert alert-warning" role="alert" invisible="schedule_id and job_plan_id">
-                                <i class="fa fa-exclamation-triangle me-2" title="Warning"></i>
+                            <div class="alert alert-warning mb-3" role="alert" invisible="schedule_id and job_plan_id">
+                                <i class="fa fa-exclamation-triangle me-2"></i>
                                 <strong>No job plan linked to this preventive workorder. Tasks are not available.</strong>
-                                <p class="mb-0">Please ensure the workorder has a linked maintenance schedule with a job plan to see tasks.</p>
+                                <p class="mb-0 mt-2">Please ensure the workorder has a linked maintenance schedule with a job plan to see tasks.</p>
                             </div>
 
                             <field name="workorder_task_ids" create="false" invisible="not (schedule_id and job_plan_id)">
@@ -282,20 +282,21 @@
                         </div>
                     </div>
 
+                    <!-- Work Summary & Notes Section -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-header bg-info text-white">
                             <h5 class="mb-0"><i class="fa fa-sticky-note me-2"></i>Work Summary &amp; Notes</h5>
                         </div>
                         <div class="card-body">
                             <field name="work_done" placeholder="Describe the work performed, issues found, and solutions applied..." readonly="state == 'cancelled'"/>
-                            <group>
-                                <group>
+                            <div class="row mt-3">
+                                <div class="col-6">
                                     <field name="first_time_fix" widget="boolean_toggle" readonly="state in ('draft', 'assigned', 'cancelled')"/>
-                                </group>
-                                <group>
+                                </div>
+                                <div class="col-6">
                                     <field name="service_type" readonly="state in ('completed', 'cancelled')"/>
-                                </group>
-                            </group>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </sheet>
