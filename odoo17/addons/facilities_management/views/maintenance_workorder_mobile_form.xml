@@ -114,13 +114,27 @@
                     <!-- Schedule and Job Plan Information -->
                     <div class="row mb-3" invisible="not schedule_id">
                         <div class="col-12">
-                            <field name="schedule_id" readonly="1"/>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-success text-white py-2">
+                                    <small><i class="fa fa-calendar me-1"></i>Maintenance Schedule</small>
+                                </div>
+                                <div class="card-body py-2">
+                                    <field name="schedule_id" readonly="1"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="row mb-3" invisible="not job_plan_id">
                         <div class="col-12">
-                            <field name="job_plan_id" readonly="1"/>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-info text-white py-2">
+                                    <small><i class="fa fa-tasks me-1"></i>Job Plan</small>
+                                </div>
+                                <div class="card-body py-2">
+                                    <field name="job_plan_id" readonly="1"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
