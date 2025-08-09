@@ -32,14 +32,36 @@
                         </div>
                     </div>
                     
-                    <!-- Status and Type Information -->
+                    <!-- Work Order Status Badges - Key Information Display -->
                     <div class="row mb-3">
                         <div class="col-12">
-                            <div class="d-flex flex-wrap gap-2">
-                                <field name="state" widget="badge"/>
-                                <field name="approval_state" widget="badge"/>
-                                <field name="work_order_type" widget="badge"/>
-                                <field name="priority" widget="badge" readonly="1"/>
+                            <!-- Status badges container with clear visual grouping -->
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                <!-- Primary Status: Current work order state (draft, in_progress, completed, etc.) -->
+                                <field name="state" widget="badge" 
+                                       decoration-info="state == 'draft'" 
+                                       decoration-warning="state == 'in_progress'" 
+                                       decoration-success="state == 'completed'" 
+                                       decoration-danger="state == 'cancelled'"/>
+                                
+                                <!-- Approval Status: Work order approval workflow state -->
+                                <field name="approval_state" widget="badge" 
+                                       decoration-info="approval_state == 'draft'" 
+                                       decoration-warning="approval_state in ('submitted', 'supervisor')" 
+                                       decoration-success="approval_state == 'approved'" 
+                                       decoration-danger="approval_state == 'rejected'"/>
+                                
+                                <!-- Work Order Type: Preventive, corrective, emergency, etc. -->
+                                <field name="work_order_type" widget="badge" 
+                                       decoration-info="work_order_type == 'preventive'" 
+                                       decoration-warning="work_order_type == 'corrective'" 
+                                       decoration-danger="work_order_type == 'emergency'"/>
+                                
+                                <!-- Priority Level: Read-only priority indicator -->
+                                <field name="priority" widget="badge" readonly="1" 
+                                       decoration-info="priority == '0'" 
+                                       decoration-warning="priority == '3'" 
+                                       decoration-danger="priority == '4'"/>
                             </div>
                         </div>
                     </div>
