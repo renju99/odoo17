@@ -25,13 +25,26 @@
         <field name="arch" type="xml">
             <form string="Work Order (Mobile)" class="o_mobile_form">
                 <header>
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                        <field name="state" widget="badge"/>
-                        <field name="approval_state" widget="badge"/>
-                        <field name="work_order_type" widget="badge"/>
-                        <field name="priority" widget="badge" readonly="1"/>
+                    <!-- Work Order Name - Prominently displayed -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <h3 class="text-primary mb-2"><field name="name" readonly="1"/></h3>
+                        </div>
                     </div>
                     
+                    <!-- Status and Type Information -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap gap-2">
+                                <field name="state" widget="badge"/>
+                                <field name="approval_state" widget="badge"/>
+                                <field name="work_order_type" widget="badge"/>
+                                <field name="priority" widget="badge" readonly="1"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Schedule and Job Plan Information -->
                     <div class="row mb-3" invisible="not schedule_id">
                         <div class="col-12">
                             <field name="schedule_id" readonly="1"/>
@@ -65,7 +78,6 @@
 
                 <sheet>
                     <div class="oe_title text-center mb-4">
-                        <h1 class="text-primary"><field name="name" readonly="1"/></h1>
                         <p class="text-muted"><field name="work_order_type" readonly="1"/></p>
                         <div class="alert alert-warning mt-2" invisible="work_order_type != 'preventive' or job_plan_id" role="alert">No job plan linked. Tasks are not available.</div>
                     </div>
