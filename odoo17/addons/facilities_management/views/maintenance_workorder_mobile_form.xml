@@ -35,6 +35,11 @@
                     <!-- Work Order Status Badges - Key Information Display -->
                     <div class="row mb-3">
                         <div class="col-12">
+                            <!-- Help text for technicians -->
+                            <div class="alert alert-info mb-3" role="alert">
+                                <i class="fa fa-info-circle me-2"></i>
+                                <strong>Status Overview:</strong> These badges show the current state of your work order. Hover over each badge for detailed information.
+                            </div>
                             <!-- Status badges container with clear visual grouping -->
                             <div class="d-flex flex-wrap gap-2 justify-content-center">
                                 <!-- Primary Status: Current work order state (draft, in_progress, completed, etc.) -->
@@ -42,26 +47,30 @@
                                        decoration-info="state == 'draft'" 
                                        decoration-warning="state == 'in_progress'" 
                                        decoration-success="state == 'completed'" 
-                                       decoration-danger="state == 'cancelled'"/>
+                                       decoration-danger="state == 'cancelled'"
+                                       help="Current status of the work order: Draft (not started), In Progress (being worked on), Completed (finished), or Cancelled (stopped)"/>
                                 
                                 <!-- Approval Status: Work order approval workflow state -->
                                 <field name="approval_state" widget="badge" 
                                        decoration-info="approval_state == 'draft'" 
                                        decoration-warning="approval_state in ('submitted', 'supervisor')" 
                                        decoration-success="approval_state == 'approved'" 
-                                       decoration-danger="approval_state == 'rejected'"/>
+                                       decoration-danger="approval_state == 'rejected'"
+                                       help="Approval workflow status: Draft (not submitted), Submitted/Supervisor (pending approval), Approved (ready to work), or Rejected (needs changes)"/>
                                 
                                 <!-- Work Order Type: Preventive, corrective, emergency, etc. -->
                                 <field name="work_order_type" widget="badge" 
                                        decoration-info="work_order_type == 'preventive'" 
                                        decoration-warning="work_order_type == 'corrective'" 
-                                       decoration-danger="work_order_type == 'emergency'"/>
+                                       decoration-danger="work_order_type == 'emergency'"
+                                       help="Type of maintenance: Preventive (scheduled maintenance), Corrective (fixing issues), or Emergency (urgent repairs)"/>
                                 
                                 <!-- Priority Level: Read-only priority indicator -->
                                 <field name="priority" widget="badge" readonly="1" 
                                        decoration-info="priority == '0'" 
                                        decoration-warning="priority == '3'" 
-                                       decoration-danger="priority == '4'"/>
+                                       decoration-danger="priority == '4'"
+                                       help="Priority level: 0 (Low), 3 (High), 4 (Critical) - Higher numbers mean more urgent"/>
                             </div>
                         </div>
                     </div>
