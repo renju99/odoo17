@@ -171,10 +171,10 @@
                                     <field name="section_id"/>
                                     <field name="name" readonly="1"/>
                                     <field name="description" readonly="1"/>
-                                                                    <field name="is_done" widget="boolean_toggle" readonly="state != 'in_progress'"/>
-                                <field name="before_image" widget="image" optional="show" string="Before"/>
-                                <field name="after_image" widget="image" optional="show" string="After"/>
-                                <button name="toggle_task_completion" type="object" string="Toggle" class="btn btn-secondary btn-sm" invisible="state != 'in_progress'"/>
+                                    <field name="is_done" widget="boolean_toggle" readonly="parent.state != 'in_progress'"/>
+                                    <field name="before_image" widget="image" optional="show" string="Before"/>
+                                    <field name="after_image" widget="image" optional="show" string="After"/>
+                                    <button name="toggle_task_completion" type="object" string="Toggle" class="btn btn-secondary btn-sm" invisible="parent.state != 'in_progress'"/>
                                     <button name="action_view_task_mobile" type="object" string="Edit Task" class="btn btn-primary btn-sm"/>
                                     <button name="action_row_click_mobile" type="object" string="Open Task" class="btn btn-link btn-sm" invisible="1"/>
                                 </tree>
