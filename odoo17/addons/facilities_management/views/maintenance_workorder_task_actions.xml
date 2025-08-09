@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <form string="Task (Mobile)" class="o_mobile_form">
                 <header>
-                    <field name="workorder_id" invisible="1"/>
+                    <field name="workorder_id"/>
                     <div class="alert alert-info" role="alert" invisible="workorder_id.state == 'in_progress'">
                         <i class="fa fa-info-circle me-2"></i>
                         <strong>Work Order must be "In Progress" to complete tasks and upload images.</strong>

@@ -2,7 +2,10 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 import base64
 import io
+import logging
 from datetime import date, datetime, timedelta
+
+_logger = logging.getLogger(__name__)
 
 try:
     import qrcode
@@ -663,3 +666,46 @@ class FacilityAsset(models.Model):
             total_operating = asset.annual_operating_cost * years_owned
             
             asset.total_cost_of_ownership = (asset.purchase_value or 0) + total_maintenance + total_operating
+
+    @api.model
+    def _run_predictive_analysis(self):
+        """Cron method to run predictive maintenance analysis"""
+        try:
+            # Find assets with predictive maintenance enabled
+            assets = self.search([('predictive_maintenance_enabled', '=', True)])
+            
+            for asset in assets:
+                # Simulate predictive analysis
+                # In a real implementation, this would call ML models
+                if asset.health_score < 50:
+                    # Create predictive maintenance work order
+                    workorder_vals = {
+                        'name': f"Predictive Maintenance - {asset.name}",
+                        'asset_id': asset.id,
+                        'work_order_type': 'predictive',
+                        'priority': '2',  # Normal priority
+                        'description': f"Predictive maintenance triggered for {asset.name} based on health score analysis",
+                        'status': 'draft'
+                    }
+                    self.env['maintenance.workorder'].create(workorder_vals)
+            
+            _logger.info(f"Predictive analysis completed. {len(assets)} assets analyzed.")
+            
+        except Exception as e:
+            _logger.error(f"Error in predictive analysis cron: {str(e)}")
+
+    @api.model
+    def _update_health_scores(self):
+        """Cron method to update asset health scores"""
+        try:
+            assets = self.search([('active', '=', True)])
+            
+            for asset in assets:
+                # Trigger health score computation
+                asset._compute_health_score()
+                asset._compute_health_trend()
+            
+            _logger.info(f"Health scores updated for {len(assets)} assets.")
+            
+        except Exception as e:
+            _logger.error(f"Error in health score update cron: {str(e)}")

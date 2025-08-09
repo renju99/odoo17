@@ -204,6 +204,31 @@ class AssetSensor(models.Model):
                 _logger.error(f"Error updating sensor {sensor.name}: {str(e)}")
                 sensor.status = 'error'
 
+    @api.model
+    def _check_sensor_health(self):
+        """Cron method to check sensor health and trigger alerts"""
+        try:
+            # Find sensors that need health checks
+            sensors = self.search([('active', '=', True)])
+            
+            for sensor in sensors:
+                # Check if sensor is offline (no reading in last hour)
+                if sensor.last_reading_time:
+                    time_diff = fields.Datetime.now() - sensor.last_reading_time
+                    if time_diff.total_seconds() > 3600:  # 1 hour
+                        sensor.status = 'offline'
+                        if sensor.alert_enabled:
+                            sensor._create_alert()
+                
+                # Check for critical conditions
+                if sensor.status == 'critical' and sensor.alert_enabled:
+                    sensor._create_alert()
+            
+            _logger.info(f"Sensor health check completed. {len(sensors)} sensors checked.")
+            
+        except Exception as e:
+            _logger.error(f"Error in sensor health check cron: {str(e)}")
+
 
 class AssetSensorData(models.Model):
     _name = 'facilities.asset.sensor.data'

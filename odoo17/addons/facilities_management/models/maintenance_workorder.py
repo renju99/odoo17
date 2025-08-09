@@ -739,6 +739,25 @@ class MaintenanceWorkOrder(models.Model):
                 rec.work_order_type == 'preventive' and not rec.job_plan_id
             )
 
+    @api.model
+    def cron_auto_escalate_workorders(self):
+        """Cron method to automatically escalate overdue work orders"""
+        try:
+            # Find work orders that need escalation
+            overdue_workorders = self.search([
+                ('state', 'in', ['draft', 'assigned', 'in_progress']),
+                ('escalation_deadline', '<=', fields.Datetime.now()),
+                ('escalation_triggered', '=', False)
+            ])
+            
+            for workorder in overdue_workorders:
+                workorder._trigger_escalation()
+                
+            _logger.info(f"Auto escalation completed. {len(overdue_workorders)} work orders escalated.")
+            
+        except Exception as e:
+            _logger.error(f"Error in auto escalation cron: {str(e)}")
+
 
 class MaintenanceEscalationLog(models.Model):
     _name = 'maintenance.escalation.log'
