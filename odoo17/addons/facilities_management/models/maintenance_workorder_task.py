@@ -34,22 +34,22 @@ class MaintenanceWorkorderTask(models.Model):
     workorder_id = fields.Many2one('maintenance.workorder', string='Work Order', required=True, ondelete='cascade')
     workorder_status = fields.Selection(related='workorder_id.state', string='Work Order Status', store=True, readonly=True)
     section_id = fields.Many2one('maintenance.workorder.section', string='Section', ondelete='cascade')
-    name = fields.Char(string='Task Description', required=True, readonly=True)
-    sequence = fields.Integer(string='Sequence', default=10, readonly=True)
+    name = fields.Char(string='Task Description', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
     is_done = fields.Boolean(string='Completed', default=False)
-    description = fields.Text(string='Instructions', readonly=True)
+    description = fields.Text(string='Instructions')
     notes = fields.Text(string='Technician Notes', help="Notes added by the technician during execution.")
-    is_checklist_item = fields.Boolean(string='Checklist Item', default=True, readonly=True)
+    is_checklist_item = fields.Boolean(string='Checklist Item', default=True)
     before_image = fields.Binary(string="Before Image", attachment=True, help="Image of the asset/area before task execution.")
     before_image_filename = fields.Char(string="Before Image Filename")
     after_image = fields.Binary(string="After Image", attachment=True, help="Image of the asset/area after task execution.")
     after_image_filename = fields.Char(string="After Image Filename")
-    duration = fields.Float(string='Estimated Duration (hours)', readonly=True)
-    tools_materials = fields.Text(string='Tools/Materials Required', readonly=True)
-    responsible_id = fields.Many2one('hr.employee', string='Responsible Personnel (Role)', readonly=True)
-    product_id = fields.Many2one('product.product', string='Required Part', readonly=True)
-    quantity = fields.Float(string='Quantity', default=1.0, readonly=True)
-    uom_id = fields.Many2one('uom.uom', string='Unit of Measure', readonly=True)
+    duration = fields.Float(string='Estimated Duration (hours)')
+    tools_materials = fields.Text(string='Tools/Materials Required')
+    responsible_id = fields.Many2one('hr.employee', string='Responsible Personnel (Role)')
+    product_id = fields.Many2one('product.product', string='Required Part')
+    quantity = fields.Float(string='Quantity', default=1.0)
+    uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     frequency_type = fields.Selection(
         [
             ('daily', 'Daily'),
@@ -59,52 +59,13 @@ class MaintenanceWorkorderTask(models.Model):
         ],
         string='Frequency Type',
         help="How often this task should be performed.",
-        readonly=True,
     )
 
-    @api.constrains('is_done')
-    def _check_workorder_status_for_task_done(self):
-        for rec in self:
-            if rec.is_done and rec.workorder_id.state != 'in_progress':
-                raise ValidationError(_("Tasks can only be marked as completed when the Work Order is 'In Progress'."))
-
-    @api.constrains('before_image', 'after_image')
-    def _check_workorder_status_for_image_upload(self):
-        for rec in self:
-            if (rec.before_image or rec.after_image) and rec.workorder_id.state != 'in_progress':
-                raise ValidationError(_("Images can only be uploaded when the Work Order is 'In Progress'."))
-
-    def write(self, vals):
-        # Additional check for image uploads during write operations
-        if ('before_image' in vals and vals['before_image']) or ('after_image' in vals and vals['after_image']):
-            for rec in self:
-                if rec.workorder_id.state != 'in_progress':
-                    raise ValidationError(_("Images can only be uploaded when the Work Order is 'In Progress'."))
-        return super().write(vals)
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        if isinstance(vals_list, dict):
-            vals_list = [vals_list]
-        
-        for vals in vals_list:
-            workorder = self.env['maintenance.workorder'].browse(vals.get('workorder_id'))
-            if workorder and workorder.state != 'draft':
-                raise UserError(_("You cannot add tasks to a work order that is not in draft."))
-        
-        return super().create(vals_list)
-
-    def unlink(self):
-        for rec in self:
-            if rec.workorder_id.state != 'draft':
-                raise UserError(_("You cannot remove tasks from a work order that is not in draft."))
-        return super().unlink()
+    # Removed constraints that prevented editing based on workorder state
 
     def toggle_task_completion(self):
         """Toggle the completion status of a task"""
         self.ensure_one()
-        if self.workorder_id.state != 'in_progress':
-            raise UserError(_("Tasks can only be marked as completed when the Work Order is 'In Progress'."))
         
         self.is_done = not self.is_done
         if self.is_done:
