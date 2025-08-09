@@ -25,11 +25,11 @@
         <field name="arch" type="xml">
             <form string="Work Order (Mobile)" class="o_mobile_form">
                 <header>
-                    <field name="state" invisible="1"/>
-                    <field name="approval_state" invisible="1"/>
-                    <field name="work_order_type" invisible="1"/>
-                    <field name="schedule_id" invisible="1"/>
-                    <field name="job_plan_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="approval_state"/>
+                    <field name="work_order_type"/>
+                    <field name="schedule_id"/>
+                    <field name="job_plan_id"/>
 
                     <group>
                         <group>

@@ -10,8 +10,8 @@
                     <field name="approval_state" widget="statusbar"
                         statusbar_visible="draft,submitted,supervisor,manager,approved,in_progress,done,refused,escalated,cancelled"
                         statusbar_colors='{"refused":"red","escalated":"orange","done":"green","cancelled":"red"}'/>
-                    <field name="status" invisible="1"/>
-                    <field name="all_tasks_completed" invisible="1"/>
+                    <field name="status"/>
+                    <field name="all_tasks_completed"/>
                     <button name="action_submit_for_approval" type="object" string="Submit for Approval" class="oe_highlight"
                         invisible="approval_state != 'draft'"/>
                     <button name="action_supervisor_approve" type="object" string="Supervisor Approve" class="oe_highlight"
@@ -175,7 +175,7 @@
                     <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
-                <field name="workorder_task_ids" invisible="1"/>
+                <field name="workorder_task_ids"/>
             </form>
         </field>
     </record>
